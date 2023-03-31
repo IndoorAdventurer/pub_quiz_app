@@ -191,6 +191,23 @@ export abstract class GameState {
      */
     public end_active(): void { }
 
+
+    static updatesGame(): MethodDecorator {
+        return  function(   target: Object,
+                            key: string | symbol,
+                            descriptor: PropertyDescriptor) {
+            const of = descriptor.value;
+            descriptor.value = function( ... args: any[]) {
+                console.warn("TODO: make it call this.parent_game.update() or something!");
+                const gm = <Game>this.parent_game;
+                console.log(`for now, to see we can access the parent: `, gm.numberOfPlayers());
+                return of.apply(this, args);
+            }
+
+            return descriptor;
+        }
+    }
+
 }
 
 
