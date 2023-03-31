@@ -10,9 +10,8 @@ export default class Game {
 
     static readonly START_SCORE = 60;
 
-    private state_sequence: GameState[] = [];   // i.e. questions; see below
-    private players: Player[] = [];             // The players playing. Should
-    // always be sorted max2min
+    private state_sequence: GameState[] = [];       // i.e. questions; see below
+    private players = new Map<string, Player>();    // stores all players
 
     /**
      * TODO should get folder as input, such that it can loop over the dirs
@@ -41,135 +40,125 @@ export default class Game {
 
     /**
      * Adds a new player to the game. Ideally done before the first round ofc
-     * @param name The name of the player. Should be unique. Else padded with Xs
+     * @param name The name of the player. Should be unique. Else gets padded
+     * with Xs till it is unique
      */
     public addPlayer(name: string): void {
 
-        // unique name:
-        while (this.players.some(player => player.name === name))
-            name = name + "X";
+        // Unique name:
+        while (this.players.has(name))
+            name += "X";
 
-        this.players.push({
-            name: name,
-            score: Game.START_SCORE,
-            isplaying: true
-        })
+        // Add to map, with name as key.
+        this.players.set(name, { score: Game.START_SCORE, isplaying: true });
     }
 
     /**
-     * Removes the player at a given index
+     * Removes the specified player
      * @param idx 
      */
-    public removePlayer(idx: number): void {
-        if (idx >= this.players.length) {
-            console.warn("Tried to remove an out of bounds object. Ignoring.");
+    public removePlayer(name: string): void {
+        if (!this.players.has(name)) {
+            console.warn(`Player "${name}" does not exist. Ignoring`);
             return;
         }
 
-        this.players.splice(idx, 1);
+        this.players.delete(name);
     }
 
     /**
      * @returns The number of Players registered
      */
     public numberOfPlayers(): number {
-        return this.players.length;
+        return this.players.size;
     }
 
     /**
-     * @param idx Index of player to be accessed
-     * @returns This Players its name
+     * @returns All the names of players
      */
-    public getPlayerName(idx: number): string | null {
-        if (idx >= this.players.length) {
-            console.warn("Tried to access an out-of-bounds player. Ignoring.");
-            return null;
-        }
-        return this.players[idx].name;
+    public getAllPlayerNames(): Set<string> {
+        return new Set(this.players.keys());
     }
 
     /**
-     * @param idx Index of player to be accessed
-     * @returns This Players its score
+     * @returns Array of objects containing all player data. Sorted in desceding
+     * order of score
      */
-    public getPlayerScore(idx: number): number | null {
-        if (idx >= this.players.length) {
-            console.warn("Tried to access an out-of-bounds player. Ignoring.");
-            return null;
+    public playerDataDump(): { name: string, score: number, isplaying: boolean }[] {
+        // Get it as a list:
+        const data = Array.from(this.players.entries())
+            .map(([name, fields]) => ({ name, ...fields }));
+
+        // Sort in descending order based on score:
+        data.sort((a, b) => b.score - a.score);
+
+        return data;
+    }
+
+
+    /**
+     * Updates the scores of all players
+     * @param map A `Map<string, number>` where keys are player names, and
+     * values are values to add to the corresponding player its score. Make sure
+     * all players specified in map actually exist!
+     */
+    public addToScores(map: Map<string, number>): void {
+        // Iterate over map and update all values
+        for (const [name, score] of map.entries()) {
+            const player = this.players.get(name);
+            if (player)
+                player.score += score;
+            else
+                console.warn("Tried updating non existing Player. Ignoring");
         }
-        return this.players[idx].score;
     }
 
     /**
-     * @param idx Index of player to be accessed
-     * @returns This Players its `isPlaying` state (boolean)
+     * Getter method for retrieving the score field for a Player given a name
+     * @param name The name of the player to retrieve the score from 
+     * @returns The retrieved score
      */
-    public getPlayerIsPlaying(idx: number): boolean | null {
-        if (idx >= this.players.length) {
-            console.warn("Tried to access an out-of-bounds player. Ignoring.");
-            return null;
-        }
-        return this.players[idx].isplaying;
+    public getScore(name: string): number | undefined {
+        const player = this.players.get(name);
+        return player?.score;
     }
 
     /**
-     * Change the score of a Player
-     * @param idx The index of the Player who's score needs to be changed
-     * @param score The new score
-     * @returns True if success. False otherwise
+     * Getter method for retrieving the isplaying field for a Player given a key
+     * @param name The name of the player to retrieve the `isplaying` state from 
+     * @returns The `isplaying` state: a boolean that specifies if the player
+     * is still part of the playing people, or if he/she lost and is now going
+     * for the consolation price.
      */
-    public setPlayerScore(idx: number, score: number): boolean {
-        if (idx >= this.players.length) {
-            console.warn("Tried to set the score of an out-of-bounds player. Ignoring.");
-            return false;
-        }
-        this.players[idx].score = score;
-        this.sortPlayers();
-        return true;
+    public isPlaying(name: string): boolean | undefined {
+        const player = this.players.get(name);
+        return player?.isplaying;
     }
 
     /**
-     * Adds the array of scores to the scores of the array of players in an
-     * element-wise manner
-     * @param scoresToAdd The scores to add. Should match up correctly with the
-     * players in the list!
-     * @returns True on success. False on failure (incorrect sized `scoresToAdd`)
+     * Setter method for setting the score field for a Player given a key
+     * @param name The name of the player: key to retrieve player with
+     * @param score The new score for this player.
      */
-    public addScores(scoresToAdd: number[]): boolean {
-        if (scoresToAdd.length !== this.players.length) {
-            console.warn("scoresToAdd not of right length. Ignoring.");
-            return false;
-        }
-
-        for (let i = 0; i < this.players.length; i++) {
-            this.players[i].score += scoresToAdd[i];
-        }
-
-        this.sortPlayers();
-
-        return true;
+    public setScore(name: string, score: number): void {
+        const player = this.players.get(name);
+        if (player)
+            player.score = score;
+        else
+            console.warn("Setter called for player that does not exist!");
     }
 
     /**
-     * Change the `isPlaying` state of a Player
-     * @param idx The index of the Player who's score needs to be changed
-     * @param score The new `isPlaying` state (boolean)
-     * @returns True if success. False otherwise
+     * Setter method for setting the isplaying field for a Player given a key
+     * @param name The name of the player: key to retrieve player with
+     * @param isplaying A boolean stating if the player is still in game or not
      */
-    public setPlayerIsPlaying(idx: number, isPlaying: boolean): boolean {
-        if (idx >= this.players.length) {
-            console.warn("Tried to set the isPlaying flag of an out-of-bounds player. Ignoring.");
-            return false;
-        }
-        this.players[idx].isplaying = isPlaying;
-        return true;
-    }
-
-    /**
-     * Private method to sort players based on score in ascending order
-     */
-    private sortPlayers(): void {
-        this.players.sort((a, b) => b.score - a.score);
+    public setIsPlaying(name: string, isplaying: boolean): void {
+        const player = this.players.get(name);
+        if (player)
+            player.isplaying = isplaying;
+        else
+            console.warn("Setter called for player that does not exist!");
     }
 }
 
@@ -209,9 +198,7 @@ export abstract class GameState {
  * Represent a player in the game. Manages its data, such as score, etc.
  */
 interface Player {
-    name: string,           // A self chosen name of the player
     score: number,          // The players score
     isplaying: boolean      // At some point, only the top-n players will keep
-    // playing, while the left-over ones will compete
-    // for the consolation price
+    // playing, while the left-over ones will compete  for the consolation price
 }
