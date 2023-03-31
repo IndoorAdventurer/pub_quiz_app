@@ -13,6 +13,10 @@ export default class Game {
     private state_sequence: GameState[] = [];       // i.e. questions; see below
     private players = new Map<string, Player>();    // stores all players
 
+    // Event listeners for two different topics:
+    private gameStateListeners: Listener<"game">[] = [];
+    private playerListeners: Listener<"player">[] = [];
+
     /**
      * TODO should get folder as input, such that it can loop over the dirs
      * and find all levels.
@@ -35,6 +39,36 @@ export default class Game {
         this.state_sequence[0].begin_active();
     }
 
+    /**
+     * Add a listener to the list of objects interested in game state changes.
+     * @param listener The listener to be added. It should implement
+     * `listener.update("game")`
+     */
+    public addGameListener(listener: Listener<"game">): void {
+        this.gameStateListeners.push(listener);
+    }
+
+    /**
+     * Removes a listener to the list of objects interested in game state changes.
+     * @param listener The listener to be removed. It should implement
+     * `listener.update("game")`
+     */
+    public removeGameListener(listener: Listener<"game">): void {
+        const idx = this.gameStateListeners.indexOf(listener);
+        if (idx !== -1) {
+            this.gameStateListeners.splice(idx, 1);
+        }
+    }
+
+    /**
+     * Notifies all listeners of a change in game state!
+     */
+    public gameStateChange(): void {
+        for (const l of this.gameStateListeners) {
+            l.update("game");
+        }
+    }
+
 
     //---STUFF-FOR-PLAYERS:-----------------------------------------------------
 
@@ -51,6 +85,9 @@ export default class Game {
 
         // Add to map, with name as key.
         this.players.set(name, { score: Game.START_SCORE, isplaying: true });
+
+        // Notify of update
+        this.playerChange();
     }
 
     /**
@@ -64,6 +101,9 @@ export default class Game {
         }
 
         this.players.delete(name);
+
+        // Notify of update
+        this.playerChange();
     }
 
     /**
@@ -97,7 +137,9 @@ export default class Game {
 
 
     /**
-     * Updates the scores of all players
+     * Updates the scores of all players **Important! Use this instead of the
+     * setter for individual players when possible, because every time you call
+     * the setter a state change message has to be sent te each client!**
      * @param map A `Map<string, number>` where keys are player names, and
      * values are values to add to the corresponding player its score. Make sure
      * all players specified in map actually exist!
@@ -111,6 +153,9 @@ export default class Game {
             else
                 console.warn("Tried updating non existing Player. Ignoring");
         }
+
+        // Notify of update
+        this.playerChange();
     }
 
     /**
@@ -146,6 +191,9 @@ export default class Game {
             player.score = score;
         else
             console.warn("Setter called for player that does not exist!");
+
+        // Notify of update
+        this.playerChange();
     }
 
     /**
@@ -159,6 +207,40 @@ export default class Game {
             player.isplaying = isplaying;
         else
             console.warn("Setter called for player that does not exist!");
+        
+        // Notify of update
+        this.playerChange();
+    }
+
+    /**
+     * Add a listener to the list of objects interested in player changes.
+     * @param listener The listener to be added. It should implement
+     * `listener.update("player")`
+     */
+    public addPlayerListener(listener: Listener<"player">): void {
+        this.playerListeners.push(listener);
+    }
+
+    /**
+     * Removes a listener to the list of objects interested in player changes.
+     * @param listener The listener to be removed. It should implement
+     * `listener.update("player")`
+     */
+    public removePlayerListener(listener: Listener<"player">): void {
+        const idx = this.playerListeners.indexOf(listener);
+        if (idx !== -1) {
+            this.playerListeners.splice(idx, 1);
+        }
+    }
+
+    /**
+     * Notifies all listeners of a change regarding the players. E.g. change in
+     * score.
+     */
+    public playerChange(): void {
+        for (const l of this.playerListeners) {
+            l.update("player");
+        }
     }
 }
 
@@ -184,24 +266,55 @@ export abstract class GameState {
      * to start a timer that makes the player's points tick away, or make sure
      * the players will see the appropriate screen, etc.
      */
+    @GameState.stateChanger()
     public begin_active(): void { }
 
     /**
      * Gets called when `Game` hands control over to the next `GameState`
      */
+    // Not adding decorator here, since the next `GameState` its `begin_active`
+    // will be called right afterwards.
     public end_active(): void { }
 
+    /**
+     * Has to return the `HTML` that the big screen will show. For example the
+     * question and possible answer (A, B, C & D) for a multiple choice question
+     */
+    public abstract bigScreen(): string;
 
-    static updatesGame(): MethodDecorator {
+    /**
+     * Has to return the `HTML` the player gets to see on his or her screen. For
+     * example, a screen with 4 buttons for a multiple choice answer.
+     * @param name The name of the player that makes the request.
+     */
+    public abstract playerScreen(name: string): string;
+
+    /**
+     * When a player gives some response this function will have to process
+     * that response. For example, if the response is a good answer, it can
+     * calculate what score the player has gained, so it can add this later to
+     * that players total using `Game.addToScores()`.
+     * @param name The name of the player
+     * @param response The response the player gave
+     */
+    public abstract playerAnswer(name: string, response: string): boolean;
+
+    /**
+     * A decorator factory function. Any method of a class that derives from
+     * `GameState` should be decorated with `@GameState.updatesGame()` if it
+     * makes some change to the visible state of the game.
+     * @returns A decorator that ensures the `Game` object notifies all clients
+     * of an update when it is called.
+     */
+    static stateChanger(): MethodDecorator {
         return  function(   target: Object,
                             key: string | symbol,
                             descriptor: PropertyDescriptor) {
             const of = descriptor.value;
             descriptor.value = function( ... args: any[]) {
-                console.warn("TODO: make it call this.parent_game.update() or something!");
-                const gm = <Game>this.parent_game;
-                console.log(`for now, to see we can access the parent: `, gm.numberOfPlayers());
-                return of.apply(this, args);
+                const out =  of.apply(this, args);
+                (<Game>this.parent_game).gameStateChange();
+                return out;
             }
 
             return descriptor;
@@ -218,4 +331,18 @@ interface Player {
     score: number,          // The players score
     isplaying: boolean      // At some point, only the top-n players will keep
     // playing, while the left-over ones will compete  for the consolation price
+}
+
+/**
+ * An interface for the observer pattern: Any class that wants to receive
+ * a notification when the state of the game has changed, has to extend this
+ * interface.
+ * `T` should be a string specifying the topic. For example, we can have:
+ * `class Foo implements Listener<"topic-x"> {}`
+ */
+interface Listener<T> {
+    /**
+     * The function that should be implemented
+     */
+    update(val: T): void;
 }

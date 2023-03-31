@@ -1,0 +1,14 @@
+1.
+I should make GameState classes very modular. For example, I can create separate
+objects for checking the answers, or sending certain screens to the clients,
+such that I can re-use code for differnt GameState classes that are partially
+similar!
+For this I can use some pattern where the constructor creates these modules,
+and that the constructors of these modules take a reference to the respective
+(private) data members as arguments.
+
+2.
+Want to make a script that automatically checks all the different types of
+question classes, and creates a file that exports all of these, and also has
+a Map which has their names as strings as keys, and maps them to the actual
+class, such that I can call the right constructor in that manner.
