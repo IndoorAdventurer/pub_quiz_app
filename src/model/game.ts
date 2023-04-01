@@ -62,10 +62,11 @@ export default class Game {
 
     /**
      * Notifies all listeners of a change in game state!
+     * @param obj An object describing the state of the game.
      */
-    public gameStateChange(): void {
+    public gameStateChange(obj: Object): void {
         for (const l of this.gameStateListeners) {
-            l.update("game");
+            l.update("game", obj);
         }
     }
 
@@ -238,8 +239,9 @@ export default class Game {
      * score.
      */
     public playerChange(): void {
+        const datadump = this.playerDataDump();
         for (const l of this.playerListeners) {
-            l.update("player");
+            l.update("player", datadump);
         }
     }
 }
@@ -254,7 +256,12 @@ export default class Game {
  */
 export abstract class GameState {
 
+    // GameState object needs to be able to interact with a game:
     protected parent_game: Game;
+
+    // GameState object needs a name that gets appended to update messages
+    // such that there is no confusion about what the active game state is
+    public readonly abstract name: string;
 
     constructor(parent_game: Game) {
         this.parent_game = parent_game;
@@ -266,7 +273,7 @@ export abstract class GameState {
      * to start a timer that makes the player's points tick away, or make sure
      * the players will see the appropriate screen, etc.
      */
-    @GameState.stateChanger()
+    @GameState.stateChanger
     public begin_active(): void { }
 
     /**
@@ -277,17 +284,61 @@ export abstract class GameState {
     public end_active(): void { }
 
     /**
-     * Has to return the `HTML` that the big screen will show. For example the
-     * question and possible answer (A, B, C & D) for a multiple choice question
+     * Has to return boiler plate code that gets put up on the big screen. For
+     * example, for a multiple choice question, it should be a template html
+     * structure to show a question and multiple possible answers (A, B, C, D).
+     * The template should of course not show specific questions in this case.
+     * A script that receives a specific questions from the clients should be
+     * implemented for this (see) below. That modifies the template with these
+     * specific questions.
+     * 
+     * 
+     * @returns `HTML` boiler plate code of the following form:
+     * ```html
+     * <template id="somename">
+     *     <!--boilerplate html-->
+     * </template>
+     * <script>
+     * document.addEventListener("somename", (e) => {
+     *   const obj = e.detail;
+     *   // modify page described in <template somename>
+     * })
+     * </script>
+     * ```
+     * The script is optional. It should implement an event listener that
+     * receives the object from the server in event.detail, and updates the
+     * page described in the template accordingly.
      */
-    public abstract bigScreen(): string;
+    public abstract bigScreenTemplate(): string;
 
     /**
      * Has to return the `HTML` the player gets to see on his or her screen. For
      * example, a screen with 4 buttons for a multiple choice answer.
      * @param name The name of the player that makes the request.
      */
-    public abstract playerScreen(name: string): string;
+    /**
+     * Has to return boiler plate code for showing something on the screen of
+     * an individual player. Just as with `bigScreenTemplate()`, this will all
+     * be send beforehand to the client, such that most traffic that comes after
+     * is via websocket updates (in a SPA-type manner).
+     * 
+     * @returns `HTML` boiler plate code of the following form:
+     * ```html
+     * <template id="somename">
+     *     <!--boilerplate html-->
+     * </template>
+     * <script>
+     * document.addEventListener("somename", (e) => {
+     *   const obj = e.detail;
+     *   // modify page described in <template somename>
+     * })
+     * </script>
+     * ```
+     * The script is optional. It should implement an event listener that
+     * receives the object from the server in event.detail, and updates the
+     * page described in the template accordingly.
+     */
+    public abstract playerScreenTemplate(): string;
 
     /**
      * When a player gives some response this function will have to process
@@ -300,26 +351,25 @@ export abstract class GameState {
     public abstract playerAnswer(name: string, response: string): boolean;
 
     /**
-     * A decorator factory function. Any method of a class that derives from
+     * A method decorator. Any method of a class that derives from
      * `GameState` should be decorated with `@GameState.updatesGame()` if it
      * makes some change to the visible state of the game.
      * @returns A decorator that ensures the `Game` object notifies all clients
-     * of an update when it is called.
+     * of an update when it is called. **IMPORTANT!** it gives the return value
+     * of the decorated method as argument to the update function
      */
-    static stateChanger(): MethodDecorator {
-        return  function(   target: Object,
-                            key: string | symbol,
-                            descriptor: PropertyDescriptor) {
-            const of = descriptor.value;
-            descriptor.value = function( ... args: any[]) {
-                const out =  of.apply(this, args);
-                (<Game>this.parent_game).gameStateChange();
-                return out;
-            }
-
-            return descriptor;
+    public static stateChanger: MethodDecorator = function(   target: Object,
+        key: string | symbol,
+        descriptor: PropertyDescriptor) {
+        const of = descriptor.value;
+        descriptor.value = function( ... args: any[]) {
+        const out =  of.apply(this, args);
+        (<Game>this.parent_game).gameStateChange(out);
+        return out;
         }
-    }
+
+        return descriptor;
+}
 
 }
 
@@ -343,6 +393,9 @@ interface Player {
 interface Listener<T> {
     /**
      * The function that should be implemented
+     * @param val a string describing the 'topic'
+     * @param obj an object describing the state. Should contain all the info
+     * the viewer would want.
      */
-    update(val: T): void;
+    update(val: T, obj: Object): void;
 }

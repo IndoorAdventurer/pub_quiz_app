@@ -7,19 +7,17 @@ import { GameState } from "./game.js"
  */
 export default class Lobby extends GameState {
     
-    
-    public bigScreen(): string {
+    public readonly name = "lobby"
+
+    public bigScreenTemplate(): string {
         throw new Error("Method not implemented.");
     }
 
-    public playerScreen(name: string): string {
+    public playerScreenTemplate(): string {
         throw new Error("Method not implemented.");
     }
 
     public playerAnswer(name: string, response: string): boolean {
         throw new Error("Method not implemented.");
     }
-
-    // Also TODO in game.ts: add abstract methods that should get called for,
-    // respectively, drawing the big screen, or drawing the small screen.
 }
