@@ -14,8 +14,8 @@ export default class Game {
     private players = new Map<string, Player>();    // stores all players
 
     // Event listeners for two different topics:
-    private gameStateListeners: Listener<"game">[] = [];
-    private playerListeners: Listener<"player">[] = [];
+    private gameStateListeners: GameListener[] = [];
+    private playerListeners: PlayerListener[] = [];
 
     /**
      * TODO should get folder as input, such that it can loop over the dirs
@@ -44,7 +44,7 @@ export default class Game {
      * @param listener The listener to be added. It should implement
      * `listener.update("game")`
      */
-    public addGameListener(listener: Listener<"game">): void {
+    public addGameListener(listener: GameListener): void {
         this.gameStateListeners.push(listener);
     }
 
@@ -53,7 +53,7 @@ export default class Game {
      * @param listener The listener to be removed. It should implement
      * `listener.update("game")`
      */
-    public removeGameListener(listener: Listener<"game">): void {
+    public removeGameListener(listener: GameListener): void {
         const idx = this.gameStateListeners.indexOf(listener);
         if (idx !== -1) {
             this.gameStateListeners.splice(idx, 1);
@@ -188,11 +188,13 @@ export default class Game {
      */
     public setScore(name: string, score: number): void {
         const player = this.players.get(name);
-        if (player)
-            player.score = score;
-        else
+        if (!player) {
             console.warn("Setter called for player that does not exist!");
+            return;
+        }
 
+        player.score = score;
+        
         // Notify of update
         this.playerChange();
     }
@@ -204,10 +206,12 @@ export default class Game {
      */
     public setIsPlaying(name: string, isplaying: boolean): void {
         const player = this.players.get(name);
-        if (player)
-            player.isplaying = isplaying;
-        else
+        if (!player) {
             console.warn("Setter called for player that does not exist!");
+            return;
+        }
+        
+        player.isplaying = isplaying;
         
         // Notify of update
         this.playerChange();
@@ -218,7 +222,7 @@ export default class Game {
      * @param listener The listener to be added. It should implement
      * `listener.update("player")`
      */
-    public addPlayerListener(listener: Listener<"player">): void {
+    public addPlayerListener(listener: PlayerListener): void {
         this.playerListeners.push(listener);
     }
 
@@ -227,7 +231,7 @@ export default class Game {
      * @param listener The listener to be removed. It should implement
      * `listener.update("player")`
      */
-    public removePlayerListener(listener: Listener<"player">): void {
+    public removePlayerListener(listener: PlayerListener): void {
         const idx = this.playerListeners.indexOf(listener);
         if (idx !== -1) {
             this.playerListeners.splice(idx, 1);
@@ -399,3 +403,6 @@ interface Listener<T> {
      */
     update(val: T, obj: Object): void;
 }
+
+export type GameListener = Listener<"game">;
+export type PlayerListener = Listener<"player">;

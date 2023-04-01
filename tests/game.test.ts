@@ -1,4 +1,4 @@
-import Game from "../src/model/game";
+import Game, {PlayerListener} from "../src/model/game";
 
 describe('Adding players to the game', () => {
     test(`Adding one player should result in one player.
@@ -109,3 +109,67 @@ describe("Updating scores/vals in multiple different ways", () => {
         g.setScore("bente", 1000000);
     })
 });
+
+
+class L implements PlayerListener {
+    public cnt = 0;
+    
+    update(val: "player", obj: Object): void {
+        const arr: Object[] = <Object[]>obj;
+        this.cnt += arr.length;
+    }
+}
+
+describe("Seeing if player listening works as it should", () => {
+    test("single listener", () => {
+
+        const g = new Game();
+        const l = new L();
+        g.addPlayerListener(l);
+        g.addPlayer("mathijs");
+        expect(l.cnt).toBe(1);
+        g.addPlayer("peter");
+        g.addPlayer("erik");
+        expect(l.cnt).toBe(6);
+        g.addToScores(new Map([
+            ["peter", 50],
+            ["erik", 100],
+            ["mathijs", 10]
+        ]));
+        expect(l.cnt).toBe(9);
+        g.removePlayer("mathijs");
+        expect(l.cnt).toBe(11);
+        g.setIsPlaying("erik", false);
+        expect(l.cnt).toBe(13);
+        g.setScore("peter", 0);
+        expect(l.cnt).toBe(15);
+        g.setScore("paardenkop!", 0);
+        expect(l.cnt).toBe(15);
+        g.setIsPlaying("paardenkop!", true);
+        expect(l.cnt).toBe(15);
+        g.removePlayer("mathijs");
+        expect(l.cnt).toBe(15);
+        g.removePlayer("peter");
+        g.removePlayer("erik");
+        expect(l.cnt).toBe(16);
+    })
+
+    test("multiple listeners", () => {
+        const g = new Game();
+        const l1 = new L();
+        const l2 = new L();
+
+        g.addPlayerListener(l1);
+        g.addPlayer("x");
+        expect(l1.cnt).toBe(1);
+        expect(l2.cnt).toBe(l1.cnt - 1);
+        g.addPlayerListener(l2);
+        g.addPlayer("x");
+        expect(l1.cnt).toBe(3);
+        expect(l2.cnt).toBe(l1.cnt - 1);
+        g.removePlayerListener(l1);
+        g.addPlayer("x");
+        expect(l1.cnt).toBe(3);
+        expect(l2.cnt).toBe(l1.cnt + 2);
+    })
+})
