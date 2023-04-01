@@ -28,16 +28,9 @@ export default class Game {
 
     //---STUFF-FOR-GAME-STATES:-------------------------------------------------
 
-    /**
-     * Moves the game to the next state/question.
-     */
-    public nextStateManip(): void {
-        if (this.state_sequence.length !== 0)
-            return;
-
-        this.state_sequence.shift().end_active();
-        this.state_sequence[0].begin_active();
-    }
+    // TODO move to next state method
+    // TODO add game state method
+    // TODO whole bunch other things :-p
 
     /**
      * Add a listener to the list of objects interested in game state changes.
@@ -62,11 +55,15 @@ export default class Game {
 
     /**
      * Notifies all listeners of a change in game state!
-     * @param obj An object describing the state of the game.
+     * @param msg An object describing the state of the game.
      */
-    public gameStateChange(obj: Object): void {
+    public gameStateChange(msg: any): void {
+        if (msg === undefined)
+            msg = {};
+        msg = {name: "TODO", ...msg};
+        console.warn("TODO: put GameState.name in obj!")
         for (const l of this.gameStateListeners) {
-            l.update("game", obj);
+            l.update("game", msg);
         }
     }
 
@@ -316,11 +313,6 @@ export abstract class GameState {
     public abstract bigScreenTemplate(): string;
 
     /**
-     * Has to return the `HTML` the player gets to see on his or her screen. For
-     * example, a screen with 4 buttons for a multiple choice answer.
-     * @param name The name of the player that makes the request.
-     */
-    /**
      * Has to return boiler plate code for showing something on the screen of
      * an individual player. Just as with `bigScreenTemplate()`, this will all
      * be send beforehand to the client, such that most traffic that comes after
@@ -398,10 +390,10 @@ interface Listener<T> {
     /**
      * The function that should be implemented
      * @param val a string describing the 'topic'
-     * @param obj an object describing the state. Should contain all the info
+     * @param msg an object describing the state. Should contain all the info
      * the viewer would want.
      */
-    update(val: T, obj: Object): void;
+    update(val: T, msg: any): void;
 }
 
 export type GameListener = Listener<"game">;
