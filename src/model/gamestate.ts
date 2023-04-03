@@ -61,8 +61,11 @@ export default abstract class GameState {
      * The script is optional. It should implement an event listener that
      * receives the object from the server in event.detail, and updates the
      * page described in the template accordingly.
+     * 
+     * **NOTE:** if you have more than one template you can return a set of
+     * strings.
      */
-    public abstract bigScreenTemplate(): string;
+    public abstract bigScreenTemplate(): string | Set<string>;
 
     /**
      * Has to return boiler plate code for showing something on the screen of
@@ -85,8 +88,11 @@ export default abstract class GameState {
      * The script is optional. It should implement an event listener that
      * receives the object from the server in event.detail, and updates the
      * page described in the template accordingly.
+     * 
+     * **NOTE:** if you have more than one template you can return a set of
+     * strings.
      */
-    public abstract playerScreenTemplate(): string;
+    public abstract playerScreenTemplate(): string | Set<string>;
 
     /**
      * When a player gives some response this function will have to process

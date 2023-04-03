@@ -33,3 +33,20 @@ procedure:
 
 of course obj.page_name and obj.event_name could be the same, or both be
 inferred from some obj.name or something.
+
+4.
+The update function should take a specific format as argument:
+{
+    general: {},
+    admin: {},
+    bigscreen: {},
+    users: {
+        user1: {},
+        user2: {},
+        .
+        .
+    }
+}
+
+where you have these fields containing information that is only relevant for
+certain listeners/clients.
