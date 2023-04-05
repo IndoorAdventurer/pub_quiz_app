@@ -56,9 +56,7 @@ export default class Game {
      * Notifies all listeners of a change in game state!
      * @param msg An object describing the state of the game.
      */
-    public gameStateChange(msg: any): void {
-        if (msg === undefined)
-            msg = {};
+    public gameStateChange(msg: GameDataMsg): void {
         // IMPORTANT: this gives room to overwrite name:
         msg = { name: "TODO", ...msg };
         console.warn("TODO: put GameState.name in msg!")
@@ -122,7 +120,7 @@ export default class Game {
      * @returns Array of objects containing all player data. Sorted in desceding
      * order of score
      */
-    public playerDataDump(): { name: string, score: number, isplaying: boolean }[] {
+    public playerDataDump(): PlayerDataMsg {
         // Get it as a list:
         const data = Array.from(this.players.entries())
             .map(([name, fields]) => ({ name, ...fields }));
@@ -264,15 +262,57 @@ interface Player {
  * `T` should be a string specifying the topic. For example, we can have:
  * `class Foo implements Listener<"topic-x"> {}`
  */
-interface Listener<T> {
+interface Listener<T, U = any> {
     /**
      * The function that should be implemented
      * @param val a string describing the 'topic'
      * @param msg an object describing the state. Should contain all the info
      * the viewer would want.
      */
-    update(val: T, msg: any): void;
+    update(val: T, msg: U): void;
 }
 
-export type GameListener = Listener<"game">;
-export type PlayerListener = Listener<"player">;
+export type GameListener = Listener<"game", GameDataMsg>;
+export type PlayerListener = Listener<"player", PlayerDataMsg>;
+
+
+/**
+ * A `GameState` (see `gamestate.ts`) notifies others of changes through
+ * returned objects. These objects need to abide by this interface.
+ * 
+ * The `name` field should give the name of the sender of the message. If
+ * it is not set, it will default to the `GameState.name` attribute of the
+ * sender.\
+ * The `general_info` field should contain an object with general information
+ * about the state of the gamen.\
+ * The `player_specific_info` field should contain an object where each key
+ * corresponds to a player in the game. The corresponding values should be
+ * objects with player-specific information.\
+ * 
+ * **IMPORTANT!** Make sure you return ALL the information you need to re-draw
+ * the screen of the client. Don't ever add statefull information on the client
+ * side.
+ */
+export interface GameDataMsg{
+    name?: string,
+    general_info: {
+        [key: string]: any
+    },
+
+    player_specific_info: {
+        [player: string]: {
+            [key: string]: any
+        }
+    }
+}
+
+/**
+ * Player data is an array of objects containing the information of all players.
+ * These should be sorted in descending order of score. A PlayerListener takes
+ * this type as argument for its update function.
+ */
+export type PlayerDataMsg =  {
+    name: string,
+    score: number,
+    isplaying: boolean
+}[];

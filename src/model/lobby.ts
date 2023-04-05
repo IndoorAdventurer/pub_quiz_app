@@ -1,4 +1,4 @@
-import { GameState } from "./game.js"
+import GameState from "./gamestate.js";
 
 /**
  * The first `GameState` of any game! Will show on the big screen a list of

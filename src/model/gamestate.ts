@@ -1,4 +1,4 @@
-import Game from "./game.js";
+import Game, { GameDataMsg } from "./game.js";
 
 /**
  * Represents a certain state of the game. For example, a specific question, or
@@ -27,7 +27,12 @@ export default abstract class GameState {
      * the players will see the appropriate screen, etc.
      */
     @GameState.stateChanger
-    public begin_active(): void { }
+    public begin_active(): GameDataMsg {
+        return {
+            general_info: {},
+            player_specific_info: {}
+        };
+    }
 
     /**
      * Gets called when `Game` hands control over to the next `GameState`
@@ -106,18 +111,19 @@ export default abstract class GameState {
 
     /**
      * A method decorator. Any method of a class that derives from
-     * `GameState` should be decorated with `@GameState.updatesGame()` if it
+     * `GameState` should be decorated with `@GameState.stateChanger` if it
      * makes some change to the visible state of the game.
      * @returns A decorator that ensures the `Game` object notifies all clients
-     * of an update when it is called. **IMPORTANT!** it gives the return value
+     * of an update when it is called. **IMPORTANT!** It gives the return value
      * of the decorated method as argument to the update function
      */
-    public static stateChanger: MethodDecorator = function (target: Object,
+    public static stateChanger = function (
+        target: Object,
         key: string | symbol,
-        descriptor: PropertyDescriptor) {
+        descriptor: TypedPropertyDescriptor<() => GameDataMsg>) {
         const of = descriptor.value;
         descriptor.value = function (...args: any[]) {
-            const out = of.apply(this, args);
+            const out: GameDataMsg = of.apply(this, args);
             (<Game>this.parent_game).gameStateChange(out);
             return out;
         }
