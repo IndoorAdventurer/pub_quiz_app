@@ -1,4 +1,5 @@
-import Game from "./model/game.js";
+import Server from "./controller/server.js";
 
-const g = new Game();
 
+const s = new Server();
+s.listen();
