@@ -1,4 +1,5 @@
 import GameState from "./gamestate.js";
+import WidgetSnippets from "../view/widgetsnippets.js";
 
 /**
  * The first `GameState` of any game! Will show on the big screen a list of
@@ -9,11 +10,11 @@ export default class Lobby extends GameState {
     
     public readonly name = "lobby"
 
-    public bigScreenTemplate(): string {
+    public bigScreenWidgets(): WidgetSnippets {
         throw new Error("Method not implemented.");
     }
 
-    public playerScreenTemplate(): string {
+    public playerScreenWidgets(): WidgetSnippets {
         throw new Error("Method not implemented.");
     }
 

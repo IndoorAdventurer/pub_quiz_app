@@ -1,4 +1,5 @@
 import Game, { GameDataMsg } from "./game.js";
+import WidgetSnippets from "../view/widgetsnippets.js";
 
 /**
  * Represents a certain state of the game. For example, a specific question, or
@@ -42,62 +43,46 @@ export default abstract class GameState {
     public end_active(): void { }
 
     /**
-     * Has to return boiler plate code that gets put up on the big screen. For
-     * example, for a multiple choice question, it should be a template html
-     * structure to show a question and multiple possible answers (A, B, C, D).
-     * The template should of course not show specific questions in this case.
-     * A script that receives a specific questions from the clients should be
-     * implemented for this (see) below. That modifies the template with these
-     * specific questions.
-     * 
-     * 
-     * @returns `HTML` boiler plate code of the following form:
-     * ```html
-     * <template id="somename">
-     *     <!--boilerplate html-->
-     * </template>
-     * <script>
-     * document.addEventListener("somename", (e) => {
-     *   const obj = e.detail;
-     *   // modify page described in <template somename>
-     * })
-     * </script>
-     * ```
-     * The script is optional. It should implement an event listener that
-     * receives the object from the server in event.detail, and updates the
-     * page described in the template accordingly.
-     * 
-     * **NOTE:** if you have more than one template you can return a set of
-     * strings.
+     * Returns widget snippets for the big screen.
+     * @returns A `WidgetSnippets` object containing all the html, js and css
+     * needed to correctly display the current game state on the big screen.
+     * The big screen is just a large tv in the middle of the room that, for
+     * example, during a question should display the question.
+     * See the `WidgetSnipptes` class for more information!
      */
-    public abstract bigScreenTemplate(): string | Set<string>;
+    public abstract bigScreenWidgets(): WidgetSnippets;
 
     /**
-     * Has to return boiler plate code for showing something on the screen of
-     * an individual player. Just as with `bigScreenTemplate()`, this will all
-     * be send beforehand to the client, such that most traffic that comes after
-     * is via websocket updates (in a SPA-type manner).
-     * 
-     * @returns `HTML` boiler plate code of the following form:
-     * ```html
-     * <template id="somename">
-     *     <!--boilerplate html-->
-     * </template>
-     * <script>
-     * document.addEventListener("somename", (e) => {
-     *   const obj = e.detail;
-     *   // modify page described in <template somename>
-     * })
-     * </script>
-     * ```
-     * The script is optional. It should implement an event listener that
-     * receives the object from the server in event.detail, and updates the
-     * page described in the template accordingly.
-     * 
-     * **NOTE:** if you have more than one template you can return a set of
-     * strings.
+     * Returns widget snippets for the screen of any player.
+     * @returns A `WidgetSnippets` object containing all the html, js and css
+     * to correctly display the current game state on the (mobile phone) screen
+     * of the client. For example, for a multiple-choice question, it should
+     * contain an html template with the 4 buttons (A, B, C, D) the player can
+     * press, as well as the javascript code to send the answer back.
+     * See the `WidgetSnipptes` class for more information!
      */
-    public abstract playerScreenTemplate(): string | Set<string>;
+    public abstract playerScreenWidgets(): WidgetSnippets;
+
+    /**
+     * Returns widget snippets for the admin screen. Usually this will be
+     * nothing, so a default implementation is given.
+     * @returns A `WidgetSnippets` object to correctly render the current game
+     * state on the screen of the admin. For example, after an open question
+     * has been answered, the game should move into a state where the admin
+     * has to manually check which answers were correct. The widget to do this
+     * checking, together with the javascript to send back the evaluation of
+     * the admin, should then be included here.
+     * See the `WidgetSnipptes` class for more information!
+     */
+    public adminScreenWidgets(): WidgetSnippets {
+        const ws = new WidgetSnippets();
+        ws.add_css_snippet(`
+        <template id="nothing">
+        <p>Nothing to display</p>
+        </template>
+        `);
+        return ws;
+    }
 
     /**
      * When a player gives some response this function will have to process
