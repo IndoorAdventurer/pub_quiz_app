@@ -14,9 +14,9 @@ describe("Basic snippet functionality", () => {
           .add_css_snippet("css1")
           .add_css_snippet("css2")
           .add_css_snippet("css3")
-          .add_js_snippet("x")
-          .add_js_snippet("y")
-          .add_js_snippet("z");
+          .add_js_snippet("(function(){x})();")
+          .add_js_snippet("(function(){y})();")
+          .add_js_snippet("(function(){z})();");
         
           w2.add_html_snippet("<template>X</template>")
           .add_html_snippet("<template>Y</template>")
@@ -24,9 +24,9 @@ describe("Basic snippet functionality", () => {
           .add_css_snippet("css4")
           .add_css_snippet("css5")
           .add_css_snippet("css6")
-          .add_js_snippet("a")
-          .add_js_snippet("b")
-          .add_js_snippet("c");
+          .add_js_snippet("(function(){a})();")
+          .add_js_snippet("(function(){b})();")
+          .add_js_snippet("(function(){c})();");
         
         w1 = w1.union(w2);
 
@@ -65,19 +65,19 @@ describe("Basic snippet functionality", () => {
         expect(css2.includes("css5")).toBe(true);
         expect(css2.includes("css6")).toBe(true);
 
-        expect(js.includes("x")).toBe(true);
-        expect(js.includes("y")).toBe(true);
-        expect(js.includes("z")).toBe(true);
-        expect(js.includes("a")).toBe(true);
-        expect(js.includes("b")).toBe(true);
-        expect(js.includes("c")).toBe(true);
+        expect(js.includes("(function(){x})();")).toBe(true);
+        expect(js.includes("(function(){y})();")).toBe(true);
+        expect(js.includes("(function(){z})();")).toBe(true);
+        expect(js.includes("(function(){a})();")).toBe(true);
+        expect(js.includes("(function(){b})();")).toBe(true);
+        expect(js.includes("(function(){c})();")).toBe(true);
 
-        expect(js2.includes("x")).toBe(false);
-        expect(js2.includes("y")).toBe(false);
-        expect(js2.includes("z")).toBe(false);
-        expect(js2.includes("a")).toBe(true);
-        expect(js2.includes("b")).toBe(true);
-        expect(js2.includes("c")).toBe(true);
+        expect(js2.includes("(function(){x})();")).toBe(false);
+        expect(js2.includes("(function(){y})();")).toBe(false);
+        expect(js2.includes("(function(){z})();")).toBe(false);
+        expect(js2.includes("(function(){a})();")).toBe(true);
+        expect(js2.includes("(function(){b})();")).toBe(true);
+        expect(js2.includes("(function(){c})();")).toBe(true);
     })
 
     test("Using the file methods", () => {
@@ -105,13 +105,13 @@ describe("Basic snippet functionality", () => {
           .add_css_snippet("css1")
           .add_css_snippet("css2")
           .add_css_snippet("css3")
-          .add_js_snippet("x")
-          .add_js_snippet("y")
-          .add_js_snippet("z");
+          .add_js_snippet("(function(){x})();")
+          .add_js_snippet("(function(){y})();")
+          .add_js_snippet("(function(){z})();");
         
           w2.add_html_snippet("<template>A</template>")
           .add_css_snippet("css3")
-          .add_js_snippet("x");
+          .add_js_snippet("(function(){x})();");
         
         const html = w1.get_html();
         const js = w1.get_js();
@@ -119,7 +119,7 @@ describe("Basic snippet functionality", () => {
 
         w1.add_html_snippet("<template>B</template>")
           .add_css_snippet("css2")
-          .add_js_snippet("z");
+          .add_js_snippet("(function(){z})();");
         
         expect(w1.get_html() === html).toBe(true);
         expect(w1.get_js() === js).toBe(true);

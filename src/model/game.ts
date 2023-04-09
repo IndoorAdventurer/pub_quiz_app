@@ -58,7 +58,7 @@ export default class Game {
      */
     public gameStateChange(msg: GameDataMsg): void {
         // IMPORTANT: this gives room to overwrite name:
-        msg = { name: "TODO", ...msg };
+        msg = { widget_name: "TODO", ...msg };
         console.warn("TODO: put GameState.name in msg!")
         for (const l of this.gameStateListeners) {
             l.update("game", msg);
@@ -280,27 +280,42 @@ export type PlayerListener = Listener<"player", PlayerDataMsg>;
  * A `GameState` (see `gamestate.ts`) notifies others of changes through
  * returned objects. These objects need to abide by this interface.
  * 
- * The `name` field should give the name of the sender of the message. If
- * it is not set, it will default to the `GameState.name` attribute of the
- * sender.\
  * The `general_info` field should contain an object with general information
- * about the state of the gamen.\
+ * about the state of the gamen.
+ * 
  * The `player_specific_info` field should contain an object where each key
  * corresponds to a player in the game. The corresponding values should be
- * objects with player-specific information.\
+ * objects with player-specific information.
+ * 
+ * The `admin_info` field should contain information that only the admin (i.e.
+ * the quiz master) should know. It is optional, since often `general_info` will
+ * suffice.
+ * 
+ * The `widget_name` field should give the name of the widget that receives this
+ * object on the client side. **Note that** higher specificity has priority: if
+ * this field is defined in the global scope, and in the player scope, then the
+ * player scope will be the widget the player sees. The same goes for admin. The
+ * general info widget will be associated the big screen.
  * 
  * **IMPORTANT!** Make sure you return ALL the information you need to re-draw
  * the screen of the client. Don't ever add statefull information on the client
  * side.
  */
 export interface GameDataMsg{
-    name?: string,
+    widget_name?: string,
     general_info: {
+        widget_name?: string,
+        [key: string]: any
+    },
+
+    admin_info?: {
+        widget_name?: string,
         [key: string]: any
     },
 
     player_specific_info: {
         [player: string]: {
+            widget_name?: string,
             [key: string]: any
         }
     }

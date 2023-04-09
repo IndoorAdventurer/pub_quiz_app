@@ -1,1 +1,3 @@
-// This is a test file
+(function() {
+    // This is a test file
+})();

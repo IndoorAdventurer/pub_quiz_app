@@ -26,9 +26,11 @@ export default class WidgetSnippets {
      * `some_id` should be the `name` attribute of the `GameState` object that
      * sends an update to the client!
      * @returns A reference to `this` for chaining
+     * @throws An error if the html code is not wrapped in a template!
      */
     public add_html_snippet(snippet: `<template${string}`): WidgetSnippets {
-        if (!snippet.includes("</template>"))
+        const template_regex = /^\s*<template[\s\S]*<\/template>\s*$/;
+        if (!template_regex.test(snippet))
             throw new Error("Found widget that is not in template!");
         this.html_snippets.add(snippet);
         return this;
@@ -41,19 +43,30 @@ export default class WidgetSnippets {
      * template (see `add_html_snippet`), and should define a listener for
      * incomming messages as follows:
      * ```javascript
+     * (function() {
      * document.addEventListener("some_name", (ev) => {
      * const obj = ev.detail;
      * // modify page described in template with id "some_id", using the info
      * // in obj.
      * })
+     * // other stuff
+     * })();
      * ```
      * * `some_name` should be the `name` attribute of the `GameState` object
      * that sends an update to the client!.
      * * the current active page will be globally defined as `active_page`, so
      * you can search the DOM from it instead of from `document`.
+     * * **IMPORTANT:** you have to use an Immediately Invoked Function
+     * Expression (IIFE) to wrap your code in to avoid naming conflicts!
      * @returns A reference to `this` for chaining
+     * @throws An error if the code is not wrapped in an IIFE!
      */
     public add_js_snippet(snippet: string): WidgetSnippets {
+        const iife_regex =
+        /^\s*\(\s*function\s*\(\s*\)\s*{[\s\S]*}\s*\)\s*\(\s*\)\s*;\s*$/;
+        if (!iife_regex.test(snippet))
+            throw new Error("Javascript snippet not wrapped in IIFE!");
+
         this.js_snippets.add(snippet);
         return this;
     }

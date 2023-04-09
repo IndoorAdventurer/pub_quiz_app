@@ -94,22 +94,28 @@ export default abstract class GameState {
      */
     public abstract playerAnswer(name: string, response: string): boolean;
 
+
+    /**
+     * Should return a summary of the current state in the form of a
+     * `GameDataMsg`.
+     */
+    public abstract stateMsg(): GameDataMsg;
+
     /**
      * A method decorator. Any method of a class that derives from
      * `GameState` should be decorated with `@GameState.stateChanger` if it
      * makes some change to the visible state of the game.
      * @returns A decorator that ensures the `Game` object notifies all clients
-     * of an update when it is called. **IMPORTANT!** It gives the return value
-     * of the decorated method as argument to the update function
+     * of an update when it is called.
      */
-    public static stateChanger = function (
-        target: Object,
+    protected static stateChanger: MethodDecorator = function (target: Object,
         key: string | symbol,
-        descriptor: TypedPropertyDescriptor<() => GameDataMsg>) {
+        descriptor: PropertyDescriptor) {
+        
         const of = descriptor.value;
-        descriptor.value = function (...args: any[]) {
-            const out: GameDataMsg = of.apply(this, args);
-            (<Game>this.parent_game).gameStateChange(out);
+        descriptor.value = function (this: GameState, ...args: any[]) {
+            const out = of.apply(this, args);
+            this.parent_game.gameStateChange(this.stateMsg());
             return out;
         }
 
