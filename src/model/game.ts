@@ -1,4 +1,5 @@
 import type GameState from "./gamestate.js";
+import Lobby from "./lobby.js";
 
 /**
  * The main class managing all the data for a game. Most notably, it
@@ -10,6 +11,7 @@ export default class Game {
     static readonly START_SCORE = 60;
 
     private state_sequence: GameState[] = [];       // see `gamestate.ts`
+    private cur_state_idx: number = 0;              // index into state_sequence
     private players = new Map<string, Player>();    // stores all players
 
     // Event listeners for two different topics:
@@ -21,15 +23,85 @@ export default class Game {
      * and find all levels.
      */
     constructor() {
+        // `Lobby` is always the first gamestate of any game. It allows users
+        // to enter the game before it really starts.
+        this.state_sequence.push(new Lobby(this));
+        
         // TODO!
     }
 
 
     //---STUFF-FOR-GAME-STATES:-------------------------------------------------
 
-    // TODO move to next state method
-    // TODO add game state method
-    // TODO whole bunch other things :-p
+    // TODO add an addState method, that can construct GameState object from
+    // an object that specifies its type and parameters. I cannot do it right
+    // now, as I need to first implement a global Map object for this that
+    // associates strings that I can find in this object with factory functions
+    // for creating these elements.
+    
+    /**
+     * @returns A reference to the game state that is currently active.
+     */
+    public currentState(): GameState {
+        return this.state_sequence[this.cur_state_idx];
+    }
+    
+    /**
+     * Move the game to the next state. I.e. the next question, etc.
+     */
+    public toNextState(): void {
+        this.setCurState(this.cur_state_idx + 1);
+    }
+
+    /**
+     * Move the game to the previous state.
+     */
+    public toPrevState(): void {
+        this.setCurState(this.cur_state_idx - 1);
+    }
+
+    
+    /**
+     * Move the Game to the gamestate at index `idx`.
+     * @param idx The index into the list of game states to move to.
+     */
+    public setCurState(idx: number): void {
+        if (    idx < 0 ||
+                idx >= this.state_sequence.length ||
+                this.state_sequence.length === 0) {
+            console.warn("Index for state_sequence out of range. Ignoring.");
+            return;
+        }
+
+        this.state_sequence[this.cur_state_idx].end_active()
+        this.cur_state_idx = idx;
+        this.state_sequence[idx].begin_active();
+    }
+
+    /**
+     * Move the question to a state relative to the current state.
+     * @param move_idx Specifies how much states to move along. +1 gives
+     * identical behavior to `nextState()`, -1 to `prevState()`, etc.
+     */
+    public setRelativeState(move_idx: number): void {
+        this.setCurState(this.cur_state_idx + move_idx);
+    }
+
+    /**
+     * @returns The index of the current state. Use, for example, together with
+     * `numberOfStates()` to show to user that we are at state X out of Y.
+     */
+    public currentStateIdx(): number {
+        return this.cur_state_idx;
+    }
+
+    /**
+     * @returns The total number of states. Use, for example, together with
+     * `stateIdx()` to show to user that we are at state X out of Y.
+     */
+    public numberOfStates(): number {
+        return this.state_sequence.length;
+    }
 
     /**
      * Add a listener to the list of objects interested in game state changes.
