@@ -35,8 +35,10 @@ export default abstract class GameState {
     constructor(parent_game: Game) {
         this.parent_game = parent_game;
         
-        // I am an adult, so I am allowed to do this 😉
-        // Making the gamestate add itself to the
+        // I am an adult, so I am allowed to do these kinds of things 😉
+        // Making the gamestate add itself to the game, by calling a method
+        // that is actually private to `Game`. This is its intended use
+        // however. Doing a bit of ugglyness here for safer code elsewhere.
         (<any>parent_game).makeGameStateAddSelf(this);
     }
 
