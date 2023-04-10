@@ -25,7 +25,7 @@ export default class Game {
     constructor() {
         // `Lobby` is always the first gamestate of any game. It allows users
         // to enter the game before it really starts.
-        this.state_sequence.push(new Lobby(this));
+        new Lobby(this);
         
         // TODO!
     }
@@ -33,11 +33,19 @@ export default class Game {
 
     //---STUFF-FOR-GAME-STATES:-------------------------------------------------
 
-    // TODO add an addState method, that can construct GameState object from
-    // an object that specifies its type and parameters. I cannot do it right
-    // now, as I need to first implement a global Map object for this that
-    // associates strings that I can find in this object with factory functions
-    // for creating these elements.
+    /**
+     * ❗**WARNING**❗ This method will be called by the constructor defined
+     * in `./gamestate.ts`, such that every `GameState` object will add itself
+     * to the game when it is constructed. Making it protected so future me, or
+     * other contributors won't screw up, **As this method should never be
+     * called elsewhere!!!** In fact, nothing else should ever modify
+     * `state_sequence`.
+     * @param gs The gamestate that will add itself by calling this method from
+     * the `GameState` abstract base class its constructor.
+     */
+    protected makeGameStateAddSelf(gs: GameState) {
+        this.state_sequence.push(gs);
+    }
     
     /**
      * @returns A reference to the game state that is currently active.

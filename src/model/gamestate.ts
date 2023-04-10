@@ -17,8 +17,27 @@ export default abstract class GameState {
     // such that there is no confusion about what the active game state is
     public readonly abstract name: string;
 
+    /**
+     * The base class constructor that gets called for any object that is
+     * derived from this abstract `GameState` class. Adds a reference to the
+     * game, **AND ADDS ITSELF TO THE GAME!**.
+     * 
+     * ❗**WARNING:**❗This constructor will add itself to the `parent_game`
+     * `Game` object. This means that **[A]**: you should be aware of the fact
+     * that any GameState will automatically be added to the game on
+     * construction. This means that a `GameState` object that is not part of a
+     * `Game` cannot exist. It also means that the order of construction matters
+     * much. **[B]**: you won't **EVER** have to do this manually!
+     * @param parent_game The `Game` object this `GameState` belongs to. It will
+     * add `parent_game` as a `protected` field `this.parent_game`, and it will
+     * add itself to this game.
+     */
     constructor(parent_game: Game) {
         this.parent_game = parent_game;
+        
+        // I am an adult, so I am allowed to do this 😉
+        // Making the gamestate add itself to the
+        (<any>parent_game).makeGameStateAddSelf(this);
     }
 
     /**
