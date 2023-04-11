@@ -77,6 +77,16 @@ export default class Server {
     }
 
     /**
+     * Add a redirect to the default ("/") route.
+     * @param route The route to redirect the player to
+     */
+    public setDefaultRoute(route: `/${string}`) {
+        this.express.get("/", (req, res) => {
+            res.redirect(route);
+        })
+    }
+
+    /**
      * Makes the server listen. Function does not ever return, so should be
      * called last, of course :-p
      * @param port The port number to listen on.

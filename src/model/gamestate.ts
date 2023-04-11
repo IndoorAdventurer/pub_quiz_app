@@ -23,11 +23,12 @@ export default abstract class GameState {
      * game, **AND ADDS ITSELF TO THE GAME!**.
      * 
      * ❗**WARNING:**❗This constructor will add itself to the `parent_game`
-     * `Game` object. This means that **[A]**: you should be aware of the fact
-     * that any GameState will automatically be added to the game on
-     * construction. This means that a `GameState` object that is not part of a
-     * `Game` cannot exist. It also means that the order of construction matters
-     * much. **[B]**: you won't **EVER** have to do this manually!
+     * `Game` object. This means that **[A]**: you won't **EVER** have to do
+     * this manually! **[B]**: you should be aware of the fact that any
+     * `GameState` will automatically be added to the game on construction. This
+     * means that a `GameState` object that is not part of a `Game` cannot
+     * exist. It also means that the order of construction makes all the
+     * difference.
      * @param parent_game The `Game` object this `GameState` belongs to. It will
      * add `parent_game` as a `protected` field `this.parent_game`, and it will
      * add itself to this game.
@@ -39,7 +40,7 @@ export default abstract class GameState {
         // Making the gamestate add itself to the game, by calling a method
         // that is actually private to `Game`. This is its intended use
         // however. Doing a bit of ugglyness here for safer code elsewhere.
-        (<any>parent_game).makeGameStateAddSelf(this);
+        (parent_game as any).makeGameStateAddSelf(this);
     }
 
     /**

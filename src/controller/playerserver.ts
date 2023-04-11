@@ -29,12 +29,15 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
 
     
     constructor(game: Game, server: Server) {
+        const route = "/player";
+        
         this.game = game;
         this.server = server;
 
         game.addPlayerListener(this);
         game.addGameListener(this);
-        server.addServerListener("/player", this);
+        server.addServerListener(route, this);
+        server.setDefaultRoute(route);
     }
     
     
@@ -51,9 +54,9 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      */
     public update(val: "player" | "game", msg: PlayerDataMsg | GameDataMsg): void {
         if (val === "player")
-            this.player_update(<PlayerDataMsg>msg);
+            this.player_update(msg as PlayerDataMsg);
         else
-            this.game_update(<GameDataMsg>msg);
+            this.game_update(msg as GameDataMsg);
     }
 
     /**
@@ -75,7 +78,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
     
     //---`ServerListener`-methods:----------------------------------------------
     public express_get(req: Request, res: Response) {
-        res.send("Have to implement this method still. Also requires stuff in game.ts etc to be added. Much work!");
+        res.send(this.game.playerView);
     }
     public add_websocket(socket: WebSocket) {
         // Temp implementation! TODO REMOVE AND REDO

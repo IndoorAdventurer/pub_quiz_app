@@ -1,5 +1,8 @@
-import type GameState from "./gamestate.js";
+import GameState from "./gamestate.js";
+import WidgetSnippets from "../view/widgetsnippets.js";
 import Lobby from "./lobby.js";
+
+import { readFileSync } from "fs";
 
 /**
  * The main class managing all the data for a game. Most notably, it
@@ -14,20 +17,34 @@ export default class Game {
     private cur_state_idx: number = 0;              // index into state_sequence
     private players = new Map<string, Player>();    // stores all players
 
+    // These contain the HTML that should be sent to a client at the beginning
+    // of a new game.
+    public readonly bigScreenView: string;
+    public readonly playerView: string;
+    public readonly adminView: string;
+
     // Event listeners for two different topics:
     private gameStateListeners: GameListener[] = [];
     private playerListeners: PlayerListener[] = [];
 
     /**
      * TODO should get folder as input, such that it can loop over the dirs
-     * and find all levels.
+     * and find all levels. Or a JSON file or something.
      */
     constructor() {
+
         // `Lobby` is always the first gamestate of any game. It allows users
         // to enter the game before it really starts.
         new Lobby(this);
-        
-        // TODO!
+
+        // TODO construct the other game states :-p
+
+        this.bigScreenView =
+            this.createView("./src/view/bigscreen.html", "bigScreenWidgets");
+        this.playerView =
+            this.createView("./src/view/playerscreen.html", "playerScreenWidgets");
+        this.adminView =
+            this.createView("./src/view/adminscreen.html", "adminScreenWidgets");
     }
 
 
@@ -37,7 +54,7 @@ export default class Game {
      * ❗**WARNING**❗ This method will be called by the constructor defined
      * in `./gamestate.ts`, such that every `GameState` object will add itself
      * to the game when it is constructed. Making it protected so future me, or
-     * other contributors won't screw up, **As this method should never be
+     * other contributors won't screw up, **since this method should never be
      * called elsewhere!!!** In fact, nothing else should ever modify
      * `state_sequence`.
      * @param gs The gamestate that will add itself by calling this method from
@@ -46,14 +63,14 @@ export default class Game {
     protected makeGameStateAddSelf(gs: GameState) {
         this.state_sequence.push(gs);
     }
-    
+
     /**
      * @returns A reference to the game state that is currently active.
      */
     public currentState(): GameState {
         return this.state_sequence[this.cur_state_idx];
     }
-    
+
     /**
      * Move the game to the next state. I.e. the next question, etc.
      */
@@ -68,15 +85,15 @@ export default class Game {
         this.setCurState(this.cur_state_idx - 1);
     }
 
-    
+
     /**
      * Move the Game to the gamestate at index `idx`.
      * @param idx The index into the list of game states to move to.
      */
     public setCurState(idx: number): void {
-        if (    idx < 0 ||
-                idx >= this.state_sequence.length ||
-                this.state_sequence.length === 0) {
+        if (idx < 0 ||
+            idx >= this.state_sequence.length ||
+            this.state_sequence.length === 0) {
             console.warn("Index for state_sequence out of range. Ignoring.");
             return;
         }
@@ -143,6 +160,41 @@ export default class Game {
         for (const l of this.gameStateListeners) {
             l.update("game", msg);
         }
+    }
+
+    /**
+     * A private method that I use to load an html-file and append all the
+     * widgets to it. It only gets called in the constructor.
+     * @param file_name An html file. This file MUST include the string
+     * `<!-- !!!SPLIT!!! -->` twice. Where it occurs first, it will add the
+     * extra css, and where it occurs second it will incert the html templates
+     * and javascript IIFEs.
+     * @param xScreenWidgets The name of one of the methods of `GameState` that
+     * returns a `WidgetsSnippets` object. E.g. `"playerScreenWidgets"`
+     * @returns The html that can be sent to a client.
+     */
+    private createView<T extends keyof GameState>(
+        file_name: `${string}.html`,
+        xScreenWidgets: T): string {
+
+        // load html file:
+        const file_split = readFileSync(file_name, "utf-8")
+            .split("<!-- !!!SPLIT!!! -->");
+        if (file_split.length !== 3)
+            throw new Error("File given to createView() did not have 2 splits");
+
+        // collect all widget snippets:
+        const ws = new WidgetSnippets();
+        for (const gs of this.state_sequence)
+            ws.union((gs[xScreenWidgets] as () => WidgetSnippets)());
+
+        // insert snippets into file:
+        return file_split[0] +
+            "<style>\n" + ws.get_css() + "\n</style>\n" +
+            file_split[1] +
+            ws.get_html() +
+            "<script defer>\n" + ws.get_js() + "</script>\n" +
+            file_split[2];
     }
 
 
@@ -381,7 +433,7 @@ export type PlayerListener = Listener<"player", PlayerDataMsg>;
  * the screen of the client. Don't ever add statefull information on the client
  * side.
  */
-export interface GameDataMsg{
+export interface GameDataMsg {
     widget_name?: string,
     general_info: {
         widget_name?: string,
@@ -406,7 +458,7 @@ export interface GameDataMsg{
  * These should be sorted in descending order of score. A PlayerListener takes
  * this type as argument for its update function.
  */
-export type PlayerDataMsg =  {
+export type PlayerDataMsg = {
     name: string,
     score: number,
     isplaying: boolean
