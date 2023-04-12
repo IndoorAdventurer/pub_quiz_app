@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "CommonJS",
+      "esModuleInterop": true,
+      "outDir": "static/scripts",
+      "removeComments": true
+      
+    },
+    "include": ["src/view/client_scripts/**/*"],
+}

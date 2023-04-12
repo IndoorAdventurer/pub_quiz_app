@@ -1,4 +1,4 @@
-import GameState from "./gamestate.js";
+import type GameState from "./gamestate.js";
 import WidgetSnippets from "../view/widgetsnippets.js";
 import Lobby from "./lobby.js";
 
@@ -40,11 +40,11 @@ export default class Game {
         // TODO construct the other game states :-p
 
         this.bigScreenView =
-            this.createView("./src/view/bigscreen.html", "bigScreenWidgets");
+            this.createView("./src/view/html/bigscreen.html", "bigScreenWidgets");
         this.playerView =
-            this.createView("./src/view/playerscreen.html", "playerScreenWidgets");
+            this.createView("./src/view/html/playerscreen.html", "playerScreenWidgets");
         this.adminView =
-            this.createView("./src/view/adminscreen.html", "adminScreenWidgets");
+            this.createView("./src/view/html/adminscreen.html", "adminScreenWidgets");
     }
 
 
@@ -193,7 +193,7 @@ export default class Game {
             "<style>\n" + ws.get_css() + "\n</style>\n" +
             file_split[1] +
             ws.get_html() +
-            "<script defer>\n" + ws.get_js() + "</script>\n" +
+            "<script>\n" + ws.get_js() + "</script>\n" +
             file_split[2];
     }
 

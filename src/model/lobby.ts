@@ -17,23 +17,8 @@ export default class Lobby extends GameState {
 
     public playerScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
-            .add_html_snippet(
-`<template id="boo">
-<p>Booh!👻</p>
-</template>`
-            )
-            .add_js_snippet(
-`(function() {
-setTimeout(() => {
-    const d = document.getElementById("boo");
-    const div = document.createElement("div");
-    div.id = d.id;
-    div.innerHTML = d.innerHTML;
-    document.body.appendChild(div);
-    console.log("DONE!");
-}, 3000);
-})();`
-            );
+        .add_html_file("./src/view/html/widgets/lobby_playerscreen.html")
+        .add_js_file("./static/scripts/widgets/lobby_playerscreen.js");
     }
 
     public playerAnswer(name: string, response: string): boolean {

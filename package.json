@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc",
+    "build": "tsc && tsc --project ./tsconfig.client.json",
     "test": "jest"
   },
   "keywords": [],

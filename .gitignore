@@ -130,3 +130,8 @@ dist
 .pnp.*
 
 .vscode/
+
+static/scripts/
+
+# Where I experiment with things :-p
+playground/

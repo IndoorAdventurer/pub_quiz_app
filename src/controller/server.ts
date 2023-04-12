@@ -31,6 +31,9 @@ export default class Server {
         this.http_server = http.createServer(this.express);
         this.wss = new ws.WebSocketServer({ server: this.http_server });
 
+        // static files should go here!
+        this.express.use(express.static("static"));
+        
         this.routeMap = new Map<string, ServerListener>();
 
         this.wss.on("connection", (socket: ws.WebSocket) => {
