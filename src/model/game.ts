@@ -155,8 +155,7 @@ export default class Game {
      */
     public gameStateChange(msg: GameDataMsg): void {
         // IMPORTANT: this gives room to overwrite name:
-        msg = { widget_name: "TODO", ...msg };
-        console.warn("TODO: put GameState.name in msg!")
+        msg = { widget_name: this.currentState().name, ...msg };
         for (const l of this.gameStateListeners) {
             l.update("game", msg);
         }
@@ -202,20 +201,24 @@ export default class Game {
 
     /**
      * Adds a new player to the game. Ideally done before the first round ofc
-     * @param name The name of the player. Should be unique. Else gets padded
-     * with Xs till it is unique
+     * @param name The name of the player. Should be unique.
+     * @returns True if the player was added; False if the name was already
+     * in use.
      */
-    public addPlayer(name: string): void {
+    public addPlayer(name: string): boolean {
 
+        
         // Unique name:
-        while (this.players.has(name))
-            name += "X";
+        if (this.players.has(name))
+            return false;
 
         // Add to map, with name as key.
         this.players.set(name, { score: Game.START_SCORE, isplaying: true });
 
         // Notify of update
         this.playerChange();
+
+        return true;
     }
 
     /**

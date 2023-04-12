@@ -21,12 +21,21 @@ export default class Lobby extends GameState {
         .add_js_file("./dist/view/widget_scripts/lobby_playerscreen.js");
     }
 
+    @GameState.stateChanger
     public playerAnswer(name: string, response: string): boolean {
-        throw new Error("Method not implemented.");
+        return this.parent_game.addPlayer(name);
     }
 
     public stateMsg(): GameDataMsg {
-        throw new Error("Method not implemented.");
+        const players = this.parent_game.getAllPlayerNames();
+        const psi = {};
+        for (const p of players)
+            psi[p] = {widget_name: "wait_screen"};
+
+        return {
+            general_info: { all_players: Array.from(players) },
+            player_specific_info: psi
+        };
     }
 
 }
