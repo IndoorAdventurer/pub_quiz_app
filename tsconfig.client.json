@@ -1,11 +1,9 @@
 {
+    "extends": "./tsconfig.json",
     "compilerOptions": {
-      "target": "ES6",
-      "module": "CommonJS",
-      "esModuleInterop": true,
+      "sourceMap": false,
       "outDir": "static/scripts",
-      "removeComments": true
-      
     },
     "include": ["src/view/client_scripts/**/*"],
+    "exclude": []
 }

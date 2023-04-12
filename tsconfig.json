@@ -10,5 +10,5 @@
     },
     "include": ["src/**/*"],
     // Will be compiled to static/scripts instead. See tsconfig.client.json
-    "exclude": ["src/view/client_scripts/**/*"]
+    "exclude": ["src/view/client_scripts/**/*", "src/view/widget_scripts/**/*"]
 }

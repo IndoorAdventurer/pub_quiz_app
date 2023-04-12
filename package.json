@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "tsc && tsc --project ./tsconfig.client.json",
+    "build": "npm run build_server && npm run build_client && npm run build_widgets",
+    "build_server": "tsc",
+    "build_client": "tsc --project ./tsconfig.client.json",
+    "build_widgets": "tsc --project ./tsconfig.widgets.json",
     "test": "jest"
   },
   "keywords": [],

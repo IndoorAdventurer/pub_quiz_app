@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "CommonJS",
+      "outDir": "dist/view/widget_scripts/",
+    },
+    "include": ["src/view/widget_scripts/**/*"],
+    "exclude": []
+}

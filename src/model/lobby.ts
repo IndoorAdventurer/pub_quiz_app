@@ -18,7 +18,7 @@ export default class Lobby extends GameState {
     public playerScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
         .add_html_file("./src/view/html/widgets/lobby_playerscreen.html")
-        .add_js_file("./static/scripts/widgets/lobby_playerscreen.js");
+        .add_js_file("./dist/view/widget_scripts/lobby_playerscreen.js");
     }
 
     public playerAnswer(name: string, response: string): boolean {
