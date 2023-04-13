@@ -18,6 +18,7 @@ export default class Lobby extends GameState {
     public playerScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
         .add_html_file("./src/view/html/widgets/lobby_playerscreen.html")
+        .add_html_file("./src/view/html/widgets/wait_playerscreen.html")
         .add_js_file("./dist/view/widget_scripts/lobby_playerscreen.js");
     }
 
@@ -27,13 +28,13 @@ export default class Lobby extends GameState {
     }
 
     public stateMsg(): GameDataMsg {
-        const players = this.parent_game.getAllPlayerNames();
+        const players = Array.from(this.parent_game.getAllPlayerNames());
         const psi = {};
         for (const p of players)
             psi[p] = {widget_name: "wait_screen"};
 
         return {
-            general_info: { all_players: Array.from(players) },
+            general_info: { all_players: players },
             player_specific_info: psi
         };
     }

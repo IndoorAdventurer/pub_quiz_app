@@ -141,7 +141,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 this.game.currentState().playerAnswer(data.name, data.answer))) {
 
                 // No news is good news:
-                socket.send(JSON.stringify({ status: "failure!" }));
+                socket.send(JSON.stringify({ status: "failure" }));
                 return;
             }
         }
@@ -185,7 +185,10 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                     socket.send(JSON.stringify({ status: "failure" }));
             }
             else {
-                socket.close();
+                // If no name is given and we are not in the lobby, send the
+                // player to the authorize page, where he has to manually fill
+                // out a valid name and auth code (auth code given by admin).
+                socket.send(JSON.stringify({ widget_name: "authorize" }));
             }
         }
         catch (e: any) {
