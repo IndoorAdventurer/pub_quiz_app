@@ -1,3 +1,5 @@
+import { Player, GameListener, PlayerListener, GameDataMsg, PlayerDataMsg }
+    from "./gametypes.js";
 import type GameState from "./gamestate.js";
 import WidgetSnippets from "../view/widgetsnippets.js";
 import Lobby from "./lobby.js";
@@ -79,14 +81,6 @@ export default class Game {
     }
 
     /**
-     * Move the game to the previous state.
-     */
-    public toPrevState(): void {
-        this.setCurState(this.cur_state_idx - 1);
-    }
-
-
-    /**
      * Move the Game to the gamestate at index `idx`.
      * @param idx The index into the list of game states to move to.
      */
@@ -106,7 +100,7 @@ export default class Game {
     /**
      * Move the question to a state relative to the current state.
      * @param move_idx Specifies how much states to move along. +1 gives
-     * identical behavior to `nextState()`, -1 to `prevState()`, etc.
+     * identical behavior to `nextState()`.
      */
     public setRelativeState(move_idx: number): void {
         this.setCurState(this.cur_state_idx + move_idx);
@@ -207,7 +201,6 @@ export default class Game {
      */
     public addPlayer(name: string): boolean {
 
-        
         // Unique name:
         if (this.players.has(name))
             return false;
@@ -238,26 +231,25 @@ export default class Game {
     }
 
     /**
-     * @returns The number of Players registered
+     * Get an array of names of players.
+     * @param isplaying If `true` (default) it returns to names of all players
+     * for which the `player.isplaying` attribute is `true`. If it is `false` it
+     * returns the ones for which it is false.
+     * @returns Array of names
      */
-    public numberOfPlayers(): number {
-        return this.players.size;
+    public getPlayerNames(isplaying: boolean = true): string[] {
+        return Array.from(this.players)
+            .filter(([_, player]) => player.isplaying === isplaying)
+            .map(([name, _]) => name);
     }
 
     /**
-     * @returns All the names of players
-     */
-    public getAllPlayerNames(): Set<string> {
-        return new Set(this.players.keys());
-    }
-
-    /**
-     * @returns Array of objects containing all player data. Sorted in desceding
-     * order of score
+     * @returns Array of objects containing all player data.
+     * *Sorted in desceding order of score*
      */
     public playerDataDump(): PlayerDataMsg {
         // Get it as a list:
-        const data = Array.from(this.players.entries())
+        const data = Array.from(this.players)
             .map(([name, fields]) => ({ name, ...fields }));
 
         // Sort in descending order based on score:
@@ -266,21 +258,24 @@ export default class Game {
         return data;
     }
 
-
     /**
-     * Updates the scores of all players **Important! Use this instead of the
-     * setter for individual players when possible, because every time you call
-     * the setter a state change message has to be sent te each client!**
-     * @param map A `Map<string, number>` where keys are player names, and
-     * values are values to add to the corresponding player its score. Make sure
-     * all players specified in map actually exist!
+     * Updates the score of multiple players at once.
+     * @param map A map containing valid player names as keys, and score updates
+     * as values. How scores are actually updated, depends on the `additive`
+     * argument. It is possible to just give a single key-value pair per call,
+     * but one should consider the fact that a message is send over the internet
+     * to each client after each call to this function!
+     * @param additive If this is `true` (default), it the values found in `map`
+     * will be *added* to the existing score of the corresponding players (i.e.
+     * `new = old + update`). If it is `false`, the values found in `map` will
+     * *overwrite* the old scores (i.e. `new = update`).
      */
-    public addToScores(map: Map<string, number>): void {
+    public updateScores(map: Map<string, number>, additive: boolean = true) {
         // Iterate over map and update all values
         for (const [name, score] of map.entries()) {
             const player = this.players.get(name);
             if (player)
-                player.score += score;
+                player.score = additive ? player.score + score : score;
             else
                 console.warn("Tried updating non existing Player. Ignoring");
         }
@@ -290,58 +285,21 @@ export default class Game {
     }
 
     /**
-     * Getter method for retrieving the score field for a Player given a name
-     * @param name The name of the player to retrieve the score from 
-     * @returns The retrieved score
+     * Changes the isplaying attribute for all listed players
+     * @param players A set of players. For each, their `player.isplaying` value
+     * will be set to the `isplaying` value given as second argument to this
+     * method.
+     * @param isplaying A boolean value. True means the player is still
+     * competing for the price; false means he/she is not.
      */
-    public getScore(name: string): number | undefined {
-        const player = this.players.get(name);
-        return player?.score;
-    }
-
-    /**
-     * Getter method for retrieving the isplaying field for a Player given a key
-     * @param name The name of the player to retrieve the `isplaying` state from 
-     * @returns The `isplaying` state: a boolean that specifies if the player
-     * is still part of the playing people, or if he/she lost and is now going
-     * for the consolation price.
-     */
-    public isPlaying(name: string): boolean | undefined {
-        const player = this.players.get(name);
-        return player?.isplaying;
-    }
-
-    /**
-     * Setter method for setting the score field for a Player given a key
-     * @param name The name of the player: key to retrieve player with
-     * @param score The new score for this player.
-     */
-    public setScore(name: string, score: number): void {
-        const player = this.players.get(name);
-        if (!player) {
-            console.warn("Setter called for player that does not exist!");
-            return;
+    public setIsPlaying(players: Set<string>, isplaying: boolean) {
+        for (const name of players) {
+            const player = this.players.get(name);
+            if (player)
+                player.isplaying = isplaying;
+            else
+                console.warn("Tried updating non existing Player. Ignoring");
         }
-
-        player.score = score;
-
-        // Notify of update
-        this.playerChange();
-    }
-
-    /**
-     * Setter method for setting the isplaying field for a Player given a key
-     * @param name The name of the player: key to retrieve player with
-     * @param isplaying A boolean stating if the player is still in game or not
-     */
-    public setIsPlaying(name: string, isplaying: boolean): void {
-        const player = this.players.get(name);
-        if (!player) {
-            console.warn("Setter called for player that does not exist!");
-            return;
-        }
-
-        player.isplaying = isplaying;
 
         // Notify of update
         this.playerChange();
@@ -379,90 +337,3 @@ export default class Game {
         }
     }
 }
-
-
-/**
- * Represent a player in the game. Manages its data, such as score, etc.
- */
-interface Player {
-    score: number,          // The players score
-    isplaying: boolean      // At some point, only the top-n players will keep
-    // playing, while the left-over ones will compete  for the consolation price
-}
-
-/**
- * An interface for the observer pattern: Any class that wants to receive
- * a notification when the state of the game has changed, has to extend this
- * interface.
- * `T` should be a string specifying the topic. For example, we can have:
- * `class Foo implements Listener<"topic-x"> {}`
- */
-interface Listener<T, U = any> {
-    /**
-     * The function that should be implemented
-     * @param val a string describing the 'topic'
-     * @param msg an object describing the state. Should contain all the info
-     * the viewer would want.
-     */
-    update(val: T, msg: U): void;
-}
-
-export type GameListener = Listener<"game", GameDataMsg>;
-export type PlayerListener = Listener<"player", PlayerDataMsg>;
-
-
-/**
- * A `GameState` (see `gamestate.ts`) notifies others of changes through
- * returned objects. These objects need to abide by this interface.
- * 
- * The `general_info` field should contain an object with general information
- * about the state of the gamen.
- * 
- * The `player_specific_info` field should contain an object where each key
- * corresponds to a player in the game. The corresponding values should be
- * objects with player-specific information.
- * 
- * The `admin_info` field should contain information that only the admin (i.e.
- * the quiz master) should know. It is optional, since often `general_info` will
- * suffice.
- * 
- * The `widget_name` field should give the name of the widget that receives this
- * object on the client side. **Note that** higher specificity has priority: if
- * this field is defined in the global scope, and in the player scope, then the
- * player scope will be the widget the player sees. The same goes for admin. The
- * general info widget will be associated the big screen.
- * 
- * **IMPORTANT!** Make sure you return ALL the information you need to re-draw
- * the screen of the client. Don't ever add statefull information on the client
- * side.
- */
-export interface GameDataMsg {
-    widget_name?: string,
-    general_info: {
-        widget_name?: string,
-        [key: string]: any
-    },
-
-    admin_info?: {
-        widget_name?: string,
-        [key: string]: any
-    },
-
-    player_specific_info: {
-        [player: string]: {
-            widget_name?: string,
-            [key: string]: any
-        }
-    }
-}
-
-/**
- * Player data is an array of objects containing the information of all players.
- * These should be sorted in descending order of score. A PlayerListener takes
- * this type as argument for its update function.
- */
-export type PlayerDataMsg = {
-    name: string,
-    score: number,
-    isplaying: boolean
-}[];

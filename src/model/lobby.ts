@@ -1,6 +1,6 @@
 import GameState from "./gamestate.js";
 import WidgetSnippets from "../view/widgetsnippets.js";
-import { GameDataMsg } from "./game.js";
+import { GameDataMsg } from "./gametypes.js";
 
 /**
  * The first `GameState` of any game! Will show on the big screen a list of
@@ -28,7 +28,7 @@ export default class Lobby extends GameState {
     }
 
     public stateMsg(): GameDataMsg {
-        const players = Array.from(this.parent_game.getAllPlayerNames());
+        const players = this.parent_game.getPlayerNames();
         const psi = {};
         for (const p of players)
             psi[p] = {widget_name: "wait_screen"};
@@ -38,5 +38,4 @@ export default class Lobby extends GameState {
             player_specific_info: psi
         };
     }
-
 }

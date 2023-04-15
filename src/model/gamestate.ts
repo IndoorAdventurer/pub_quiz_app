@@ -1,4 +1,5 @@
-import Game, { GameDataMsg } from "./game.js";
+import Game from "./game.js";
+import { GameDataMsg } from "./gametypes.js";
 import WidgetSnippets from "../view/widgetsnippets.js";
 
 /**

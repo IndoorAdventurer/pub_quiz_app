@@ -1,4 +1,6 @@
-import Game, { GameDataMsg, PlayerListener, GameListener, PlayerDataMsg } from "../model/game.js";
+import Game from "../model/game.js";
+import { GameDataMsg, PlayerListener, GameListener, PlayerDataMsg }
+    from "../model/gametypes.js";
 import Server, { ServerListener } from "./server.js";
 import { Request, Response } from "express";
 import { WebSocket, MessageEvent } from "ws";
