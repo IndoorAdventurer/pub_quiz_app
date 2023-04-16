@@ -184,7 +184,10 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 if (this.game.currentState().playerAnswer(data.name, ""))
                     this.promote_and_notify(data.name, socket);
                 else
-                    socket.send(JSON.stringify({ status: "failure" }));
+                    socket.send(JSON.stringify({
+                        status: "failure",
+                        error_msg: "Name already exists!"
+                    }));
             }
             else {
                 // If no name is given and we are not in the lobby, send the
@@ -241,9 +244,10 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
         // Giving it a sparkling new onmessage handler! 😍
         socket.onmessage = (event) => this.known_client_listener(socket, event);
 
-        // Notifying it of the success!
+        // Notifying it of the success by sending name and auth_code!
         socket.send(JSON.stringify({
-            status: "success",
+            widget_name: "lobby",
+            name: name,
             auth_code: auth
         }));
     }

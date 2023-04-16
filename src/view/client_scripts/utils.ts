@@ -17,7 +17,7 @@
  */
 export function socket_listener_setup(socket: WebSocket) {
     
-    const main_div = document.getElementById("main");
+    const main_div = document.getElementsByClassName("main")[0];
 
     let old_msg: game_state_message = {widget_name: "-"};
     let new_msg: game_state_message = {widget_name: "-"};
@@ -28,7 +28,10 @@ export function socket_listener_setup(socket: WebSocket) {
 
             // Check for a failure message first:
             if ("status" in data)
+            {
                 handleStatusMsg(data);
+                return;
+            }
     
             // Its a game state message, so calling its method:
             if ("widget_name" in data) {

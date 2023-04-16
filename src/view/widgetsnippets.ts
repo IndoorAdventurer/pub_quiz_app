@@ -12,6 +12,7 @@ export default class WidgetSnippets {
 
     private html_snippets = new Set<string>();
     private js_snippets = new Set<string>();
+    private js_import_snippets = new Set<string>();
     private css_snippets = new Set<string>();
 
     /**
@@ -63,11 +64,21 @@ export default class WidgetSnippets {
      */
     public add_js_snippet(snippet: string): WidgetSnippets {
         const iife_regex =
-        /^\s*\(\s*function\s*\(\s*\)\s*{[\s\S]*}\s*\)\s*\(\s*\)\s*;\s*$/;
+        /\(\s*function\s*\(\s*\)\s*{[\s\S]*}\s*\)\s*\(\s*\)\s*;/m;
+        const import_regex = /^[ \t]*import.*;$/gm;
+
         if (!iife_regex.test(snippet))
             throw new Error("Javascript snippet not wrapped in IIFE!");
 
-        this.js_snippets.add(snippet);
+        // Add the iife to the list of snippets:
+        this.js_snippets.add(snippet.match(iife_regex)[0]);
+        
+        // Add all imports too
+        this.union_aux(
+            this.js_import_snippets,
+            new Set<string>(snippet.match(import_regex))
+        );
+
         return this;
     }
 
@@ -136,6 +147,7 @@ export default class WidgetSnippets {
     public union(other: WidgetSnippets): WidgetSnippets {
         this.union_aux(this.html_snippets, other.html_snippets);
         this.union_aux(this.js_snippets, other.js_snippets);
+        this.union_aux(this.js_import_snippets, other.js_import_snippets);
         this.union_aux(this.css_snippets, other.css_snippets);
         return this;
     }
@@ -154,7 +166,10 @@ export default class WidgetSnippets {
      * a `<script defer></script>` block!
      */
     public get_js(): string {
-        return this.concat_all(this.js_snippets);
+        const imports = Array.from(this.js_import_snippets, (imp) => {
+            return imp.replace("../client_scripts/", "./scripts/") + "\n";
+        });
+        return this.concat_all(imports) +  this.concat_all(this.js_snippets);
     }
 
     /**
@@ -186,7 +201,7 @@ export default class WidgetSnippets {
      * Private member: concats all string elements in a set with newlines
      * inbetween.
      */
-    private concat_all(set: Set<string>): string {
+    private concat_all(set: Set<string> | string[]): string {
         let ret = "";
         for (const mem of set)
             ret += mem + "\n";

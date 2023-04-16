@@ -74,6 +74,22 @@ export default class Game {
     }
 
     /**
+     * @returns The index of the current state. Use, for example, together with
+     * `numberOfStates()` to show to user that we are at state X out of Y.
+     */
+    public currentStateIdx(): number {
+        return this.cur_state_idx;
+    }
+
+    /**
+     * @returns The total number of states. Use, for example, together with
+     * `stateIdx()` to show to user that we are at state X out of Y.
+     */
+    public numberOfStates(): number {
+        return this.state_sequence.length;
+    }
+
+    /**
      * Move the game to the next state. I.e. the next question, etc.
      */
     public toNextState(): void {
@@ -107,22 +123,6 @@ export default class Game {
     }
 
     /**
-     * @returns The index of the current state. Use, for example, together with
-     * `numberOfStates()` to show to user that we are at state X out of Y.
-     */
-    public currentStateIdx(): number {
-        return this.cur_state_idx;
-    }
-
-    /**
-     * @returns The total number of states. Use, for example, together with
-     * `stateIdx()` to show to user that we are at state X out of Y.
-     */
-    public numberOfStates(): number {
-        return this.state_sequence.length;
-    }
-
-    /**
      * Add a listener to the list of objects interested in game state changes.
      * @param listener The listener to be added. It should implement
      * `listener.update("game")`
@@ -148,7 +148,7 @@ export default class Game {
      * @param msg An object describing the state of the game.
      */
     public gameStateChange(msg: GameDataMsg): void {
-        // IMPORTANT: this gives room to overwrite name:
+        // IMPORTANT: following gives room to overwrite widget_name:
         msg = { widget_name: this.currentState().name, ...msg };
         for (const l of this.gameStateListeners) {
             l.update("game", msg);
@@ -186,7 +186,7 @@ export default class Game {
             "<style>\n" + ws.get_css() + "\n</style>\n" +
             file_split[1] +
             ws.get_html() +
-            "<script>\n" + ws.get_js() + "</script>\n" +
+            "<script type=\"module\">\n" + ws.get_js() + "</script>\n" +
             file_split[2];
     }
 
@@ -234,7 +234,7 @@ export default class Game {
      * Get an array of names of players.
      * @param isplaying If `true` (default) it returns to names of all players
      * for which the `player.isplaying` attribute is `true`. If it is `false` it
-     * returns the ones for which it is false.
+     * instead returns the ones that are not playing anymore.
      * @returns Array of names
      */
     public getPlayerNames(isplaying: boolean = true): string[] {
@@ -265,7 +265,7 @@ export default class Game {
      * argument. It is possible to just give a single key-value pair per call,
      * but one should consider the fact that a message is send over the internet
      * to each client after each call to this function!
-     * @param additive If this is `true` (default), it the values found in `map`
+     * @param additive If this is `true` (default), the values found in `map`
      * will be *added* to the existing score of the corresponding players (i.e.
      * `new = old + update`). If it is `false`, the values found in `map` will
      * *overwrite* the old scores (i.e. `new = update`).
@@ -292,7 +292,7 @@ export default class Game {
      * @param isplaying A boolean value. True means the player is still
      * competing for the price; false means he/she is not.
      */
-    public setIsPlaying(players: Set<string>, isplaying: boolean) {
+    public setIsPlaying(players: Set<string> | string[], isplaying: boolean) {
         for (const name of players) {
             const player = this.players.get(name);
             if (player)

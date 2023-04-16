@@ -1,8 +1,8 @@
 import { socket_listener_setup } from "./utils.js";
 
 
-export let name: string | undefined;        // name of this player
-export let auth_code: string | undefined;   // corresponding authentication code
+let name: string | undefined;        // name of this player
+let auth_code: string | undefined;   // corresponding authentication code
 
 /**
  * Send a message over the socket in a format that suits the server.
@@ -17,6 +17,28 @@ export function socketMessage(answer: string) {
     socket.send(JSON.stringify(msg));
 }
 
+/**
+ * An unsafe version of the `socketMessage` function, which in this case
+ * allows the caller to send any object directly to the client. Will be used
+ * by the lobby widget to send the login stuff
+ * @param message The object to be sent
+ */
+export function socketMessageUnsafe(message: object) {
+    socket.send(JSON.stringify(message));
+}
+
+/**
+ * Set the name and auth code. Will now also be stored in session storage.
+ * @param new_name The name to set
+ * @param new_auth_code The auth_code to set
+ */
+export function setCreds(new_name: string, new_auth_code: string) {
+    name = new_name;
+    auth_code = new_auth_code;
+    sessionStorage.setItem("name", new_name);
+    sessionStorage.setItem("auth_code", new_auth_code);
+}
+
 // Setting up the socket:
 const socket = new WebSocket(`ws://${window.location.host}`, "player");
 socket_listener_setup(socket);
@@ -28,7 +50,7 @@ socket.onopen = (ev) => {
     const tmp_auth_code = sessionStorage.getItem("auth_code");
     if (tmp_name && tmp_auth_code) {
         name = tmp_name;
-        auth_code = auth_code;
+        auth_code = tmp_auth_code;
     }
     socketMessage("-");
 }
