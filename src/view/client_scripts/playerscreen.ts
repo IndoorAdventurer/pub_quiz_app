@@ -9,7 +9,7 @@ let auth_code: string | undefined;   // corresponding authentication code
  * @param answer The answer to send. Always has to be a string type.
  */
 export function socketMessage(answer: string) {
-    const msg = {answer: answer};
+    const msg: {[key: string]: any} = {answer: answer};
     if (name && auth_code) {
         msg["name"] = name;
         msg["auth_code"] = auth_code;

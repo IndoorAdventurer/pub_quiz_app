@@ -39,8 +39,9 @@ export default class Server {
         this.wss.on("connection", (socket: ws.WebSocket) => {
             const route = socket.protocol;
 
-            if (this.routeMap.has(route)) {
-                this.routeMap.get(route).add_websocket(socket);
+            const route_val = this.routeMap.get(route);
+            if (route_val) {
+                route_val.add_websocket(socket);
                 return;
             }
 
@@ -116,7 +117,7 @@ export interface ServerListener {
      * @param res The `Response` object gotten from the `express.get()` callback.
      * This object can be used to send a reply, with res.send();
      */
-    express_get(req: express.Request, res: express.Response);
+    express_get(req: express.Request, res: express.Response): void;
 
     /**
      * A method that gets called whenever a new socket connects to the server
@@ -131,6 +132,6 @@ export interface ServerListener {
      * called whenever the socket sends a message. This last step is not always
      * needed.
      */
-    add_websocket(socket: ws.WebSocket);
+    add_websocket(socket: ws.WebSocket): void;
 
 }

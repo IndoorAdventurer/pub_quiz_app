@@ -90,7 +90,8 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
 
         // We always send all registered clients the game state:
         for (const [name, s_data] of this.known_clients)
-            this.sendGametUpdate(name, s_data.socket, msg);
+            if (s_data.socket)
+                this.sendGametUpdate(name, s_data.socket, msg);
     }
 
     //---`ServerListener`-methods:----------------------------------------------
@@ -139,7 +140,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 "auth_code" in data &&
                 "answer" in data &&
                 this.known_clients.has(data.name) &&
-                this.known_clients.get(data.name).auth_code === data.auth_code &&
+                this.known_clients.get(data.name)?.auth_code === data.auth_code &&
                 this.game.currentState().playerAnswer(data.name, data.answer))) {
 
                 // No news is good news:
@@ -264,5 +265,5 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
 }
 
 // A map of all client sockets that have already identified themselves.
-type SocketData = { auth_code: string, socket: WebSocket }
+type SocketData = { auth_code: string, socket: WebSocket | null }
 type SocketMap = Map<string, SocketData>;

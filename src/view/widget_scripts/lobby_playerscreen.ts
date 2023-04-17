@@ -24,8 +24,10 @@ import { setCreds, socketMessageUnsafe } from "../client_scripts/playerscreen.js
             
             const main = document.getElementsByClassName("main")[0];
             const wait_screen = document.getElementById("wait_screen");
-            main.id = wait_screen.id;
-            main.innerHTML = wait_screen.innerHTML;
+            if (wait_screen) {
+                main.id = wait_screen.id;
+                main.innerHTML = wait_screen.innerHTML;
+            }
         }
     });
 

@@ -29,7 +29,7 @@ export default class Lobby extends GameState {
 
     public stateMsg(): GameDataMsg {
         const players = this.parent_game.getPlayerNames();
-        const psi = {};
+        const psi: {[key: string]: any} = {};
         for (const p of players)
             psi[p] = {widget_name: "wait_screen"};
 

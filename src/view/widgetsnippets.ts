@@ -58,7 +58,8 @@ export default class WidgetSnippets {
      * * the current active page will be globally defined as `active_page`, so
      * you can search the DOM from it instead of from `document`.
      * * **IMPORTANT:** you have to use an Immediately Invoked Function
-     * Expression (IIFE) to wrap your code in to avoid naming conflicts!
+     * Expression (IIFE) to wrap your code in to avoid naming conflicts! You are
+     * allowed to use ES6 import statements, however.
      * @returns A reference to `this` for chaining
      * @throws An error if the code is not wrapped in an IIFE!
      */
@@ -67,11 +68,12 @@ export default class WidgetSnippets {
         /\(\s*function\s*\(\s*\)\s*{[\s\S]*}\s*\)\s*\(\s*\)\s*;/m;
         const import_regex = /^[ \t]*import.*;$/gm;
 
-        if (!iife_regex.test(snippet))
+        const iife = snippet.match(iife_regex)?.[0];
+        if (!iife)
             throw new Error("Javascript snippet not wrapped in IIFE!");
 
         // Add the iife to the list of snippets:
-        this.js_snippets.add(snippet.match(iife_regex)[0]);
+        this.js_snippets.add(iife);
         
         // Add all imports too
         this.union_aux(
@@ -166,9 +168,13 @@ export default class WidgetSnippets {
      * a `<script defer></script>` block!
      */
     public get_js(): string {
+        // Getting all imports, and changing paths so it works on the client
+        // side:
         const imports = Array.from(this.js_import_snippets, (imp) => {
             return imp.replace("../client_scripts/", "./scripts/") + "\n";
         });
+
+        // Returning first all imports on separate lines and then all IIFEs:
         return this.concat_all(imports) +  this.concat_all(this.js_snippets);
     }
 
@@ -184,7 +190,7 @@ export default class WidgetSnippets {
     /**
      * Private member: loads file and calls `func`.
      */
-    private add_file(file_name: string, func: (string) => void): void {
+    private add_file(file_name: string, func: (str: any) => void): void {
         const file = readFileSync(file_name, "utf-8");
         func.call(this, file);
     }
