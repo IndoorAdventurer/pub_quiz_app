@@ -172,10 +172,17 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             const data = JSON.parse(event.data.toString());
             const state_name = this.game.currentState().name;
             if ("name" in data && "auth_code" in data) {
-                console.log("Promote and carry on?", data);
-                // Remember: has to work both for automatic reconnection as well
-                // as people who switch devices or something!
-                // I have to think about this a bit more still :-p
+                if (this.auto_promote(socket, data.name, data.auth_code) ||
+                    false /* Second option: wildcard auth code */) {
+                    const msg = this.game.getGameDataMsg();
+                    this.sendGametUpdate(data.name, socket, msg);
+                }
+                else {
+                    socket.send(JSON.stringify({
+                        status: "failure",
+                        error_msg: "Invalid name and/or auth_code received."
+                    }));
+                }
             }
             else if (!("name" in data) && state_name === "lobby") {
                 // We are in the lobby, so in that case we can treat it as any other
@@ -254,6 +261,38 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             name: name,
             auth_code: auth
         }));
+    }
+
+    /**
+     * If a client connects and sends a name and auth_code, it might be one that
+     * lost connection and now reconnects. This method checks if the name and
+     * auth code match up, and if so restores the socket in the list of known
+     * clients
+     * @param socket The socket that claims it is known
+     * @param name The name it says it has/had
+     * @param auth_code The auth code it says it received from the server
+     * @returns True if it was restored, false if not.
+     */
+    private auto_promote(socket: WebSocket, name: string, auth_code: string): boolean {
+        
+        // Check if user message makes sense:
+        const sock_dat = this.known_clients.get(name);
+        if (sock_dat?.auth_code !== auth_code)
+            return false;
+        
+        // Close socket if there is still another one:
+        sock_dat.socket?.close();
+        
+        // Add socket to list:
+        sock_dat.socket = socket;
+
+        // Remove from unknown clients:
+        let idx = this.anonymous_clients.indexOf(socket);
+        if (idx !== -1)
+            this.anonymous_clients.splice(idx, 1);
+
+
+        return true;
     }
 
     /**

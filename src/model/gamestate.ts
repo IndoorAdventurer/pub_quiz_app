@@ -117,6 +117,14 @@ export default abstract class GameState {
      */
     public abstract playerAnswer(name: string, response: string): boolean;
 
+    
+    /**
+     * Some `GameState` objects will need to be able to accept traffic from the
+     * admin. For example, one that sends answers to open questions to the admin
+     * and wants to get all the ones that are correct back.
+     * @param obj 
+     */
+    public adminAnswer(obj: {[key: string]: any}): void {};
 
     /**
      * Should return a summary of the current state in the form of a
