@@ -112,12 +112,15 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             if (idx !== -1)
                 this.anonymous_clients.splice(idx, 1);
             else {
+                // In the map we just set the socket to null, so that we keep
+                // the auth_code, and maybe can let the same client re-join
+                // later
                 const arr = Array.from(this.known_clients.entries());
                 const entry = arr.find(([_, s]) => s.socket === socket);
                 if (entry)
-                    this.known_clients.delete(entry[0]);
+                    entry[1].socket = null;
             }
-            console.log("A websocket connection was closed.");
+            console.log("A player websocket connection was closed.");
         }
 
         socket.onmessage = (event) => this.anonymous_client_listener(socket, event);

@@ -1,3 +1,6 @@
+<!-- This template uses the SPLIT comments you see below to insert extra
+contents. The first one is used to insert css, and the second is used to insert
+first a bunch of <template> elements, and then scripts. -->
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -6,9 +9,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- !!!SPLIT!!! -->
 <title>Big Screen</title>
+<script type="module" src="scripts/playerscreen.js" defer></script>
 </head>
 <body>
-This is the Big Screen!
+<!-- The main div. Its contents will be determined by the GameState that is
+currently active. -->
+<div class="main"></div>
 <!-- !!!SPLIT!!! -->
 </body>
 </html>

@@ -12,7 +12,9 @@ export default class Lobby extends GameState {
     public readonly name = "lobby";
 
     public bigScreenWidgets(): WidgetSnippets {
-        return new WidgetSnippets();
+        return new WidgetSnippets()
+        .add_html_file("./src/view/html/widgets/lobby_bigscreen.html")
+        .add_js_file("./dist/view/widget_scripts/lobby_bigscreen.js");
     }
 
     public playerScreenWidgets(): WidgetSnippets {
