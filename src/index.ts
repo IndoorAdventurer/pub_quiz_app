@@ -5,7 +5,7 @@ import BigScreenServer from "./controller/bigscreenserver.js";
 
 const g = new Game();
 const s = new Server();
-const pc = new PlayerServer(g, s);
+const ps = new PlayerServer(g, s);
 const bss = new BigScreenServer(g, s);
 console.log("Number of game states: ", g.numberOfStates());
 console.log("Current game state: ", g.currentState().name)

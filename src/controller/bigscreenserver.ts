@@ -7,9 +7,9 @@ import { WebSocket } from "ws";
 
 
 /**
- * This class is responsible from sending data to Big Screen clients. These are
- * are passive web pages that are displayed on a big screen (e.g. a TV) and
- * show, for example, the question, or a video fragment, etc.
+ * This class is responsible for sending data to Big Screen clients. These are
+ * passive web pages that are displayed on a big screen (e.g. a TV) and show,
+ * for example, the question, or a video fragment, etc.
  * 
  * This class serves as a middleman between the `Game` object, and the big screen
  * client.
@@ -70,7 +70,8 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
      * @param msg An informative message describing the state of the game.
      */
     private game_update(msg: GameDataMsg) {
-        console.log(msg);
+        for (const socket of this.clients)
+            this.sendGameUpdate(socket, msg);
     }
 
     //---`ServerListener`-methods:----------------------------------------------
@@ -92,7 +93,7 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
             console.log("A bigscreen websocket connection was closed.");
         }
 
-        const msg = this.game.currentState().stateMsg();
+        const msg = this.game.getGameDataMsg();
         this.sendGameUpdate(socket, msg);
     }
 

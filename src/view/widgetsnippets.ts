@@ -29,8 +29,8 @@ export default class WidgetSnippets {
      * @returns A reference to `this` for chaining
      * @throws An error if the html code is not wrapped in a template!
      */
-    public add_html_snippet(snippet: `<template${string}`): WidgetSnippets {
-        const template_regex = /^\s*<template[\s\S]*<\/template>\s*$/;
+    public add_html_snippet(snippet: `<template id=${string}`): WidgetSnippets {
+        const template_regex = /^\s*<template id=[\s\S]*<\/template>\s*$/;
         if (!template_regex.test(snippet))
             throw new Error("Found widget that is not in template!");
         this.html_snippets.add(snippet);

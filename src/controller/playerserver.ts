@@ -180,7 +180,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             else if (!("name" in data) && state_name === "lobby") {
                 // We are in the lobby, so in that case we can treat it as any other
                 // client and give it a state message.
-                const msg = this.game.currentState().stateMsg();
+                const msg = this.game.getGameDataMsg();
                 socket.send(this.anon_lobby_msg(msg));
             }
             else if ("name" in data && state_name === "lobby") {

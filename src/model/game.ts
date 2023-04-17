@@ -144,6 +144,21 @@ export default class Game {
     }
 
     /**
+     * Ask for a game data message outside of an update. For example, if
+     * a new client just joined and needs to get the most up-to-date info.
+     * 
+     * **IMPORTANT** Do not call `currentState().stateMsg()` directly. Use this.
+     * @returns A message describing the current state of the game.
+     */
+    public getGameDataMsg(): GameDataMsg {
+        const cur_state = this.currentState()
+        return {
+            widget_name: cur_state.name,
+            ...cur_state.stateMsg()
+        };
+    }
+    
+    /**
      * Notifies all listeners of a change in game state!
      * @param msg An object describing the state of the game.
      */
