@@ -208,7 +208,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             }
         }
         catch (e: any) {
-            console.warn("anonymous_client_listener threw error!", e);
+            console.warn("anonymous player threw error!", e);
             socket.close();
         }
     }
