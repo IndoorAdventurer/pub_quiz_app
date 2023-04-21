@@ -23,7 +23,7 @@ export function socketMessage(answer: string) {
  * by the lobby widget to send the login stuff
  * @param message The object to be sent
  */
-export function socketMessageUnsafe(message: object) {
+export function socketMessageUnsafe(message: {[key: string]: any}) {
     socket.send(JSON.stringify(message));
 }
 
@@ -58,36 +58,3 @@ socket.onopen = (ev) => {
 document.addEventListener("player_state", (event) => {
     // TODO (this is for showing your own score)
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-EXAMPLE IN CHROME:
-const s = new WebSocket(`ws://${window.location.host}`, "player");
-undefined
-s.addEventListener("message", (event) => console.log("Msg!: ", event.data));
-undefined
-s.send(JSON.stringify({hi: "hello?"}));
-undefined
-VM746:1 Msg!:  {"widget_name":"lobby","general_info":{"all_players":{}}}
-s.send(JSON.stringify({hi: "hello?"}));
-undefined
-VM746:1 Msg!:  {"widget_name":"lobby","general_info":{"all_players":{}}}
-s.send(JSON.stringify({name: "vincent"}));
-undefined
-VM746:1 Msg!:  {"status":"success","auth_code":"90266"}
-s.send(JSON.stringify({name: "vincent"}));
-undefined 
-*/

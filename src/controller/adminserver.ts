@@ -4,8 +4,6 @@ import { GameDataMsg, PlayerListener, GameListener, PlayerDataMsg }
 import Server, { ServerListener } from "./server.js";
 import { Request, Response } from "express";
 import { WebSocket, MessageEvent } from "ws";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 
 
 /**
@@ -108,8 +106,12 @@ export default class AdminServer implements PlayerListener, GameListener, Server
      * @param event The event containing the message
      */
     private known_client_listener(socket: WebSocket, event: MessageEvent) {
-        console.log("TODO");
-        console.log(event.data);
+        try {
+            console.log("TODO");
+            console.log(event.data);
+        } catch (e: any) {
+            console.warn("Known admin threw an error!");
+        }
     }
     
     /**
@@ -136,6 +138,8 @@ export default class AdminServer implements PlayerListener, GameListener, Server
 
                 socket.onmessage = (ev) => this.known_client_listener(socket, ev);
 
+                socket.send(JSON.stringify({status: "logged in"}));
+                
                 const msg = this.game.getGameDataMsg();
                 this.sendGameUpdate(socket, msg);
             }

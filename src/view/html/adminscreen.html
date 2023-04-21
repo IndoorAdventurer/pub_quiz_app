@@ -1,3 +1,6 @@
+<!-- This template uses the SPLIT comments you see below to insert extra
+contents. The first one is used to insert css, and the second is used to insert
+first a bunch of <template> elements, and then scripts. -->
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -6,9 +9,85 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- !!!SPLIT!!! -->
 <title>Admin Screen</title>
+<script type="module" src="scripts/adminscreen.js" defer></script>
 </head>
 <body>
-This is the Admin screen!
+
+<!-- Logging in the admin: -->
+<div id="login_panel">
+    <h3>Admin Login</h3>
+    <label for="login_panel_name">Name: </label>
+    <input type="text" id="login_panel_name">
+    <label for="login_panel_auth_code">Authorization code: </label>
+    <input type="text" id="login_panel_auth_code">
+    <button id="login_panel_btn">Login</button>
+</div>
+
+<!-- Used to navigate through the game. I.e. to next question, etc -->
+<div id="game_nav">
+    <h3>Game Navigation</h3>
+    <button id="game_nav_prev">Previous</button>
+    <button id="game_nav_next">Next</button>
+    <span>||| or |||</span>
+    <input type="number" id="game_nav_num">
+    <label for="game_nav_relative">Set relative:</label>
+    <input type="checkbox" id="game_nav_relative">
+    <button id="game_nav_set">Set</button>
+</div>
+
+<!-- The main div. Its contents will be determined by the GameState that is
+currently active. Using the same name as I did for the big screen and player
+screen files. There this names makes a bit more sense, as it is the only thing
+displayed... -->
+<div class="main"><p>Waiting for login ... ⌛</p></div>
+
+<div id="player_data">
+    <h3>Player Data</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th><th>Score</th><th>Is playing</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div id="logs">
+    <h3>Logs</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th><th>Message</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
 <!-- !!!SPLIT!!! -->
+
+<style>
+    div {
+        margin: .5rem;
+        padding: .5rem;
+        border: 1px solid grey;
+    }
+    
+    table, th, td{
+        border: 2px solid gray;
+        border-collapse: collapse;
+        padding: .3rem;
+    }
+    thead * {
+        font-weight: bold;
+    }
+    tbody * {
+        font-weight: normal;
+    }
+</style>
+
 </body>
 </html>

@@ -1,6 +1,6 @@
 import Game from "./model/game.js";
 import Server from "./controller/server.js";
-import AdminServer from "./controller/adminscreen.js";
+import AdminServer from "./controller/adminserver.js";
 import PlayerServer from "./controller/playerserver.js";
 import BigScreenServer from "./controller/bigscreenserver.js";
 

@@ -100,7 +100,7 @@ export default abstract class GameState {
     public adminScreenWidgets(): WidgetSnippets {
         const ws = new WidgetSnippets();
         ws.add_html_snippet(
-        `<template id="nothing">
+        `<template id="${this.name}">
         <p>Nothing to display</p>
         </template>
         `);
@@ -114,6 +114,7 @@ export default abstract class GameState {
      * that players total using `Game.addToScores()`.
      * @param name The name of the player
      * @param response The response the player gave
+     * @returns True if succesfully handled message. False otherwise
      */
     public abstract playerAnswer(name: string, response: string): boolean;
 
