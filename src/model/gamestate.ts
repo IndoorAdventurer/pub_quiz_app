@@ -98,13 +98,7 @@ export default abstract class GameState {
      * See the `WidgetSnipptes` class for more information!
      */
     public adminScreenWidgets(): WidgetSnippets {
-        const ws = new WidgetSnippets();
-        ws.add_html_snippet(
-        `<template id="${this.name}">
-        <p>Nothing to display</p>
-        </template>
-        `);
-        return ws;
+        return new WidgetSnippets();
     }
 
     /**

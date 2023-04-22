@@ -8,9 +8,9 @@ describe("Basic snippet functionality", () => {
         let w1 = new WidgetSnippets();
         let w2 = new WidgetSnippets();
 
-        w1.add_html_snippet("<template id=\"id\">A</template>")
-          .add_html_snippet("<template id=\"id\">B</template>")
-          .add_html_snippet("<template id=\"id\">C</template>")
+        w1.add_html_snippet("<template class=\"cls\">A</template>")
+          .add_html_snippet("<template class=\"cls\">B</template>")
+          .add_html_snippet("<template class=\"cls\">C</template>")
           .add_css_snippet("css1")
           .add_css_snippet("css2")
           .add_css_snippet("css3")
@@ -18,9 +18,9 @@ describe("Basic snippet functionality", () => {
           .add_js_snippet("(function(){y})();")
           .add_js_snippet("(function(){z})();");
         
-          w2.add_html_snippet("<template id=\"id\">X</template>")
-          .add_html_snippet("<template id=\"id\">Y</template>")
-          .add_html_snippet("<template id=\"id\">Z</template>")
+          w2.add_html_snippet("<template class=\"cls\">X</template>")
+          .add_html_snippet("<template class=\"cls\">Y</template>")
+          .add_html_snippet("<template class=\"cls\">Z</template>")
           .add_css_snippet("css4")
           .add_css_snippet("css5")
           .add_css_snippet("css6")
@@ -37,19 +37,19 @@ describe("Basic snippet functionality", () => {
         const css = w1.get_css();
         const css2 = w2.get_css();
 
-        expect(html.includes("<template id=\"id\">A</template>")).toBe(true);
-        expect(html.includes("<template id=\"id\">B</template>")).toBe(true);
-        expect(html.includes("<template id=\"id\">C</template>")).toBe(true);
-        expect(html.includes("<template id=\"id\">X</template>")).toBe(true);
-        expect(html.includes("<template id=\"id\">Y</template>")).toBe(true);
-        expect(html.includes("<template id=\"id\">Z</template>")).toBe(true);
+        expect(html.includes("<template class=\"cls\">A</template>")).toBe(true);
+        expect(html.includes("<template class=\"cls\">B</template>")).toBe(true);
+        expect(html.includes("<template class=\"cls\">C</template>")).toBe(true);
+        expect(html.includes("<template class=\"cls\">X</template>")).toBe(true);
+        expect(html.includes("<template class=\"cls\">Y</template>")).toBe(true);
+        expect(html.includes("<template class=\"cls\">Z</template>")).toBe(true);
 
-        expect(html2.includes("<template id=\"id\">A</template>")).toBe(false);
-        expect(html2.includes("<template id=\"id\">B</template>")).toBe(false);
-        expect(html2.includes("<template id=\"id\">C</template>")).toBe(false);
-        expect(html2.includes("<template id=\"id\">X</template>")).toBe(true);
-        expect(html2.includes("<template id=\"id\">Y</template>")).toBe(true);
-        expect(html2.includes("<template id=\"id\">Z</template>")).toBe(true);
+        expect(html2.includes("<template class=\"cls\">A</template>")).toBe(false);
+        expect(html2.includes("<template class=\"cls\">B</template>")).toBe(false);
+        expect(html2.includes("<template class=\"cls\">C</template>")).toBe(false);
+        expect(html2.includes("<template class=\"cls\">X</template>")).toBe(true);
+        expect(html2.includes("<template class=\"cls\">Y</template>")).toBe(true);
+        expect(html2.includes("<template class=\"cls\">Z</template>")).toBe(true);
 
         expect(css.includes("css1")).toBe(true);
         expect(css.includes("css2")).toBe(true);
@@ -99,9 +99,9 @@ describe("Basic snippet functionality", () => {
         let w1 = new WidgetSnippets();
         let w2 = new WidgetSnippets();
 
-        w1.add_html_snippet("<template id=\"id\">A</template>")
-          .add_html_snippet("<template id=\"id\">B</template>")
-          .add_html_snippet("<template id=\"id\">C</template>")
+        w1.add_html_snippet("<template class=\"cls\">A</template>")
+          .add_html_snippet("<template class=\"cls\">B</template>")
+          .add_html_snippet("<template class=\"cls\">C</template>")
           .add_css_snippet("css1")
           .add_css_snippet("css2")
           .add_css_snippet("css3")
@@ -109,7 +109,7 @@ describe("Basic snippet functionality", () => {
           .add_js_snippet("(function(){y})();")
           .add_js_snippet("(function(){z})();");
         
-          w2.add_html_snippet("<template id=\"id\">A</template>")
+          w2.add_html_snippet("<template class=\"cls\">A</template>")
           .add_css_snippet("css3")
           .add_js_snippet("(function(){x})();");
         
@@ -117,7 +117,7 @@ describe("Basic snippet functionality", () => {
         const js = w1.get_js();
         const css = w1.get_css();
 
-        w1.add_html_snippet("<template id=\"id\">B</template>")
+        w1.add_html_snippet("<template class=\"cls\">B</template>")
           .add_css_snippet("css2")
           .add_js_snippet("(function(){z})();");
         

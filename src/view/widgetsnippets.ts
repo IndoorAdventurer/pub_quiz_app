@@ -20,17 +20,17 @@ export default class WidgetSnippets {
      * @param snippet snippet of html. Each html snippet has to define a single
      * page as an html template. **So it has to be formatted as follows**:
      * ```html
-     * <template id="some_id">
+     * <template class="widget_name">
      * <!-- your code here -->
      * </template>
      * ```
-     * `some_id` should be the `name` attribute of the `GameState` object that
-     * sends an update to the client!
+     * `widget_name` should correspond to the `widget_name` attribute of the
+     * `GameState` object that sends an update to the client!
      * @returns A reference to `this` for chaining
      * @throws An error if the html code is not wrapped in a template!
      */
-    public add_html_snippet(snippet: `<template id=${string}`): WidgetSnippets {
-        const template_regex = /^\s*<template id=[\s\S]*<\/template>\s*$/;
+    public add_html_snippet(snippet: `<template class=${string}`): WidgetSnippets {
+        const template_regex = /^\s*<template class=[\s\S]*<\/template>\s*$/;
         if (!template_regex.test(snippet))
             throw new Error("Found widget that is not in template!");
         this.html_snippets.add(snippet);
@@ -45,7 +45,7 @@ export default class WidgetSnippets {
      * incomming messages as follows:
      * ```javascript
      * (function() {
-     * document.addEventListener("some_name", (ev) => {
+     * document.addEventListener("widget_name", (ev) => {
      * const obj = ev.detail;
      * // modify page described in template with id "some_id", using the info
      * // in obj.
@@ -53,8 +53,8 @@ export default class WidgetSnippets {
      * // other stuff
      * })();
      * ```
-     * * `some_name` should be the `name` attribute of the `GameState` object
-     * that sends an update to the client!.
+     * * `widget_name` should be the `widget_name` attribute of the `GameState`
+     * object that sends an update to the client!.
      * * the current active page will be globally defined as `active_page`, so
      * you can search the DOM from it instead of from `document`.
      * * **IMPORTANT:** you have to use an Immediately Invoked Function

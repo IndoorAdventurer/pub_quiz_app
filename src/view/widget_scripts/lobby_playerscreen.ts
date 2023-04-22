@@ -22,10 +22,10 @@ import { setCreds, socketMessageUnsafe } from "../client_scripts/playerscreen.js
         if (data.new_msg.name && data.new_msg.auth_code) {
             setCreds(data.new_msg.name, data.new_msg.auth_code);
             
-            const main = document.getElementsByClassName("main")[0];
-            const wait_screen = document.getElementById("wait_screen");
-            if (wait_screen) {
-                main.id = wait_screen.id;
+            const main = document.getElementById("main");
+            const wait_screen = document.getElementsByClassName("wait_screen")[0];
+            if (main && wait_screen) {
+                main.className = wait_screen.className;
                 main.innerHTML = wait_screen.innerHTML;
             }
         }

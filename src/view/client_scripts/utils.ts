@@ -17,7 +17,7 @@
  */
 export function socket_listener_setup(socket: WebSocket) {
     
-    const main_div = document.getElementsByClassName("main")[0];
+    const main_div = document.getElementById("main");
 
     let old_msg: game_state_message = {widget_name: "-"};
     let new_msg: game_state_message = {widget_name: "-"};
@@ -92,14 +92,20 @@ export function socket_listener_setup(socket: WebSocket) {
         old_msg = new_msg;
         new_msg = data;
         
-        const w_name = (new_msg.widget_name as string);
+        const w_name = new_msg.widget_name;
 
         // If the active page (check with id) is not the one the message
         // is addressed to, change it to that page (=template)
-        if (main_div && new_msg.widget_name !== main_div.id) {
-            const template = document.getElementById(w_name);
-            main_div.id = (template as HTMLElement).id;
-            main_div.innerHTML = (template as HTMLElement).innerHTML;
+        if (main_div && new_msg.widget_name !== main_div.className) {
+            const template = document.getElementsByClassName(w_name)[0];
+            if (template) {
+                main_div.className = template.className;
+                main_div.innerHTML = template.innerHTML;
+            }
+            else {
+                main_div.className = "none";
+                main_div.innerHTML = "😴";
+            }
         }
 
         // Emit an event that the relevant widget script can receive:

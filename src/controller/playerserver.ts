@@ -19,7 +19,6 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
 
 
     private game: Game;
-    private server: Server;
 
     // New websocket clients get stored in `anonymous_clients` first.
     private anonymous_clients: WebSocket[] = [];
@@ -39,7 +38,6 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
         const route = "/player";
 
         this.game = game;
-        this.server = server;
 
         game.addPlayerListener(this);
         game.addGameListener(this);

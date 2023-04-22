@@ -17,7 +17,6 @@ import { WebSocket } from "ws";
 export default class BigScreenServer implements PlayerListener, GameListener, ServerListener {
     
     private game: Game;
-    private server: Server;
 
     private clients: WebSocket[] = [];
 
@@ -31,7 +30,6 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
         const route = "/bigscreen";
 
         this.game = game;
-        this.server = server;
 
         game.addPlayerListener(this);
         game.addGameListener(this);

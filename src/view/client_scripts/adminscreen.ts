@@ -35,6 +35,6 @@ document.addEventListener("server_status", (ev) => {
     // the login div:
     if (data.status && data.status === "logged in") {
         const login_div = document.getElementById("login_panel");
-        login_div?.parentElement?.removeChild(login_div);
+        login_div?.remove();
     }
 })

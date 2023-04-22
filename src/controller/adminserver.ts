@@ -22,7 +22,6 @@ export default class AdminServer implements PlayerListener, GameListener, Server
 
 
     private game: Game;
-    private server: Server;
 
     private clients: WebSocket[] = [];
     private name: string;
@@ -37,7 +36,6 @@ export default class AdminServer implements PlayerListener, GameListener, Server
         const route = "/admin";
 
         this.game = game;
-        this.server = server;
 
         this.name = name;
         this.auth_code = auth_code;
@@ -45,7 +43,6 @@ export default class AdminServer implements PlayerListener, GameListener, Server
         game.addPlayerListener(this);
         game.addGameListener(this);
         server.addServerListener(route, this);
-        server.setDefaultRoute(route);
     }
 
     //---`GameListener`/`PlayerListener`-methods:-------------------------------
