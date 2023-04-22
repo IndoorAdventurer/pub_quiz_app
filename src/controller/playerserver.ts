@@ -69,6 +69,15 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      * @param msg An array containing all information of all players.
      */
     private player_update(msg: PlayerDataMsg) {
+        // First checking if we have to remove clients:
+        if (msg.length !== this.known_clients.size) {
+            const names = new Set(this.known_clients.keys());
+            for (const p of msg)
+                names.delete(p.name);
+            for (const n of names)
+                this.known_clients.delete(n);
+        }
+
         console.log(msg);
     }
 

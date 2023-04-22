@@ -55,6 +55,6 @@ socket.onopen = (ev) => {
     socketMessage("-");
 }
 
-document.addEventListener("player_state", (event) => {
+document.addEventListener("player_update", (event) => {
     // TODO (this is for showing your own score)
 });

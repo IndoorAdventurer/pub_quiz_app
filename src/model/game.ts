@@ -231,7 +231,7 @@ export default class Game {
 
     /**
      * Removes the specified player
-     * @param idx 
+     * @param name The name of the player to be removed
      */
     public removePlayer(name: string): void {
         if (!this.players.has(name)) {

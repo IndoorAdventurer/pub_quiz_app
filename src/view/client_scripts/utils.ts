@@ -11,7 +11,7 @@
  * page (template) and then emitting a message with with the received data to
  * that can be picked up by the script associated with that template;
  * * Correctly handle player_update messages. (These need a `player_update`
- * field in order to be recognized). These will emit a player_state event which
+ * field in order to be recognized). These will emit a player_update event which
  * also contains the received data.
  * @param socket The socket to which the `onmessage` listener is added.
  */
@@ -41,7 +41,7 @@ export function socket_listener_setup(socket: WebSocket) {
 
             // Player updates should be handled by specific handler:
             if ("player_update" in data) {
-                const ev = new CustomEvent("player_state", {detail: data});
+                const ev = new CustomEvent("player_update", {detail: data});
                 document.dispatchEvent(ev);
                 return;
             }
@@ -56,7 +56,7 @@ export function socket_listener_setup(socket: WebSocket) {
             if (e instanceof Error) {
                 const error_div = document.createElement("div");
                 error_div.className = "error_popup";
-                error_div.innerText = e.message;
+                error_div.textContent = e.message;
                 main_div?.insertAdjacentElement("beforebegin", error_div);
                 setTimeout(() => error_div.remove(), 15000);
             }

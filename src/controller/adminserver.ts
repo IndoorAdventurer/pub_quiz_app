@@ -4,6 +4,7 @@ import { GameDataMsg, PlayerListener, GameListener, PlayerDataMsg }
 import Server, { ServerListener } from "./server.js";
 import { Request, Response } from "express";
 import { WebSocket, MessageEvent } from "ws";
+import PlayerServer from "./playerserver.js";
 
 
 /**
@@ -22,6 +23,7 @@ export default class AdminServer implements PlayerListener, GameListener, Server
 
 
     private game: Game;
+    private player_server: PlayerServer;
 
     private clients: WebSocket[] = [];
     private name: string;
@@ -32,10 +34,13 @@ export default class AdminServer implements PlayerListener, GameListener, Server
      * @param game The Game to listen to, and interact with
      * @param server The server that gives new socket connection etc
      */
-    constructor(game: Game, server: Server, name: string, auth_code: string) {
+    constructor(game: Game, server: Server, player_server: PlayerServer,
+        name: string, auth_code: string) {
+
         const route = "/admin";
 
         this.game = game;
+        this.player_server = player_server
 
         this.name = name;
         this.auth_code = auth_code;
@@ -65,10 +70,12 @@ export default class AdminServer implements PlayerListener, GameListener, Server
 
     /**
      * Gets called by `update()` whenever there is an update regarding players.
+     * In the case of admin just sends all the data over :-)
      * @param msg An array containing all information of all players.
      */
     private player_update(msg: PlayerDataMsg) {
-        console.log(msg);
+        for (const socket of this.clients)
+            this.sendPlayerUpdate(socket, msg);
     }
 
     /**
@@ -104,13 +111,28 @@ export default class AdminServer implements PlayerListener, GameListener, Server
      */
     private known_client_listener(socket: WebSocket, event: MessageEvent) {
         try {
-            console.log("TODO");
-            console.log(event.data);
+            const data = JSON.parse(event.data.toString());
+            switch (data.action) {
+                case "set_score":
+                    if ("player" in data && "score" in data)
+                        this.game.updateScores(
+                            new Map([[data.player, data.score]]), false);
+                    return;
+                case "set_isplaying":
+                    if ("player" in data && "isplaying" in data)
+                        this.game.setIsPlaying(
+                            new Set([data.player]), data.isplaying);
+                    return;
+                case "remove_player":
+                    if ("player" in data)
+                        this.game.removePlayer(data.player);
+                    return;
+            }
         } catch (e: any) {
             console.warn("Known admin threw an error!");
         }
     }
-    
+
     /**
      * Listens for messages from clients that connected but did authorize
      * themselves yet. Sees if they sent valid credentials and give them
@@ -135,10 +157,14 @@ export default class AdminServer implements PlayerListener, GameListener, Server
 
                 socket.onmessage = (ev) => this.known_client_listener(socket, ev);
 
-                socket.send(JSON.stringify({status: "logged in"}));
-                
-                const msg = this.game.getGameDataMsg();
-                this.sendGameUpdate(socket, msg);
+                // Sending bunch of update messages directly:
+                socket.send(JSON.stringify({ status: "logged in" }));
+
+                const msgGame = this.game.getGameDataMsg();
+                this.sendGameUpdate(socket, msgGame);
+
+                const msgPlayer = this.game.playerDataDump();
+                this.sendPlayerUpdate(socket, msgPlayer);
             }
             else
                 socket.send(JSON.stringify({
@@ -165,6 +191,10 @@ export default class AdminServer implements PlayerListener, GameListener, Server
             admin_info: ai,
             general_info: gi
         }));
+    }
+
+    private sendPlayerUpdate(socket: WebSocket, msg: PlayerDataMsg) {
+        socket.send(JSON.stringify({ player_update: msg }));
     }
 
 }
