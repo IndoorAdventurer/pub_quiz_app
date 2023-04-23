@@ -39,7 +39,7 @@ document.addEventListener("server_status", (ev) => {
     }
 })
 
-// Add event listener for player updates and updating "player_data" div:
+// Add event listener for player updates and that redraws "player_data" div:
 document.addEventListener("player_update", (ev) => {
     const player_data_tbody =
         document.getElementById("player_data")?.getElementsByTagName("tbody")[0];
@@ -53,6 +53,12 @@ document.addEventListener("player_update", (ev) => {
     player_data_tbody.parentElement?.replaceChild(clone, player_data_tbody);
 });
 
+/**
+ * Creates a single row for the `player_data` table, corrseponding to a single
+ * player.
+ * @param row_data The data to put into the row
+ * @returns The row, such that you can do: `table.appendChild(row)`
+ */
 function create_player_row(row_data: player_data_type): HTMLTableRowElement {
     // First col is name:
     const tr = document.createElement("tr");

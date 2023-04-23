@@ -74,11 +74,16 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             const names = new Set(this.known_clients.keys());
             for (const p of msg)
                 names.delete(p.name);
-            for (const n of names)
+            for (const n of names) {
+                this.known_clients.get(n)?.socket?.close();
                 this.known_clients.delete(n);
+            }
         }
 
-        console.log(msg);
+        // Send the player its most up to date score:
+        for (const p of msg) {
+            this.sendPlayerUpdate(p.name, p.score);
+        }
     }
 
     /**
@@ -98,7 +103,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
         // We always send all registered clients the game state:
         for (const [name, s_data] of this.known_clients)
             if (s_data.socket)
-                this.sendGametUpdate(name, s_data.socket, msg);
+                this.sendGameUpdate(name, s_data.socket, msg);
     }
 
     //---`ServerListener`-methods:----------------------------------------------
@@ -180,10 +185,8 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             const state_name = this.game.currentState().name;
             if ("name" in data && "auth_code" in data) {
                 if (this.auto_promote(socket, data.name, data.auth_code) ||
-                    false /* Second option: wildcard auth code */) {
-                    const msg = this.game.getGameDataMsg();
-                    this.sendGametUpdate(data.name, socket, msg);
-                }
+                    false /* Second option: wildcard auth code */)
+                    this.sendDualUpdate(data.name, socket);
                 else {
                     socket.send(JSON.stringify({
                         status: "failure",
@@ -199,8 +202,10 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             }
             else if ("name" in data && state_name === "lobby") {
                 // If the lobby returns true, the player is added to the game! :-D
-                if (this.game.currentState().playerAnswer(data.name, ""))
+                if (this.game.currentState().playerAnswer(data.name, "")) {
                     this.promote_and_notify(data.name, socket);
+                    this.sendDualUpdate(data.name, socket);
+                }
                 else
                     socket.send(JSON.stringify({
                         status: "failure",
@@ -226,7 +231,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      * @param socket The socket of the client to send the data to
      * @param msg The update message
      */
-    private sendGametUpdate(name: string, socket: WebSocket, msg: GameDataMsg) {
+    private sendGameUpdate(name: string, socket: WebSocket, msg: GameDataMsg) {
         const psiArr = msg.player_specific_info;
         const psi = name in psiArr ? psiArr[name] : {};
         const wn = "widget_name" in psi ? psi.widget_name : msg.widget_name;
@@ -235,6 +240,31 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             general_info: msg.general_info,
             player_info: psi
         }));
+    }
+
+    /**
+     * Send the player an update about its own score.
+     * @param name The name of the player to send the message to
+     * @param score The score to send to the player
+     */
+    private sendPlayerUpdate(name: string, score: number) {
+        this.known_clients.get(name)?.socket?.send(JSON.stringify({
+            player_update: {score: score}
+        }));
+    }
+
+    /**
+     * Send both game update as well as player update at once. E.g. on first
+     * connection
+     * @param name Name of the player
+     * @param socket Socket to send it to
+     */
+    private sendDualUpdate(name: string, socket: WebSocket) {
+        const msgGame = this.game.getGameDataMsg();
+        this.sendGameUpdate(name, socket, msgGame);
+        const score = this.game.playerDataDump()
+            .find((p) => p.name === name)?.score;
+        this.sendPlayerUpdate(name, score || 0);
     }
 
     /**

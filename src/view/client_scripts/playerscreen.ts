@@ -55,6 +55,14 @@ socket.onopen = (ev) => {
     socketMessage("-");
 }
 
+// Update the info the player sees about him/herself
 document.addEventListener("player_update", (event) => {
-    // TODO (this is for showing your own score)
+    const data = (event as CustomEvent).detail.player_update;
+    console.log(data);
+    const name_div = document.getElementById("player_name");
+    const score_div = document.getElementById("player_score");
+    if (name_div && score_div) {
+        name_div.textContent = name || '-';
+        score_div.textContent = data.score.toString() || '-';
+    }
 });

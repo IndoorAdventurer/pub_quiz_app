@@ -17,6 +17,7 @@ import { WebSocket } from "ws";
 export default class BigScreenServer implements PlayerListener, GameListener, ServerListener {
     
     private game: Game;
+    private top_n: number;
 
     private clients: WebSocket[] = [];
 
@@ -25,11 +26,13 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
      * Constructor. Sets up all the infrastructure.
      * @param game The Game to listen to, and interact with
      * @param server The server that gives new socket connection etc
+     * @param top_n For displaying the top `n` players and their score at top
      */
-    constructor(game: Game, server: Server) {
+    constructor(game: Game, server: Server, top_n: number = 3) {
         const route = "/bigscreen";
 
         this.game = game;
+        this.top_n = top_n;
 
         game.addPlayerListener(this);
         game.addGameListener(this);
@@ -59,7 +62,8 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
      * @param msg An array containing all information of all players.
      */
     private player_update(msg: PlayerDataMsg) {
-        console.log(msg);
+        for (const socket of this.clients)
+            this.sendPlayerUpdate(socket, msg);
     }
     
     /**
@@ -91,8 +95,10 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
             console.log("A bigscreen websocket connection was closed.");
         }
 
-        const msg = this.game.getGameDataMsg();
-        this.sendGameUpdate(socket, msg);
+        const msgGame = this.game.getGameDataMsg();
+        this.sendGameUpdate(socket, msgGame);
+        const msgPlayer = this.game.playerDataDump();
+        this.sendPlayerUpdate(socket, msgPlayer);
     }
 
 
@@ -111,5 +117,15 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
             widget_name: wn,
             general_info: gi
         }));
+    }
+
+    /**
+     * Sends the `top_n` rows of a `PlayerDataMsg` to a client
+     * @param socket Client socket to send the message to
+     * @param msg The complete PlayerDataMsg.
+     */
+    private sendPlayerUpdate(socket: WebSocket, msg: PlayerDataMsg) {
+        const slice = msg.slice(0, this.top_n);
+        socket.send(JSON.stringify({ player_update: slice }));
     }
 }

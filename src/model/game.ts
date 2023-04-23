@@ -93,14 +93,23 @@ export default class Game {
      * Move the game to the next state. I.e. the next question, etc.
      */
     public toNextState(): void {
-        this.setCurState(this.cur_state_idx + 1);
+        this.setCurState(1, true);
     }
 
     /**
-     * Move the Game to the gamestate at index `idx`.
-     * @param idx The index into the list of game states to move to.
+     * Move the `Game` to another state.
+     * @param idx The index into the list of game states to move to. If
+     * `relative` is `true`, then the index will be relative to the current
+     * state.
+     * @param relative Boolean value. If `true`, it will considered `idx` to be
+     * relative to the current state. I.e. if we are at state 5 and `idx` is 1,
+     * we move to state 6. If `false` (default), it will consider `idx` as
+     * absolute.
      */
-    public setCurState(idx: number): void {
+    public setCurState(idx: number, relative: boolean = false): void {
+        if (relative)
+            idx += this.cur_state_idx;
+
         if (idx < 0 ||
             idx >= this.state_sequence.length ||
             this.state_sequence.length === 0) {
@@ -111,15 +120,6 @@ export default class Game {
         this.state_sequence[this.cur_state_idx].end_active()
         this.cur_state_idx = idx;
         this.state_sequence[idx].begin_active();
-    }
-
-    /**
-     * Move the question to a state relative to the current state.
-     * @param move_idx Specifies how much states to move along. +1 gives
-     * identical behavior to `nextState()`.
-     */
-    public setRelativeState(move_idx: number): void {
-        this.setCurState(this.cur_state_idx + move_idx);
     }
 
     /**
