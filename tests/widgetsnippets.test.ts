@@ -136,5 +136,51 @@ describe("Basic snippet functionality", () => {
         expect(w2.get_html() === html).toBe(false);
         expect(w2.get_js() === js).toBe(false);
         expect(w2.get_css() === css).toBe(false);
+    });
+
+    test("Should properly handle scripts with imports", () => {
+
+      let throws = 0;
+
+      const ws = new WidgetSnippets();
+      ws.add_js_snippet(
+`
+import x from "x.js";
+import * as y from "y.js";
+
+     import {a, b, c} from "abc.js";
+
+(function(){})();
+`
+      );
+
+      let js = ws.get_js();
+      console.log(js);
+      
+      ws.add_js_snippet("import x from \"x.js\";\n(function(){})();")
+
+      expect(ws.get_js()).toBe(js);
+
+      const bads = [
+        "importt x from \"x.js\";\n(function(){})();",
+        "import x from \"x.js\"\n(function(){})();",
+        "import x from \"x.js\";\n(function(){})()"
+      ]
+
+      for (const s of bads) {
+        try {
+          ws.add_js_snippet(s);
+        } catch {
+          ++throws;
+        }
+      }
+
+      // It only throws for bad suntaxed IIFE. Bad imports get ignored.
+      expect(throws).toBe(1);
+
+      // Expect the bad import to have been ignored. Good IIFEs are identical
+      // to the one present, so that one stays.
+      expect(ws.get_js()).toBe(js);
+
     })
 })

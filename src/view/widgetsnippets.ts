@@ -66,7 +66,7 @@ export default class WidgetSnippets {
     public add_js_snippet(snippet: string): WidgetSnippets {
         const iife_regex =
         /\(\s*function\s*\(\s*\)\s*{[\s\S]*}\s*\)\s*\(\s*\)\s*;/m;
-        const import_regex = /^[ \t]*import.*;$/gm;
+        const import_regex = /^[ \t]*import[ \t].*;$/gm;
 
         const iife = snippet.match(iife_regex)?.[0];
         if (!iife)
