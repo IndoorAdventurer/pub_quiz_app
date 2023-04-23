@@ -33,8 +33,10 @@ export default abstract class GameState {
      * @param parent_game The `Game` object this `GameState` belongs to. It will
      * add `parent_game` as a `protected` field `this.parent_game`, and it will
      * add itself to this game.
+     * @param config A configuration object defining the whole game in terms of
+     * key-value-pairs
      */
-    constructor(parent_game: Game) {
+    constructor(parent_game: Game, config: {[key: string]: any}) {
         this.parent_game = parent_game;
         
         // I am an adult, so I am allowed to do these kinds of things 😉

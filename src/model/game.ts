@@ -5,6 +5,7 @@ import WidgetSnippets from "../view/widgetsnippets.js";
 import Lobby from "./lobby.js";
 
 import { readFileSync } from "fs";
+import { yesOrThrow } from "../utils/yesorthrow.js";
 
 /**
  * The main class managing all the data for a game. Most notably, it
@@ -13,7 +14,7 @@ import { readFileSync } from "fs";
  */
 export default class Game {
 
-    static readonly START_SCORE = 60;
+    private start_score: number;
 
     private state_sequence: GameState[] = [];       // see `gamestate.ts`
     private cur_state_idx: number = 0;              // index into state_sequence
@@ -30,14 +31,17 @@ export default class Game {
     private playerListeners: PlayerListener[] = [];
 
     /**
-     * TODO should get folder as input, such that it can loop over the dirs
-     * and find all levels. Or a JSON file or something.
+     * Constructor for the `Game` object
+     * @param config A configuration object defining the whole game in terms of
+     * key-value-pairs
      */
-    constructor() {
+    constructor(config: {[key: string]: any}) {
+
+        this.start_score = yesOrThrow(config, "start_score");
 
         // `Lobby` is always the first gamestate of any game. It allows users
         // to enter the game before it really starts.
-        new Lobby(this);
+        new Lobby(this, yesOrThrow(config, "lobby"));
 
         // TODO construct the other game states :-p
 
@@ -221,7 +225,7 @@ export default class Game {
             return false;
 
         // Add to map, with name as key.
-        this.players.set(name, { score: Game.START_SCORE, isplaying: true });
+        this.players.set(name, { score: this.start_score, isplaying: true });
 
         // Notify of update
         this.playerChange();

@@ -1,11 +1,14 @@
 (function() {
 
     document.addEventListener("lobby", (ev: Event) => {
-        const msg = (ev as CustomEvent).detail.new_msg;
-        const players = msg.general_info.all_players;
+        const msg = (ev as CustomEvent).detail.new_msg.general_info;
+        const players = msg.all_players;
+        console.log(msg);
 
-        // TODO: update a text (if needed) that should also still be included
-        // with the message.
+        // Display message on the screen
+        const msg_div = document.getElementById("welcome_msg");
+        if (msg_div && msg_div.textContent !== msg.big_screen_msg)
+            msg_div.textContent = msg.big_screen_msg || "😊";
 
         // Update the list of names with the array of names gotten from the
         // server

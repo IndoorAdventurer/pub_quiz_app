@@ -1,0 +1,9 @@
+{
+    "admin_name": "admin",
+    "admin_auth_code": "admin",
+    "start_score": 3,
+    "lobby": {
+        "big_screen_msg": "Hoi! Log in op mijn website 😎"
+    },
+    "gamestates": []
+}

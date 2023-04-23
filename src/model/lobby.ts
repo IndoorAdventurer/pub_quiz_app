@@ -1,6 +1,8 @@
+import type Game from "./game.js";
 import GameState from "./gamestate.js";
 import WidgetSnippets from "../view/widgetsnippets.js";
 import { GameDataMsg } from "./gametypes.js";
+import { yesOrThrow } from "../utils/yesorthrow.js";
 
 /**
  * The first `GameState` of any game! Will show on the big screen a list of
@@ -10,7 +12,20 @@ import { GameDataMsg } from "./gametypes.js";
 export default class Lobby extends GameState {
     
     public readonly name = "lobby";
+    private big_screen_msg: string;
 
+    /**
+     * Constructor of `Lobby`
+     * @param parent_game The `Game` this lobby will be added to
+     * @param config The config object. Should specify `big_screen_msg` as a
+     * message to show on the big screen that tells players how they can join
+     * on their phone. (e.g. go to this and that web address)
+     */
+    constructor(parent_game: Game, config: {[key: string]: any}) {
+        super(parent_game, config);
+        this.big_screen_msg = yesOrThrow(config, "big_screen_msg");
+    }
+    
     public bigScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
         .add_html_file("./src/view/html/widgets/lobby_bigscreen.html")
@@ -36,7 +51,10 @@ export default class Lobby extends GameState {
             psi[p] = {widget_name: "wait_screen"};
 
         return {
-            general_info: { all_players: players },
+            general_info: {
+                all_players: players,
+                big_screen_msg: this.big_screen_msg
+            },
             player_specific_info: psi
         };
     }

@@ -1,11 +1,14 @@
+import { readFileSync } from "fs";
 import Game from "../src/model/game";
 import { PlayerListener } from "../src/model/gametypes";
 
+const config_file = "./tests/test_game.json"; // TODO: get from CLI arguments
+const config = JSON.parse(readFileSync(config_file, "utf-8"));
 
 describe('Adding players to the game', () => {
     test(`Adding one player should result in one player.
     Removing it should remove it again`, () => {
-        const g = new Game();
+        const g = new Game(config);
         g.addPlayer("vincent");
         expect(g.getPlayerNames().length).toBe(1);
         g.removePlayer("vincent");
@@ -13,7 +16,7 @@ describe('Adding players to the game', () => {
     });
 
     test(`Adding players, and removing one that doesn't exist.`, () => {
-        const g = new Game();
+        const g = new Game(config);
         g.addPlayer("vincent");
         expect(g.getPlayerNames().length).toBe(1);
         g.addPlayer("karel");
@@ -41,7 +44,7 @@ describe('Adding players to the game', () => {
     });
 
     test("Adding same person twice should return false without any changes", () => {
-        const g = new Game();
+        const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("vincent");
         expect(g.getPlayerNames().length).toBe(1);
@@ -56,7 +59,7 @@ describe('Adding players to the game', () => {
 
 describe("Updating scores/vals in multiple different ways", () => {
     test("Updating the scores in a relative manner", () => {
-        const g = new Game();
+        const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("dennis");
         g.addPlayer("theo");
@@ -73,23 +76,23 @@ describe("Updating scores/vals in multiple different ways", () => {
         expect(dump[0].name).toBe("theo");
         expect(dump[1].name).toBe("dennis");
         expect(dump[2].name).toBe("vincent");
-        expect(dump[0].score).toBe(Game.START_SCORE + 30);
-        expect(dump[1].score).toBe(Game.START_SCORE + 20);
-        expect(dump[2].score).toBe(Game.START_SCORE + 10);
+        expect(dump[0].score).toBe(config.start_score + 30);
+        expect(dump[1].score).toBe(config.start_score + 20);
+        expect(dump[2].score).toBe(config.start_score + 10);
 
         score_map.delete("vincent");
         score_map.set("remco", 500);
         g.updateScores(score_map);
         dump = g.playerDataDump();
-        expect(dump[0].score).toBe(Game.START_SCORE + 60);
-        expect(dump[1].score).toBe(Game.START_SCORE + 40);
-        expect(dump[2].score).toBe(Game.START_SCORE + 10);
+        expect(dump[0].score).toBe(config.start_score + 60);
+        expect(dump[1].score).toBe(config.start_score + 40);
+        expect(dump[2].score).toBe(config.start_score + 10);
         expect(g.getPlayerNames().length).toBe(3);
 
     });
 
     test("Updating the scores in an absolute manner", () => {
-        const g = new Game();
+        const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("dennis");
         g.addPlayer("theo");
@@ -124,7 +127,7 @@ describe("Updating scores/vals in multiple different ways", () => {
     });
 
     test("Test the isplaying functionality", () => {
-        const g = new Game();
+        const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("dennis");
         g.addPlayer("theo");
@@ -162,7 +165,7 @@ class L implements PlayerListener {
 describe("Seeing if player listening works as it should", () => {
     test("single listener", () => {
 
-        const g = new Game();
+        const g = new Game(config);
         const l = new L();
         g.addPlayerListener(l);
         g.addPlayer("mathijs");
@@ -196,7 +199,7 @@ describe("Seeing if player listening works as it should", () => {
     test("multiple listeners", () => {
         // Also this test isn't completely what it should be anymore because I
         // changed the behavior of addPlayer() ...
-        const g = new Game();
+        const g = new Game(config);
         const l1 = new L();
         const l2 = new L();
 
