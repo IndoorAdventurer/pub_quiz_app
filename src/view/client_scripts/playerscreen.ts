@@ -96,7 +96,6 @@ document.addEventListener("authorize", (ev: Event) => {
                 name: name.value,
                 auth_code: auth_code.value
             });
-            name.value = "";
         }
     });
 });

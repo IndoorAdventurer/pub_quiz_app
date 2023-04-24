@@ -64,7 +64,17 @@ game_nav_next_btn?.addEventListener("click", (ev) => {
     setGameState(1, true);
 });
 
-// TODO: the other way of switching game states
+// Adding functionality for relative checkbox
+const game_nav_set_btn = document.getElementById("game_nav_set");
+game_nav_set_btn?.addEventListener("click", (ev) => {
+    const number_inp =
+        document.getElementById("game_nav_num") as HTMLInputElement | null;
+    const relative_checkbox = 
+    document.getElementById("game_nav_relative") as HTMLInputElement | null;
+    if (number_inp && number_inp.value.length > 0 && relative_checkbox) {
+        setGameState(parseInt(number_inp.value), relative_checkbox.checked);
+    }
+});
 
 
 //---ADDING PLAYERS AND SOCKETS OUTSIDE OF LOBBY:-------------------------------
@@ -101,9 +111,17 @@ set_code_btn?.addEventListener("click", (ev) => {
 document.addEventListener("server_status", (ev) => {
     const data = (ev as CustomEvent).detail;
 
-    // If we receive a "logged in" staus, we are logged in and we can delete
+    if (data.status === "state_info") {
+        const info_span = document.getElementById("state_info");
+        if (info_span) {
+            info_span.textContent =
+                `At state ${data.widget_index} (${data.widget_name})`;
+        }
+    }
+    
+    // If we receive a "logged in" status, we are logged in and we can delete
     // the login div:
-    if (data.status && data.status === "logged in") {
+    if (data.status === "logged in") {
         const login_div = document.getElementById("login_panel");
         login_div?.remove();
     }
