@@ -5,7 +5,7 @@ import WidgetSnippets from "../view/widgetsnippets.js";
 import Lobby from "./lobby.js";
 
 import { readFileSync } from "fs";
-import { yesOrThrow } from "../utils/yesorthrow.js";
+import yesOrThrow from "../utils/yesorthrow.js";
 
 /**
  * The main class managing all the data for a game. Most notably, it

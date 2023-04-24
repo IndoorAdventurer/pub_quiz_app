@@ -36,9 +36,9 @@ export default abstract class GameState {
      * @param config A configuration object defining the whole game in terms of
      * key-value-pairs
      */
-    constructor(parent_game: Game, config: {[key: string]: any}) {
+    constructor(parent_game: Game, config: { [key: string]: any }) {
         this.parent_game = parent_game;
-        
+
         // I am an adult, so I am allowed to do these kinds of things 😉
         // Making the gamestate add itself to the game, by calling a method
         // that is actually private to `Game`. This is its intended use
@@ -53,12 +53,7 @@ export default abstract class GameState {
      * the players will see the appropriate screen, etc.
      */
     @GameState.stateChanger
-    public begin_active(): GameDataMsg {
-        return {
-            general_info: {},
-            player_specific_info: {}
-        };
-    }
+    public begin_active(): void { }
 
     /**
      * Gets called when `Game` hands control over to the next `GameState`
@@ -112,16 +107,16 @@ export default abstract class GameState {
      * @param response The response the player gave
      * @returns True if succesfully handled message. False otherwise
      */
-    public abstract playerAnswer(name: string, response: string): boolean;
+    public playerAnswer(name: string, response: string): boolean { return false; }
 
-    
+
     /**
      * Some `GameState` objects will need to be able to accept traffic from the
      * admin. For example, one that sends answers to open questions to the admin
      * and wants to get all the ones that are correct back.
      * @param obj 
      */
-    public adminAnswer(obj: {[key: string]: any}): void {};
+    public adminAnswer(obj: { [key: string]: any }): void { }
 
     /**
      * Should return a summary of the current state in the form of a
@@ -139,7 +134,7 @@ export default abstract class GameState {
     protected static stateChanger: MethodDecorator = function (target: Object,
         key: string | symbol,
         descriptor: PropertyDescriptor) {
-        
+
         const of = descriptor.value;
         descriptor.value = function (this: GameState, ...args: any[]) {
             const out = of.apply(this, args);

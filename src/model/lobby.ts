@@ -2,7 +2,7 @@ import type Game from "./game.js";
 import GameState from "./gamestate.js";
 import WidgetSnippets from "../view/widgetsnippets.js";
 import { GameDataMsg } from "./gametypes.js";
-import { yesOrThrow } from "../utils/yesorthrow.js";
+import yesOrThrow from "../utils/yesorthrow.js";
 
 /**
  * The first `GameState` of any game! Will show on the big screen a list of

@@ -4,7 +4,7 @@ import AdminServer from "./controller/adminserver.js";
 import PlayerServer from "./controller/playerserver.js";
 import BigScreenServer from "./controller/bigscreenserver.js";
 import { readFileSync } from "fs";
-import { yesOrThrow } from "./utils/yesorthrow.js";
+import yesOrThrow from "./utils/yesorthrow.js";
 
 const config_file = "./tests/test_game.json"; // TODO: get from CLI arguments
 const config = JSON.parse(readFileSync(config_file, "utf-8"));

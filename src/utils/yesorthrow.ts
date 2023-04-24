@@ -7,6 +7,6 @@
  * @returns `obj[key]`
  * @throws Error if `obj[key] == undefined`
  */
-export function yesOrThrow(obj: {[key: string]: any}, key: string): any {
+export default function yesOrThrow(obj: {[key: string]: any}, key: string): any {
     return obj[key] || (() => {throw new Error(`${key} not specified`)})();
 }
