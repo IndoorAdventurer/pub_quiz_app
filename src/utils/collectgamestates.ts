@@ -32,14 +32,16 @@ let outfile = "";
 for (const [file, name] of class_list) {
     // Using NodeNext, so need to replace it with .js
     const to_js = file.replace(".ts", ".js");
-    outfile += `import ${name} from "./fullstates/${to_js}"\n`;
+    outfile += `import ${name} from "./fullstates/${to_js}";\n`;
 }
 
 // Now add middle part:
 outfile +=
-`
+`import type Game from "./game.js";
+import GameState from "./gamestate.js";
 
-export const all_game_states = {\n`;
+
+export const all_game_states: all_game_states_type = {\n`;
 
 // All entries:
 for (const [_, name] of class_list) {
@@ -47,6 +49,15 @@ for (const [_, name] of class_list) {
 }
 
 outfile += `
-};`
+};
 
+// Specify type as object that maps strings to GameState constructors:
+type all_game_states_type = {
+    [key: string]: new (game: Game, args: {[key: string]: any}) => GameState
+}`
+
+// Converting to CRLF:
+outfile = outfile.replace(/\n/g, "\r\n");
+
+// Save file
 writeFileSync(out_file_path, outfile, "utf-8");

@@ -5,9 +5,24 @@
     "lobby": {
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },
-    "gamestates": [],
-
-    "staticpage": {
-        "html_content": "<h1>Testing!</h1><p>Here I am testing a static page 🤓</p>"
-    }
+    "gamestates": [
+        {
+            "name": "staticpage",
+            "args": {
+                "html_content": "<h1>Testing 1</h1><p>Here I am testing the first static page 🤓</p>"
+            }
+        },
+        {
+            "name": "staticpage",
+            "args": {
+                "html_content": "<h1>Testing 2</h1><p>Here I am testing the second static page 😎</p>"
+            }
+        },
+        {
+            "name": "staticpage",
+            "args": {
+                "html_content": "<h1>Testing 3</h1><p>The last one already 🤷‍♂️</p>"
+            }
+        }
+    ]
 }

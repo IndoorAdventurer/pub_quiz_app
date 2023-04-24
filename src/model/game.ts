@@ -6,7 +6,7 @@ import Lobby from "./lobby.js";
 
 import { readFileSync } from "fs";
 import yesOrThrow from "../utils/yesorthrow.js";
-import StaticPage from "./fullstates/staticpage.js";
+import { all_game_states } from "./allgamestates.js";
 
 /**
  * The main class managing all the data for a game. Most notably, it
@@ -44,8 +44,12 @@ export default class Game {
         // to enter the game before it really starts.
         new Lobby(this, yesOrThrow(config, "lobby"));
 
-        // TODO construct the other game states :-p
-        new StaticPage(this, yesOrThrow(config, "staticpage"));
+        // Construct all game states:
+        for (const gs of yesOrThrow(config, "gamestates")) {
+            const name = yesOrThrow(gs, "name");
+            const args = yesOrThrow(gs, "args");
+            new all_game_states[name](this, args);
+        }
 
         this.bigScreenView =
             this.createView("./src/view/html/bigscreen.html", "bigScreenWidgets");
