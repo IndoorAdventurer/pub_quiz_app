@@ -20,7 +20,11 @@ first a bunch of <template> elements, and then scripts. -->
 currently active. -->
 <div id="main"></div>
 <template class="authorize">
-Here a player has to authorize him/herself manually. TODO implement.
+    <label for="authorize_name">Name: </label>
+    <input type="text" id="authorize_name">
+    <label for="authorize_auth_code">Authorization code: </label>
+    <input type="number" id="authorize_auth_code">
+    <button id="authorize_btn">Ok</button>
 </template>
 <!-- !!!SPLIT!!! -->
 </body>

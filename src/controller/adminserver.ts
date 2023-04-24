@@ -113,19 +113,46 @@ export default class AdminServer implements PlayerListener, GameListener, Server
         try {
             const data = JSON.parse(event.data.toString());
             switch (data.action) {
+                // Changing which game state is active:
+                case "set_game_state":
+                    if ("idx" in data && "relative" in data)
+                        this.game.setCurState(data.idx, data.relative);
+                    return;
+                
+                // Changing the score of an individual player:
                 case "set_score":
                     if ("player" in data && "score" in data)
                         this.game.updateScores(
                             new Map([[data.player, data.score]]), false);
                     return;
+                
+                // Changing the isplaying boolean of an individual player:
                 case "set_isplaying":
                     if ("player" in data && "isplaying" in data)
                         this.game.setIsPlaying(
                             new Set([data.player]), data.isplaying);
                     return;
+                
+                // Remove a player from the game:
                 case "remove_player":
                     if ("player" in data)
                         this.game.removePlayer(data.player);
+                    return;
+                
+                // Add a player to the game:
+                case "add_player":
+                    if (!("name" in data && this.game.addPlayer(data.name))) {
+                        socket.send(JSON.stringify({
+                            status: "failure",
+                            error_msg: "Name is taken"
+                        }));
+                    }
+                    return;
+                
+                // Set wildcard authcode of PlayerServer:
+                case "set_wildcard_auth":
+                    if ("auth_code" in data)
+                        this.player_server.setWildcardAuthCode(data.auth_code);
                     return;
             }
         } catch (e: any) {

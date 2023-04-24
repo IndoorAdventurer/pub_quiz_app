@@ -4,6 +4,7 @@ import { socket_listener_setup } from "./utils.js";
 const socket = new WebSocket(`ws://${window.location.host}`, "admin");
 socket_listener_setup(socket);
 
+//---FUNCTION DEFINITIONS:------------------------------------------------------
 /**
  * Send a message over the websocket
  * @param msg The message to be sent: a javascript object.
@@ -11,6 +12,27 @@ socket_listener_setup(socket);
 export function socketMessage(msg: { [key: string]: any }) {
     socket.send(JSON.stringify(msg));
 }
+
+/**
+ * Send a message about switching to another game state
+ * @param idx The index into the list of game states to move to. If
+ * `relative` is `true`, then the index will be relative to the current
+ * state.
+ * @param relative Boolean value. If `true`, it will considered `idx` to be
+ * relative to the current state. I.e. if we are at state 5 and `idx` is 1,
+ * we move to state 6. If `false` (default), it will consider `idx` as
+ * absolute.
+ */
+function setGameState(idx: number, relative: boolean) {
+    socketMessage({
+        action: "set_game_state",
+        idx: idx,
+        relative: relative
+    });
+}
+
+
+//---ADMIN LOGIN:---------------------------------------------------------------
 
 // Adding listener for login button:
 const login_btn = document.getElementById("login_panel_btn");
@@ -27,6 +49,54 @@ login_btn?.addEventListener("click", (ev) => {
     }
 });
 
+
+//---GAMESTATE NAVIGATION:------------------------------------------------------
+
+// Adding a listener for the "previous" button:
+const game_nav_prev_btn = document.getElementById("game_nav_prev");
+game_nav_prev_btn?.addEventListener("click", (ev) => {
+    setGameState(-1, true);
+});
+
+// Adding a listener for the "next" button:
+const game_nav_next_btn = document.getElementById("game_nav_next");
+game_nav_next_btn?.addEventListener("click", (ev) => {
+    setGameState(1, true);
+});
+
+// TODO: the other way of switching game states
+
+
+//---ADDING PLAYERS AND SOCKETS OUTSIDE OF LOBBY:-------------------------------
+
+// Adding a listener for the "new_player_add" button:
+const new_player_add_btn = document.getElementById("new_player_add_btn");
+new_player_add_btn?.addEventListener("click", (ev) => {
+    const name_field =
+        document.getElementById("new_player_name") as HTMLInputElement | null;
+    if (name_field?.value && name_field.value.length > 0) {
+        socketMessage({ action: "add_player", name: name_field.value });
+        name_field.value = "";
+    }
+});
+
+// Set a wildcard code a player can use to login outside of the lobby state
+const set_code_btn = document.getElementById("set_code_btn");
+set_code_btn?.addEventListener("click", (ev) => {
+    const code_field = document.getElementById("new_socket_auth_code") as
+        HTMLInputElement | null;
+    if (code_field?.value && code_field.value.length > 0) {
+        socketMessage({
+            action: "set_wildcard_auth",
+            auth_code: code_field.value
+        });
+        code_field.value = "";
+    }
+});
+
+
+//---STANDARD EVENT LISTENERS:--------------------------------------------------
+
 // Event listener for status codes:
 document.addEventListener("server_status", (ev) => {
     const data = (ev as CustomEvent).detail;
@@ -37,7 +107,7 @@ document.addEventListener("server_status", (ev) => {
         const login_div = document.getElementById("login_panel");
         login_div?.remove();
     }
-})
+});
 
 // Add event listener for player updates and that redraws "player_data" div:
 document.addEventListener("player_update", (ev) => {
@@ -52,6 +122,9 @@ document.addEventListener("player_update", (ev) => {
         clone.appendChild(create_player_row(row));
     player_data_tbody.parentElement?.replaceChild(clone, player_data_tbody);
 });
+
+
+//---EXTRA FUNCTIONS:-----------------------------------------------------------
 
 /**
  * Creates a single row for the `player_data` table, corrseponding to a single
@@ -81,7 +154,7 @@ function create_player_row(row_data: player_data_type): HTMLTableRowElement {
             player: name_th.textContent,
             score: score_num
         });
-    })
+    });
 
     // Third col is "isplaying" state. You can toggle this with a checkbox
     const is_playing_th = document.createElement("th");
@@ -96,7 +169,7 @@ function create_player_row(row_data: player_data_type): HTMLTableRowElement {
             player: name_th.textContent,
             isplaying: check_box.checked
         });
-    })
+    });
 
     // Fourth col is the remove button. Lets you remove a player
     const remove_th = document.createElement("th");

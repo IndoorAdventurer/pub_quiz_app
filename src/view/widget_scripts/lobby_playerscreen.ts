@@ -17,10 +17,6 @@ import { setCreds, socketMessageUnsafe } from "../client_scripts/playerscreen.js
                 }
             });
         }
-
-        // We received an auth_code! Saving it
-        if (data.new_msg.name && data.new_msg.auth_code)
-            setCreds(data.new_msg.name, data.new_msg.auth_code);
     });
 
 })();

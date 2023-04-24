@@ -5,5 +5,9 @@
     "lobby": {
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },
-    "gamestates": []
+    "gamestates": [],
+
+    "staticpage": {
+        "html_content": "<h1>Testing!</h1><p>Here I am testing a static page 🤓</p>"
+    }
 }

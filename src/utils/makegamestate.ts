@@ -80,10 +80,10 @@ export default class CLS_CAMEL extends GameState {
     //     return new WidgetSnippets()ADMINWIDGETS;
     // }
 
-    public playerAnswer(name: string, response: string): boolean {
-        // TODO
-        return false;
-    }
+    // public playerAnswer(name: string, response: string): boolean {
+    //     // TODO
+    //     return false;
+    // }
 
     // public adminAnswer(obj: {[key: string]: any}): void {
     //     // TODO
@@ -163,7 +163,7 @@ const css_template = `/* TODO */`;
             console.log(f.path);
         if (await askYesNoQuestion("Do you want to proceed?")) {
             for (const f of files)
-                fs.writeFileSync(f.path, f.content, "utf-8");
+                fs.writeFileSync(f.path, f.content.replace(/\n/g, "\r\n"), "utf-8");
             console.log("All done!");
         }
 
@@ -201,7 +201,7 @@ async function addWidgets(name: string, type: string): Promise<widgets_collectio
             console.log(content);
             files.push({ path: path, content: content });
 
-            source += "\r\n            .add_" + t.name + "_file(\"" + t.include + name + "_" + type + t.inc_ext + "\")";
+            source += "\n            .add_" + t.name + "_file(\"" + t.include + name + "_" + type + t.inc_ext + "\")";
         }
     }
 

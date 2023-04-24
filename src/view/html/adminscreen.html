@@ -42,7 +42,9 @@ displayed... -->
 <div id="main"><p>Waiting for login ... ⌛</p></div>
 
 <div id="player_data">
-    <h3>Player Data</h3>
+    <h3>Players</h3>
+    
+    <h4>Table</h4>
     <table>
         <thead>
             <tr>
@@ -52,6 +54,17 @@ displayed... -->
         <tbody>
         </tbody>
     </table>
+
+    <h4>Add player</h4>
+    <label for="new_player_name">Name of new player: </label>
+    <input type="text" id="new_player_name">
+    <button id="new_player_add_btn">Add Player</button>
+
+    <h4>Wildcard authorization code</h4>
+    <label for="new_socket_auth_code">Wildcard authorization code: </label>
+    <input type="number" id="new_socket_auth_code">
+    <button id="set_code_btn">Set code</button>
+
 </div>
 
 <div id="logs">

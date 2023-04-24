@@ -66,3 +66,38 @@ document.addEventListener("player_update", (event) => {
         score_div.textContent = data.score.toString() || '-';
     }
 });
+
+
+// Event listener for status codes:
+document.addEventListener("server_status", (ev) => {
+    const data = (ev as CustomEvent).detail;
+
+    // Log user in if it received a success status
+    if (data.name && data.auth_code)
+        setCreds(data.name, data.auth_code);
+});
+
+
+// Add eventlistener to authorize button. Authorization page will show when
+// player is not logged in, but we are also not in the lobby phase
+document.addEventListener("authorize", (ev: Event) => {
+    const authorize_btn = document.getElementById("authorize_btn");
+    authorize_btn?.addEventListener("click", (ev) => {
+        console.log("Here!");
+        const name =
+            document.getElementById("authorize_name") as HTMLInputElement | null;
+        const auth_code = document.getElementById("authorize_auth_code") as
+            HTMLInputElement | null;
+    
+        if (name && auth_code &&
+            name.value.length > 0 && auth_code.value.length > 0) {
+        
+            socketMessageUnsafe({
+                name: name.value,
+                auth_code: auth_code.value
+            });
+            name.value = "";
+        }
+    });
+});
+

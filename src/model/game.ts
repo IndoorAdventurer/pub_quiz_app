@@ -6,6 +6,7 @@ import Lobby from "./lobby.js";
 
 import { readFileSync } from "fs";
 import yesOrThrow from "../utils/yesorthrow.js";
+import StaticPage from "./fullstates/staticpage.js";
 
 /**
  * The main class managing all the data for a game. Most notably, it
@@ -44,6 +45,7 @@ export default class Game {
         new Lobby(this, yesOrThrow(config, "lobby"));
 
         // TODO construct the other game states :-p
+        new StaticPage(this, yesOrThrow(config, "staticpage"));
 
         this.bigScreenView =
             this.createView("./src/view/html/bigscreen.html", "bigScreenWidgets");
@@ -51,6 +53,9 @@ export default class Game {
             this.createView("./src/view/html/playerscreen.html", "playerScreenWidgets");
         this.adminView =
             this.createView("./src/view/html/adminscreen.html", "adminScreenWidgets");
+        
+        // Let the first state know it is time for action:
+        this.state_sequence[0].begin_active();
     }
 
 
@@ -94,14 +99,8 @@ export default class Game {
     }
 
     /**
-     * Move the game to the next state. I.e. the next question, etc.
-     */
-    public toNextState(): void {
-        this.setCurState(1, true);
-    }
-
-    /**
-     * Move the `Game` to another state.
+     * Move the `Game` to another state. Call this as: `setCurState(1, true)` to
+     * move to the next state ❗
      * @param idx The index into the list of game states to move to. If
      * `relative` is `true`, then the index will be relative to the current
      * state.

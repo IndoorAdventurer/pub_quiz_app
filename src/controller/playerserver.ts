@@ -28,6 +28,11 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
     // name is the key/entry into the map.
     private known_clients: SocketMap = new Map<string, SocketData>();
 
+    // Sometimes, for example if a player joins in later, he has to be able to
+    // get into the game outside of the lobby state. For that the admin can set
+    // a wildcard authorization code, which the player can then fill in manually
+    private wildcard_auth_code: string | undefined;
+
 
     /**
      * Constructor. Sets up all the infrastructure for players
@@ -141,6 +146,16 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
     //---The-fun-stuff:---------------------------------------------------------
 
     /**
+     * Sets the wildcard authorization code. This can be used, for example,
+     * by players who join the game at a later moment. They will ask the admin
+     * to set this, and then they can fill it out manually to join.
+     * @param auth_code An authorization code
+     */
+    public setWildcardAuthCode(auth_code: string) {
+        this.wildcard_auth_code = auth_code;
+    }
+
+    /**
      * This method gets called when a known client socket sends a message. It
      * first checks if everything is in order (authentication). If so, it
      * forwards the received message to the active GameState object.
@@ -185,7 +200,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             const state_name = this.game.currentState().name;
             if ("name" in data && "auth_code" in data) {
                 if (this.auto_promote(socket, data.name, data.auth_code) ||
-                    false /* Second option: wildcard auth code */)
+                    this.wildcard_login(socket, data.name, data.auth_code))
                     this.sendDualUpdate(data.name, socket);
                 else {
                     socket.send(JSON.stringify({
@@ -249,7 +264,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      */
     private sendPlayerUpdate(name: string, score: number) {
         this.known_clients.get(name)?.socket?.send(JSON.stringify({
-            player_update: {score: score}
+            player_update: { score: score }
         }));
     }
 
@@ -273,13 +288,15 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      * @param socket The socket that currently is in `anonymous_clients`, and
      * will be put into `known_clients`.
      */
-    private promote_and_notify(name: string, socket: WebSocket) {
+    private promote_and_notify(name: string, socket: WebSocket, auth: string | null = null) {
 
-        // Generate random authorization code:
-        const nums = "0123456789";
-        let auth = "";
-        for (let idx = 0; idx != 5; ++idx)
-            auth += nums.charAt(Math.floor(Math.random() * nums.length))
+        // Generate random authorization code if needed:
+        if (!auth) {
+            const nums = "0123456789";
+            auth = "";
+            for (let idx = 0; idx != 5; ++idx)
+                auth += nums.charAt(Math.floor(Math.random() * nums.length))
+        }
 
         // Add to known clients:
         this.known_clients.set(name, { auth_code: auth, socket: socket });
@@ -294,7 +311,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
 
         // Notifying it of the success by sending name and auth_code!
         socket.send(JSON.stringify({
-            widget_name: "lobby",
+            status: "login_succes",
             name: name,
             auth_code: auth
         }));
@@ -311,23 +328,42 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      * @returns True if it was restored, false if not.
      */
     private auto_promote(socket: WebSocket, name: string, auth_code: string): boolean {
-        
+
         // Check if user message makes sense:
         const sock_dat = this.known_clients.get(name);
         if (sock_dat?.auth_code !== auth_code)
             return false;
-        
+
         // Close socket if there is still another one:
         sock_dat.socket?.close();
-        
-        // Add socket to list:
-        sock_dat.socket = socket;
 
-        // Remove from unknown clients:
-        let idx = this.anonymous_clients.indexOf(socket);
-        if (idx !== -1)
-            this.anonymous_clients.splice(idx, 1);
+        // Promote:
+        this.promote_and_notify(name, socket, auth_code);
 
+        return true;
+    }
+
+    /**
+     * Lets a client login at any state of the game. Only condition is that it
+     * sents an auth_code equal to the wildcard auth code set by the admin, and
+     * that its name is already present in the game.
+     * @param socket The unknown socket to be promoted if all goes well
+     * @param name The name this sockets says it has
+     * @param auth_code The wildcard auth code
+     * @returns `true` on success, `false` on failure.
+     */
+    private wildcard_login(socket: WebSocket, name: string, auth_code: string): boolean {
+
+        // Auth code must equal wildcard, and game must include name:
+        if (auth_code !== this.wildcard_auth_code ||
+            !this.game.getPlayerNames().includes(name))
+            return false;
+
+        // Maybe there was already a client for this player, so deleting:
+        this.known_clients.get(name)?.socket?.close();
+
+        // Promote:
+        this.promote_and_notify(name, socket, auth_code);
 
         return true;
     }
