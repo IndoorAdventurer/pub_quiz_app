@@ -99,12 +99,14 @@ export default class CLS_CAMEL extends GameState {
 }`;
 
 const html_template =
-    `<template class="CLS_LOWER">
+`<template class="CLS_LOWER">
     <!-- TODO -->
 </template>`;
 
 const ts_template =
-    `(function(){
+`// Use following function in player widgets to send message to server:
+// import { socketMessage } from "../client_scripts/playerscreen.js"
+(function(){
     document.addEventListener("CLS_LOWER", (ev: Event) => {
         const msg = (ev as CustomEvent).detail.new_msg;
         // const msg_old = (ev as CustomEvent).detail.old_msg;

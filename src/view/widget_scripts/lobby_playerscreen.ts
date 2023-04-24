@@ -1,4 +1,4 @@
-import { setCreds, socketMessageUnsafe } from "../client_scripts/playerscreen.js"
+import { socketMessageUnsafe } from "../client_scripts/playerscreen.js"
 
 (function() {
     

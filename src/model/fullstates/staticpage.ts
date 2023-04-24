@@ -5,7 +5,9 @@ import { GameDataMsg } from "../gametypes.js";
 import yesOrThrow from "../../utils/yesorthrow.js";
 
 /**
- * TODO: add description!
+ * This type of `GameState` is just like a powerpoint slide: it shows some
+ * html on the big screen, and that is it. Can be used, for example, to show
+ * instructions for a new type of round.
  */
 export default class StaticPage extends GameState {
 
