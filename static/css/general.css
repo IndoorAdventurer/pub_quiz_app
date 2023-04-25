@@ -1,0 +1,63 @@
+@font-face {
+    font-family: "PubQuizFont(oswald)";
+    src: url(../Oswald-VariableFont_wght.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(150deg, #4A7180, #132e38);
+    min-height: 100vh;
+    font-family: "PubQuizFont(oswald)", monospace, sans-serif;
+}
+
+header {
+    background-color: white;
+    box-shadow: 0 .5rem 1rem;
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+header > img {
+    width: min(12rem, 15vw);
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+
+#main {
+    width: 60%;
+    max-width: 60rem;
+    min-width: min(40rem, 100vw - 2 * .5rem);
+    min-height: 60vh;
+    background-color: #ffffff;
+    color: #1C2F33;
+    margin: auto;
+    padding: 1rem;
+    box-shadow: 0 .5rem 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    text-align: center;
+}
+
+.error_popup {
+    background-color: rgb(255, 78, 55);
+    box-shadow: 0 .5rem 1rem;
+    width: 60%;
+    min-width: min(40rem, 100vw - 2 * .5rem);
+    padding: 0.75rem;
+    margin: 0.5rem;
+}

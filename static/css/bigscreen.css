@@ -1,0 +1,70 @@
+/* Header stuff: */
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    margin-bottom: 1px;
+}
+
+#leaderboard {
+    display: flex;
+    margin-left: 3rem;
+    overflow: hidden;
+}
+
+.player_card {
+    box-shadow: 0 .2rem 0.5rem #00000099;
+    border: #1C2F33 solid 2px;
+    margin: 0.5rem;
+    padding: 0 1rem 0 1rem;
+    width: min(12rem, 20vw);
+    height: 6rem;
+    display: grid;
+    grid-template-columns: 35% auto;
+}
+
+.player_card div {
+    display: flex;
+}
+
+.player_card_nth {
+    font-size: 3rem;
+    font-weight: bold;
+    grid-column: 1;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    align-items: center;
+    justify-content: end;
+    margin-right: min(1.2rem, 2vw);
+}
+
+.player_card_name {
+    font-weight: bold;
+    grid-column: 2;
+    align-items: end;
+}
+
+.player_card_score {
+    grid-column: 2;
+}
+
+
+/* Main screen stuff: */
+
+.question {
+    font-size: 3rem;
+    font-style: italic;
+    text-align: center;
+    max-height: 100%;
+}
+
+.question::before {
+    content: "“";
+}
+
+.question::after {
+    content: "”";
+}

@@ -9,8 +9,7 @@ const out_file_path = "./src/model/allgamestates.ts";
 const files = readdirSync(dir).filter(f => f.endsWith(".ts"));
 
 // Collect all classes that derive from GameState:
-const class_regex =
-    /export[ \t]*default[ \t]*class[ \t]*([A-Z]\w*)[ \t]*extends[ \t]*GameState/;
+const class_regex = /export[ \t]*default[ \t]*class[ \t]*([A-Z]\w*)[ \t]*extends/;
 const class_list: string[][] = [];
 for (const file of files) {
     const full_path = dir + file;

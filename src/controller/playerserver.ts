@@ -365,6 +365,9 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
         // Promote:
         this.promote_and_notify(name, socket, auth_code);
 
+        // Unset wildcard code:
+        this.wildcard_auth_code = undefined;
+
         return true;
     }
 

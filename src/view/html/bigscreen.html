@@ -7,13 +7,18 @@ first a bunch of <template> elements, and then scripts. -->
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="module" src="scripts/bigscreen.js" defer></script>
+<link rel="stylesheet" href="css/general.css">
+<link rel="stylesheet" href="css/bigscreen.css">
 <!-- !!!SPLIT!!! -->
 <title>Big Screen</title>
-<script type="module" src="scripts/bigscreen.js" defer></script>
 </head>
 <body>
+<header>
+<img src="img/logo.svg" alt="Logo">
 <!-- The leaderboard will show the top so many players and their scores -->
 <div id="leaderboard"></div>
+</header>
 <!-- The main div. Its contents will be determined by the GameState that is
 currently active. -->
 <div id="main"></div>
