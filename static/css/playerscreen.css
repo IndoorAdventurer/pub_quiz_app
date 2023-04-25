@@ -5,3 +5,38 @@ header > img {
 #player_name {
     font-weight: bold;
 }
+
+#main {
+    align-items: flex-start;
+}
+
+p {
+    text-align: left;
+    margin-bottom: 1rem;
+}
+
+input {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+    border: 1px #4A7180 solid;
+    width: 100%;
+    max-width: 30rem;
+    font-family: monospace;
+    font-weight: bold;
+    color: #1C2F33;
+}
+
+input:focus {
+    border: 3px #1C2F33 solid;
+}
+
+button {
+    padding: .5rem 2rem .5rem 2rem;
+    border-radius: 4px;
+    background-color: #1C2F33;
+    font-family: "Oswald", "PubQuizFont(oswald)", monospace, sans-serif;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+}

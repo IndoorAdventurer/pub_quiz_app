@@ -12,7 +12,7 @@
 body {
     background: linear-gradient(150deg, #4A7180, #132e38);
     min-height: 100vh;
-    font-family: "PubQuizFont(oswald)", monospace, sans-serif;
+    font-family: "Oswald", "PubQuizFont(oswald)", monospace, sans-serif;
 }
 
 header {

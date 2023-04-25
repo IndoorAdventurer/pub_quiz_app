@@ -17,8 +17,8 @@ first a bunch of <template> elements, and then scripts. -->
 <header>
 <img src="img/logo.svg" alt="Logo">
 <div id="player_info">
-    <div id="player_name">-</div>
-    <div id="player_score">-</div>
+    <div id="player_name"></div>
+    <div id="player_score"></div>
 </div>
 </header>
 <!-- The main div. Its contents will be determined by the GameState that is
@@ -26,6 +26,8 @@ currently active. -->
 <div id="main"></div>
 <template class="authorize">
     <h1>Deelnemen</h1>
+    <p>Wat leuk dat je mee wilt doen met de pubquiz!🥳🎈</p>
+    <p>Op deze pagina kun je je alsnog inloggen. Vraag daarvoor wel eerst een authenticatiecode van de quizmaster🧑🏻‍🎓</p>
     <label for="authorize_name">Naam: </label>
     <input type="text" id="authorize_name">
     <label for="authorize_auth_code">Code: </label>

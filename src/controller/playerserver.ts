@@ -205,7 +205,9 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 else {
                     socket.send(JSON.stringify({
                         status: "failure",
-                        error_msg: "Invalid name and/or auth_code received."
+                        error_msg: "Je hebt (automatisch) een ongeldige naam " +
+                        "of code gestuurd. Open deze website op een nieuwe " +
+                        "pagina."
                     }));
                 }
             }
@@ -224,7 +226,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 else
                     socket.send(JSON.stringify({
                         status: "failure",
-                        error_msg: "Name already exists!"
+                        error_msg: "Deze naam is al in gebruik!"
                     }));
             }
             else {

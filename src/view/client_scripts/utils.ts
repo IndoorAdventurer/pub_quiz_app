@@ -46,7 +46,7 @@ export function socket_listener_setup(socket: WebSocket) {
                 return;
             }
 
-            throw new Error("Received a strange message from server.");
+            throw new Error("Server doet raar...");
             
         } catch (e: any) {
             console.warn("Something went wrong with receiving a message.");
