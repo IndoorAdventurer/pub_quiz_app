@@ -29,7 +29,8 @@ export default class Lobby extends GameState {
     public bigScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
             .add_html_file("./src/view/html/widgets/lobby_bigscreen.html")
-            .add_js_file("./dist/view/widget_scripts/lobby_bigscreen.js");
+            .add_js_file("./dist/view/widget_scripts/lobby_bigscreen.js")
+            .add_css_file("./src/view/widgets_css/lobby_bigscreen.css");
     }
 
     public playerScreenWidgets(): WidgetSnippets {

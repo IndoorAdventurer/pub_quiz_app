@@ -24,6 +24,7 @@ header {
     height: 6rem;
     display: grid;
     grid-template-columns: 35% auto;
+    overflow: hidden;
 }
 
 .player_card div {

@@ -1,18 +1,18 @@
 import yesOrThrow from "../../utils/yesorthrow.js";
-import OQAnsweringStage from "../constituentstates/oqansweringstage.js";
+import MCQAnsweringStage from "../constituentstates/mcqansweringstage.js";
 import QuestionData from "../constituentstates/questiondata.js";
 import Game from "../game.js";
 
 
 /**
- * Encapsulates an open question. Here a player can type in whatever, and then
- * the admin will have to check the answers. As a result, it exists out of 3
- * game states:
+ * Encapsulates a multiple-choice question. Here, a player gets to see a random
+ * set of options to choose from, and has to select one. It is made up out of
+ * two constituent game states, namely:
  * 1) The state where a player can answer the question;
- * 2) The state where the admin checks the answers;
- * 3) The state where points get rewarded.
+ * 2) The state where points get rewarded.
  */
-export default class OpenQuestion extends OQAnsweringStage {
+export default class MCQuestion extends MCQAnsweringStage {
+
 
     constructor(parent_game: Game, config: { [key: string]: any }) {
         const qdat = new QuestionData(

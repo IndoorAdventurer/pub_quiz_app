@@ -98,6 +98,9 @@ export function socket_listener_setup(socket: WebSocket) {
         // is addressed to, change it to that page (=template)
         if (main_div && new_msg.widget_name !== main_div.className) {
             const template = document.getElementsByClassName(w_name)[0];
+            // old_msg can only cause harm if we have moved to a new widget, so
+            // resetting to default:
+            old_msg = {widget_name: "-"};
             if (template) {
                 main_div.className = template.className;
                 main_div.innerHTML = template.innerHTML;

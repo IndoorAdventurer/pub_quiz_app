@@ -17,7 +17,7 @@
             for (const player of players) {
                 const player_div = document.createElement("div");
                 player_div.className = "lobby_player_li";
-                player_div.innerHTML = player
+                player_div.textContent = player
                 new_list.appendChild(player_div);
             }
             html_list.parentElement?.replaceChild(new_list, html_list);

@@ -1,0 +1,12 @@
+.lobby #lobby_player_list {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.lobby .lobby_player_li {
+    box-shadow: 0 0.3rem 0.5rem #0000005e;
+    margin: 0.3rem;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    border: solid 1px;
+}
