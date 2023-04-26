@@ -114,8 +114,11 @@ document.addEventListener("server_status", (ev) => {
     if (data.status === "state_info") {
         const info_span = document.getElementById("state_info");
         if (info_span) {
+            const at: number = data.widget_index + 1;
+            const of: number = data.num_widgets;
+            const wname: string = data.widget_name;
             info_span.textContent =
-                `At state ${data.widget_index} (${data.widget_name})`;
+                `At state ${at} of ${of} (${wname})`;
         }
     }
     

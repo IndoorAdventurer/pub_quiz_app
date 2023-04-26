@@ -221,7 +221,8 @@ export default class AdminServer implements PlayerListener, GameListener, Server
         socket.send(JSON.stringify({
             status: "state_info",
             widget_name: wn,
-            widget_index: this.game.currentStateIdx()
+            widget_index: this.game.currentStateIdx(),
+            num_widgets: this.game.numberOfStates()
         }));
     }
 
