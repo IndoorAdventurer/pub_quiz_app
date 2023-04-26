@@ -18,7 +18,7 @@
                 "question": "Wat eet ik tegenwoordig op brood?",
                 "correct_answer": "pindakaas",
                 "other_options": ["aap", "noot", "mies"],
-                "case_sensitive": false
+                "point_reward": 3
             }
         },
         {
@@ -26,7 +26,8 @@
             "args": {
                 "question": "Wat eet ik tegenwoordig op brood?",
                 "correct_answer": "Pindakaas",
-                "case_sensitive": false
+                "case_sensitive": false,
+                "point_reward": 3
             }
         },
         {

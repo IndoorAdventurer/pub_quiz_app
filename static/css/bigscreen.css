@@ -55,17 +55,17 @@ header {
 
 /* Main screen stuff: */
 
-.question {
+.quote {
     font-size: 3rem;
     font-style: italic;
     text-align: center;
     max-height: 100%;
 }
 
-.question::before {
+.quote::before {
     content: "“";
 }
 
-.question::after {
+.quote::after {
     content: "”";
 }

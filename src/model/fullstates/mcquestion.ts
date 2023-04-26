@@ -1,4 +1,5 @@
 import yesOrThrow from "../../utils/yesorthrow.js";
+import CheckAnswersStage from "../constituentstates/checkanswersstage.js";
 import MCQAnsweringStage from "../constituentstates/mcqansweringstage.js";
 import QuestionData from "../constituentstates/questiondata.js";
 import Game from "../game.js";
@@ -15,11 +16,11 @@ export default class MCQuestion extends MCQAnsweringStage {
 
 
     constructor(parent_game: Game, config: { [key: string]: any }) {
-        const qdat = new QuestionData(
-            yesOrThrow(config, "correct_answer"),
-            yesOrThrow(config, "case_sensitive")
-        );
+        const qdat = new QuestionData(yesOrThrow(config, "correct_answer"), true);
         
         super(parent_game, config, qdat);
+
+        // This will add the stage that checks the answers to the game:
+        new CheckAnswersStage(parent_game, config, qdat);
     }
 }

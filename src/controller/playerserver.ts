@@ -258,7 +258,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
         socket.send(JSON.stringify({
             widget_name: wn,
             general_info: msg.general_info,
-            player_info: psi
+            player_specific_info: psi
         }));
     }
 
