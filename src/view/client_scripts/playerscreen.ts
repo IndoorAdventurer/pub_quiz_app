@@ -9,6 +9,7 @@ let auth_code: string | undefined;   // corresponding authentication code
  * @param answer The answer to send. Always has to be a string type.
  */
 export function socketMessage(answer: string) {
+    answer = answer.trim();
     const msg: {[key: string]: any} = {answer: answer};
     if (name && auth_code) {
         msg["name"] = name;
@@ -58,7 +59,6 @@ socket.onopen = (ev) => {
 // Update the info the player sees about him/herself
 document.addEventListener("player_update", (event) => {
     const data = (event as CustomEvent).detail.player_update;
-    console.log(data);
     const name_div = document.getElementById("player_name");
     const score_div = document.getElementById("player_score");
     if (name_div && score_div) {
@@ -82,8 +82,10 @@ document.addEventListener("server_status", (ev) => {
 // player is not logged in, but we are also not in the lobby phase
 document.addEventListener("authorize", (ev: Event) => {
     const authorize_btn = document.getElementById("authorize_btn");
-    authorize_btn?.addEventListener("click", (ev) => {
-        console.log("Here!");
+    if (!authorize_btn)
+        return;
+    
+    authorize_btn.onclick = (ev) => {
         const name =
             document.getElementById("authorize_name") as HTMLInputElement | null;
         const auth_code = document.getElementById("authorize_auth_code") as
@@ -97,6 +99,6 @@ document.addEventListener("authorize", (ev: Event) => {
                 auth_code: auth_code.value
             });
         }
-    });
+    };
 });
 

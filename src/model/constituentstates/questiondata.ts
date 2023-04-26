@@ -9,28 +9,22 @@
  */
 export default class QuestionData {
 
+    public exemplar_answer: string;
     public correct_answers: Set<string>;
-    public not_answered: Set<string>;
-    public answers: [string, string][] = [];
+    public player_answers: [string, string][] = [];
 
     private case_sensitive: boolean
 
     /**
      * Constructor
-     * @param correct_answer The correct answer to the quesiton. You can also
-     * give an array of correct answers if multiple are possible
-     * @param players An array of player names that should answer this question.
+     * @param correct_answer The exemplar correct answer. Like, the one that
+     * will be displayed on screen once everyone has given an answer.
      * @param case_sensitive If it should match despite lowecase/uppercase.
      * Default is `false`, making it more lenient.
      */
-    constructor(
-        correct_answer: string | string[],
-        players: string[],
-        case_sensitive: boolean = false
-    ) {
-        this.correct_answers = typeof correct_answer == "string" ?
-            new Set([correct_answer]) : new Set(correct_answer);
-        this.not_answered = new Set(players);
+    constructor(correct_answer: string, case_sensitive: boolean = false) {
+        this.exemplar_answer = correct_answer;
+        this.correct_answers = new Set([correct_answer]);
         this.case_sensitive = case_sensitive;
     }
 
@@ -44,13 +38,6 @@ export default class QuestionData {
         for (const answer of answers)
             this.correct_answers.add(answer);
     }
-    
-    /**
-     * @returns True if all players have given an answer. False if not.
-     */
-    public allPlayersAnswered(): boolean {
-        return this.not_answered.size === 0;
-    }
 
     /**
      * Updates data with new player answer
@@ -58,13 +45,12 @@ export default class QuestionData {
      * @param answer The answer
      */
     public processAnswer(player: string, answer: string) {
-        if (!this.not_answered.has(player)) {
-            console.warn(`Player "${player}" already answered. Ignoring`)
+        if (this.player_answers.find(([name]) => name === player)) {
+            console.warn(`Player "${player}" already answered. Ignoring.`);
             return;
         }
-        
-        this.answers.push([player, answer]);
-        this.not_answered.delete(player);
+
+        this.player_answers.push([player, answer]);
     }
 
     /**
@@ -78,7 +64,7 @@ export default class QuestionData {
                 new Set([...this.correct_answers].map(a => a.toLowerCase()));
         }
         
-        const list = this.answers.filter(([_, answer]) => {
+        const list = this.player_answers.filter(([_, answer]) => {
             if (!this.case_sensitive)
                 answer = answer.toLowerCase();
             return this.correct_answers.has(answer);
@@ -86,8 +72,7 @@ export default class QuestionData {
 
         // Clear all data so we don't fuck up if we have to go back somewhere:
         this.correct_answers = new Set();
-        this.not_answered = new Set();
-        this.answers = [];
+        this.player_answers = [];
 
         // Return the names of our heroes:
         return list.map(([player]) => player);

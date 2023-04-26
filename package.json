@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "start": "node dist/index.js",
-    "build": "npm run build_gamestates && npm run build_server && npm run build_client",
-    "build_gamestates": "node ./dist/utils/collectgamestates.js",
+    "build": "npm run collect_gamestates && npm run build_server && npm run build_client",
+    "collect_gamestates": "node ./dist/utils/collectgamestates.js",
     "build_server": "tsc",
     "build_client": "tsc --project ./tsconfig.client.json",
-    "test": "jest"
+    "test": "jest",
+    "make_gamestate": "node ./dist/utils/makegamestate.js"
   },
   "keywords": [],
   "author": "",

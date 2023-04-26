@@ -4,14 +4,14 @@ describe("Basic question data mechanics", () => {
     
     test("Testing case insensitive situation", () => {
 
-        const qd = new QuestionData("aap", ["jan", "piet", "derk"]);
+        const qd = new QuestionData("aap");
 
         qd.processAnswer("piet", "Aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("jan", "aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("derk", "noot");
-        expect(qd.allPlayersAnswered()).toBe(true);
+        expect(qd.player_answers.length === 3).toBe(true);
 
         const s = qd.setDumpAndClear();
         expect(s.has("piet")).toBe(true);
@@ -22,14 +22,14 @@ describe("Basic question data mechanics", () => {
 
     test("Testing case sensitive situation", () => {
 
-        const qd = new QuestionData("aap", ["jan", "piet", "derk"], true);
+        const qd = new QuestionData("aap", true);
 
         qd.processAnswer("piet", "Aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("jan", "aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("derk", "noot");
-        expect(qd.allPlayersAnswered()).toBe(true);
+        expect(qd.player_answers.length === 3).toBe(true);
 
         const s = qd.setDumpAndClear();
         expect(s.has("piet")).toBe(false);
@@ -40,14 +40,14 @@ describe("Basic question data mechanics", () => {
 
     test("Testing ordering", () => {
 
-        const qd = new QuestionData("aap", ["jan", "piet", "derk"]);
+        const qd = new QuestionData("aap");
 
         qd.processAnswer("piet", "Aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("derk", "noot");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("jan", "aap");
-        expect(qd.allPlayersAnswered()).toBe(true);
+        expect(qd.player_answers.length === 3).toBe(true);
 
         const l = qd.listDumpAndClear();
         expect(l.indexOf("piet")).toBe(0);
@@ -58,14 +58,14 @@ describe("Basic question data mechanics", () => {
 
     test("Testing adding more correct answers", () => {
 
-        const qd = new QuestionData("aap", ["jan", "piet", "derk"], true);
+        const qd = new QuestionData("aap", true);
 
         qd.processAnswer("piet", "Aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("jan", "aap");
-        expect(qd.allPlayersAnswered()).toBe(false);
+        expect(qd.player_answers.length === 3).toBe(false);
         qd.processAnswer("derk", "noot");
-        expect(qd.allPlayersAnswered()).toBe(true);
+        expect(qd.player_answers.length === 3).toBe(true);
 
         qd.addCorrectAnswers(["noot"]);
 
@@ -74,5 +74,25 @@ describe("Basic question data mechanics", () => {
         expect(s.has("jan")).toBe(true);
         expect(s.has("derk")).toBe(true);
     });
+
+    test("A second answer of a player should get ingored", () => {
+        const qd = new QuestionData("aap", true);
+
+        qd.processAnswer("piet", "Aap");
+        expect(qd.player_answers.length).toBe(1);
+        qd.processAnswer("jan", "aap");
+        expect(qd.player_answers.length).toBe(2);
+        qd.processAnswer("piet", "aap");
+        expect(qd.player_answers.length).toBe(2);
+        qd.processAnswer("derk", "noot");
+        expect(qd.player_answers.length).toBe(3);
+        qd.processAnswer("derk", "aap");
+        expect(qd.player_answers.length).toBe(3);
+
+        const s = qd.setDumpAndClear();
+        expect(s.has("piet")).toBe(false);
+        expect(s.has("jan")).toBe(true);
+        expect(s.has("derk")).toBe(false);
+    })
     
 });

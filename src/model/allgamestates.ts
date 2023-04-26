@@ -1,10 +1,13 @@
+import OpenQuestion from "./fullstates/openquestion.js";
 import StaticPage from "./fullstates/staticpage.js";
 import type Game from "./game.js";
 import GameState from "./gamestate.js";
 
 
 export const all_game_states: all_game_states_type = {
+    openquestion : OpenQuestion,
     staticpage : StaticPage,
+
 };
 
 // Specify type as object that maps strings to GameState constructors:

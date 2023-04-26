@@ -11,11 +11,14 @@ import { socketMessageUnsafe } from "../client_scripts/playerscreen.js"
                 HTMLInputElement | null);
             const btn = document.getElementById("lobby_btn");
             
-            btn?.addEventListener("click", (ev) => {
+            if (!btn)
+                return;
+            
+            btn.onclick = (ev) => {
                 if (inp?.value) {
                     socketMessageUnsafe({name: inp.value});
                 }
-            });
+            };
         }
     });
 

@@ -44,7 +44,7 @@ export const all_game_states: all_game_states_type = {\n`;
 
 // All entries:
 for (const [_, name] of class_list) {
-    outfile += `    ${name.toLocaleLowerCase()} : ${name},`;
+    outfile += `    ${name.toLocaleLowerCase()} : ${name},\n`;
 }
 
 outfile += `

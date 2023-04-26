@@ -13,6 +13,14 @@
             }
         },
         {
+            "name": "openquestion",
+            "args": {
+                "question": "Wat eet ik tegenwoordig op brood?",
+                "correct_answer": "Pindakaas",
+                "case_sensitive": false
+            }
+        },
+        {
             "name": "staticpage",
             "args": {
                 "html_content": "<h1>Testing 2</h1><p>Here I am testing the second static page 😎</p>"

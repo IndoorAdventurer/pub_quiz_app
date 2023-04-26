@@ -174,7 +174,10 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 this.game.currentState().playerAnswer(data.name, data.answer))) {
 
                 // No news is good news:
-                socket.send(JSON.stringify({ status: "failure" }));
+                socket.send(JSON.stringify({
+                    status: "failure",
+                    error_msg: "Kon je antwoord niet verwerken."
+                }));
                 return;
             }
         }

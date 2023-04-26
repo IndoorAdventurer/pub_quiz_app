@@ -8,5 +8,7 @@
  * @throws Error if `obj[key] == undefined`
  */
 export default function yesOrThrow(obj: {[key: string]: any}, key: string): any {
-    return obj[key] || (() => {throw new Error(`${key} not specified`)})();
+    if (key in obj)
+        return obj[key];
+    throw new Error(`${key} not specified`);
 }

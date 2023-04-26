@@ -3,7 +3,6 @@
     document.addEventListener("lobby", (ev: Event) => {
         const msg = (ev as CustomEvent).detail.new_msg.general_info;
         const players = msg.all_players;
-        console.log(msg);
 
         // Display message on the screen
         const msg_div = document.getElementById("welcome_msg");
