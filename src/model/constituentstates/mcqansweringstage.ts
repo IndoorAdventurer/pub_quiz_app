@@ -5,6 +5,7 @@ import { GameDataMsg } from "../gametypes.js";
 import yesOrThrow from "../../utils/yesorthrow.js";
 import QuestionData from "./questiondata.js";
 import OQAnsweringStage from "./oqansweringstage.js";
+import shuffle_strings from "../../utils/shuffle.js";
 
 /**
  * Multiple Choice Question -- Answering Stage. So in other words, this
@@ -36,7 +37,7 @@ export default class MCQAnsweringStage extends OQAnsweringStage {
         const correct_answer: string = yesOrThrow(config, "correct_answer");
         const other_options: string[] = yesOrThrow(config, "other_options");
         this.options = other_options.concat(correct_answer);
-        this.options.sort(() => Math.random() - 0.5);
+        this.options = shuffle_strings(this.options);
     }
 
     public bigScreenWidgets(): WidgetSnippets {

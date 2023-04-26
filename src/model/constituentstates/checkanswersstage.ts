@@ -50,7 +50,8 @@ export default class CheckAnswersStage extends GameState {
     public playerScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
             .add_html_file("./src/view/html/widgets/checkanswersstage_playerscreen.html")
-            .add_js_file("./dist/view/widget_scripts/checkanswersstage_playerscreen.js");
+            .add_js_file("./dist/view/widget_scripts/checkanswersstage_playerscreen.js")
+            .add_css_file("./src/view/widgets_css/checkanswersstage_playerscreen.css");
     }
 
     public adminScreenWidgets(): WidgetSnippets {
