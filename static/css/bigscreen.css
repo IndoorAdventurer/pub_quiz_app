@@ -5,6 +5,10 @@ body {
     flex-direction: column;
 }
 
+h1 {
+    text-align: center;
+}
+
 header {
     margin-bottom: 1px;
 }
@@ -68,4 +72,9 @@ header {
 
 .quote::after {
     content: "”";
+}
+
+.big_logo {
+    height: 40vh;
+    margin-bottom: 1rem;
 }

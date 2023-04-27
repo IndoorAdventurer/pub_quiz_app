@@ -18,9 +18,11 @@ export default class MCQuestion extends MCQAnsweringStage {
     constructor(parent_game: Game, config: { [key: string]: any }) {
         const qdat = new QuestionData(yesOrThrow(config, "correct_answer"), true);
         
+        // Construct parent: the game state that actually allows players to give
+        // multiple choice answers:
         super(parent_game, config, qdat);
 
-        // This will add the stage that checks the answers to the game:
+        // This will add the stage that checks answers and gives points:
         new CheckAnswersStage(parent_game, config, qdat);
     }
 }

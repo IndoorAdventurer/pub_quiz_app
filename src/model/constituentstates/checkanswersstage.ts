@@ -19,6 +19,8 @@ export default class CheckAnswersStage extends GameState {
      * Constructor of `CheckAnswersStage`
      * @param parent_game The `Game` this lobby will be added to
      * @param config The config object.
+     * @param qdat The QuestionData object allowing multiple game states to
+     * have access to the same data.
      */
     constructor(parent_game: Game, config: { [key: string]: any }, qdat: QuestionData) {
         super(parent_game, config);

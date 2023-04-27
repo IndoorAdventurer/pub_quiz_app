@@ -149,6 +149,11 @@ export default class AdminServer implements PlayerListener, GameListener, Server
                     }
                     return;
                 
+                // If action undefined or anything else, we let the game deal
+                // with it :-)
+                default:
+                    this.game.currentState().adminAnswer(data);
+                
                 // Set wildcard authcode of PlayerServer:
                 case "set_wildcard_auth":
                     if ("auth_code" in data)

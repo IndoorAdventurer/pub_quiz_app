@@ -9,6 +9,11 @@
         "/img/wrong_ans_gif3.gif",
         "/img/wrong_ans_gif4.gif",
         "/img/wrong_ans_gif5.gif",
+        "/img/wrong_ans_gif6.gif",
+        "/img/wrong_ans_gif7.gif",
+        "/img/wrong_ans_gif8.gif",
+        "/img/wrong_ans_gif9.gif",
+        "/img/wrong_ans_gif10.gif"
     ];
 
     // Pre-loading the gifs:
