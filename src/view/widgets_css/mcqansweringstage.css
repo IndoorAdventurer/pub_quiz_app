@@ -12,6 +12,7 @@
     display: flex;
     justify-content: start;
 
+    color: rgb(var(--mycolor));
     background-color: transparent;
     border-style: solid;
     border-width: 3px;
@@ -20,6 +21,13 @@
     margin: 0.3rem;
     padding: .5rem 2rem .5rem 2rem;
     font-size: 1.2rem;
+
+    transition: 300ms;
+}
+
+.color-list-li:hover, .color-list-li:active {
+    background-color: rgba(var(--mycolor), 0.3);
+    
 }
 
 .color-list .color-list-li > span {
@@ -28,17 +36,17 @@
 }
 
 .color-list > *:nth-child(4n + 1) {
-    color: #ffb663;
+    --mycolor: 255, 182, 99;
 }
 
 .color-list > *:nth-child(4n + 2) {
-    color: #66b5ff;
+    --mycolor: 102, 181, 255;
 }
 
 .color-list > *:nth-child(4n + 3) {
-    color: #7fca61;
+    --mycolor: 127, 202, 97;
 }
 
 .color-list > *:nth-child(4n + 4) {
-    color: #ff91ce;
+    --mycolor: 255, 145, 206;
 }

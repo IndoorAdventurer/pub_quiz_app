@@ -1,5 +1,7 @@
 (function(){
     
+    const right_gif = "/img/correct_ans_gif.gif";
+    
     // Gifs showing that the answer is wrong 😈:
     const wrong_gifs = [
         "/img/wrong_ans_gif1.gif",
@@ -8,6 +10,12 @@
         "/img/wrong_ans_gif4.gif",
         "/img/wrong_ans_gif5.gif",
     ];
+
+    // Pre-loading the gifs:
+    [...wrong_gifs, right_gif].forEach((file) => {
+        const img = new Image();
+        img.src = file;
+    });
     
     
     /**
@@ -47,7 +55,7 @@
         
         // Showing player if he/she answered correctly:
         if (msg?.answer_correct)
-            reveal_answer("/img/correct_ans_gif.gif", "#004500", 1900);
+            reveal_answer(right_gif, "#004500", 1900);
         else {
             const img = wrong_gifs[Math.floor(Math.random() * wrong_gifs.length)];
             reveal_answer(img, "#530101", 50);

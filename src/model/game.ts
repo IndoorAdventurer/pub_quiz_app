@@ -274,8 +274,9 @@ export default class Game {
         const data = Array.from(this.players)
             .map(([name, fields]) => ({ name, ...fields }));
 
-        // Sort in descending order based on score:
-        data.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+        // Sort in descending order based on isplaying, then score, then name:
+        data.sort((a, b) => (b.isplaying ? 1 : 0) - (a.isplaying ? 1 : 0) ||
+            b.score - a.score || a.name.localeCompare(b.name));
 
         return data;
     }
