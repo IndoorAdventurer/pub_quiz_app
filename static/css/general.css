@@ -13,24 +13,32 @@ body {
     background: linear-gradient(150deg, #4A7180, #132e38);
     min-height: 100vh;
     font-family: "Oswald", "PubQuizFont(oswald)", monospace, sans-serif;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
     background-color: white;
     box-shadow: 0 .5rem 1rem;
-    margin-bottom: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 0.6rem;
     display: flex;
     align-items: center;
 }
 
 header > img {
-    width: min(12rem, 15vw);
-    margin-left: 1rem;
+    height: min(6rem, 17vh);
     margin-right: 1rem;
 }
 
+#centering-div {
+    background-color: transparent;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
 
 #main {
     width: 60%;
@@ -39,7 +47,6 @@ header > img {
     min-height: 60vh;
     background-color: #ffffff;
     color: #1C2F33;
-    margin: auto;
     padding: 1rem;
     box-shadow: 0 .5rem 1rem;
 

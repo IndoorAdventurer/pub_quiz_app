@@ -1,5 +1,9 @@
 /* Header stuff: */
 
+html {
+    font-size: min(120%, 2.7vh);
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -47,9 +51,11 @@ header {
 }
 
 .player_card_name {
+    font-size: 1.2rem;
     font-weight: bold;
     grid-column: 2;
     align-items: end;
+    white-space: nowrap;
 }
 
 .player_card_score {
