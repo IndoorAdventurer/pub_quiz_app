@@ -15,24 +15,27 @@ h1 {
 
 header {
     margin-bottom: 1px;
+    overflow: hidden;
 }
 
 #leaderboard {
     display: flex;
     margin-left: 3rem;
-    overflow: hidden;
 }
 
 .player_card {
     box-shadow: 0 .2rem 0.5rem #00000099;
     border: #1C2F33 solid 2px;
-    margin: 0.5rem;
+    margin: 0 0.5rem 0 0.5rem;
     padding: 0 1rem 0 1rem;
     width: min(12rem, 20vw);
-    height: 6rem;
+    height: 5rem;
     display: grid;
     grid-template-columns: 35% auto;
     overflow: hidden;
+    background-color: white;
+
+    transition: transform 300ms;
 }
 
 .player_card div {
