@@ -46,9 +46,7 @@ export default class OQAnsweringStage extends GameState {
 
     public adminScreenWidgets(): WidgetSnippets {
         // Just the same as bigscreen, so the admin can read it from there.
-        return new WidgetSnippets()
-            .add_html_file("./src/view/html/widgets/oqansweringstage_bigscreen.html")
-            .add_js_file("./dist/view/widget_scripts/oqansweringstage_bigscreen.js");
+        return this.bigScreenWidgets();
     }
 
     public playerAnswer(name: string, response: string): boolean {

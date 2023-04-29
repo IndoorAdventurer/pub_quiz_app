@@ -57,9 +57,7 @@ export default class CheckAnswersStage extends GameState {
     }
 
     public adminScreenWidgets(): WidgetSnippets {
-        return new WidgetSnippets()
-            .add_html_file("./src/view/html/widgets/checkanswersstage_bigscreen.html")
-            .add_js_file("./dist/view/widget_scripts/checkanswersstage_bigscreen.js");
+        return this.bigScreenWidgets();
     }
 
     public stateMsg(): GameDataMsg {

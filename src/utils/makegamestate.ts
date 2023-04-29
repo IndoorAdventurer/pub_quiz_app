@@ -122,9 +122,10 @@ const css_template = `/* TODO */`;
         // Step 1: asking if it should go in ./src/model/fullstates or
         // ./src/model/constituentstates
         const isFull = await askYesNoQuestion(
-            "Is this a full game state (i.e. a question or an info page), or is " +
-            "is this a constituent game state (i.e. part of another game state, " +
-            "such as the stage of the question where answers can be given)?"
+            "Is this a full game state? In other words: can it directly be " +
+            "added to the game? If not, it will be put treated as a " +
+            "constituent game state, which is meant to be used by other game " +
+            "states to make a full one."
         );
         const target_dir_name = isFull ? "fullstates" : "constituentstates";
 

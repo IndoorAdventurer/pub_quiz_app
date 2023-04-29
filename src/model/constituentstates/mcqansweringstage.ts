@@ -57,10 +57,7 @@ export default class MCQAnsweringStage extends OQAnsweringStage {
 
     public adminScreenWidgets(): WidgetSnippets {
         // Just the same as bigscreen, so the admin can read it from there.
-        return new WidgetSnippets()
-            .add_html_file("./src/view/html/widgets/mcqansweringstage_bigscreen.html")
-            .add_js_file("./dist/view/widget_scripts/mcqansweringstage_bigscreen.js")
-            .add_css_file("./src/view/widgets_css/mcqansweringstage.css");
+        return this.bigScreenWidgets();
     }
 
     public stateMsg(): GameDataMsg {
