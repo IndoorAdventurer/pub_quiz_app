@@ -13,6 +13,20 @@
             }
         },
         {
+            "name": "opencrowdjquestion",
+            "args": {
+                "correct_answers": [
+                    "Apen en olifanten",
+                    "Noten en pindakaas en kwallen",
+                    "Miezen en konijnen",
+                    "De aardappels zijn op",
+                    "Ik moet straks even plassen"
+                ],
+                "max_points": 5,
+                "min_points": 1
+            }
+        },
+        {
             "name": "mcquestion",
             "args": {
                 "question": "Wat eet ik tegenwoordig op brood?",

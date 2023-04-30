@@ -1,1 +1,47 @@
-/* TODO */
+#voting_container {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.voting_trey {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.voting_trey > div {
+    padding: 0.5rem;
+    border-radius: 5px;
+    background-color: transparent;
+    border: solid 2px;
+    margin-bottom: 2px;
+    font-size: 1.2rem;
+    user-select: none;
+    overflow: hidden;
+    justify-content: center;
+}
+
+.voting_trey .no_btn {
+    color: rgb(255, 78, 55);
+    text-align: center;
+    font-weight: bold;
+    flex-grow: 1;
+    margin-right: 2px;
+    background-image: linear-gradient(to top,
+            rgba(255, 78, 55, 0.301) var(--fill),
+            transparent var(--fill));
+}
+
+.voting_trey .no_btn::after {
+    content: "NOPE!";
+}
+
+.voting_trey .yes_btn {
+    width: 80%;
+    background-image: linear-gradient(to right,
+            #1c2f335b var(--fill),
+            transparent var(--fill));
+}

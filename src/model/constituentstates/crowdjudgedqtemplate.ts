@@ -20,7 +20,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     private picker: PlayerPicker
     protected active_player: string | null;
-    
+
     /**
      * Fraction of players needed to have marked it as correct before it
      * gets marked as correct and triggers the `handleCorrectAnswer` method
@@ -46,7 +46,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     private max_points: number;
     private min_points: number;
-    
+
     /**
      * Constructor of `CrowdJudgedQTemplate`
      * @param parent_game The `Game` this lobby will be added to
@@ -60,7 +60,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
         const correct_answers = yesOrThrow(config, "correct_answers");
         for (const ca of correct_answers)
             this.answer_map.set(ca, [[], []]);
-        
+
         // Player that says answer was given first will get max_points, one that
         // was last gets min_points. Rest is exponentially interpolated.
         const max = yesOrThrow(config, "max_points");
@@ -73,7 +73,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     @GameState.stateChanger
     public begin_active() {
-        this.active_player = this.picker.pickPlayer(true);
+        this.setActivePlayer(true);
         // TODO start countdown timer
     }
 
@@ -101,8 +101,13 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     public playerAnswer(name: string, response: string): boolean {
         if (name !== this.active_player)
             return this.notPlayingPlayerAnswer(name, response);
-        // TODO handle pass message of active player
         
+        // Player passes, set the next active player:
+        if (response == "pass") {
+            this.setActivePlayer(false);
+            return true;
+        }
+
         return false;
     }
 
@@ -131,14 +136,39 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
             player_list.push(name);
         else
             player_list.splice(pIdx, 1);
-        
+
         this.handleChange(answer);
         return true;
     }
 
     @GameState.stateChanger
-    public adminAnswer(obj: {[key: string]: any}): void {
-        // TODO 
+    public adminAnswer(obj: { [key: string]: any }): void {
+        
+        // If admin marks it, it is final
+        if ("mark_given" in obj && "answer" in obj) {
+            this.grantPoints(this.answer_map.get(obj.answer)?.[0] || []);
+            this.answer_map.delete(obj.answer);
+            this.answ_given.push(obj.answer);
+            this.handleCorrectAnswer(obj.answer);
+            return;
+        }
+
+        // Change a treshold:
+        if ("correct_threshold" in obj)
+            this.correct_threshold = obj.correct_threshold;
+        if ("incorrect_threshold" in obj)
+            this.incorrect_threshold = obj.incorrect_threshold;
+        this.handleChange();
+    }
+
+    private setActivePlayer(isstart: boolean) {
+        this.active_player = this.picker.pickPlayer(isstart);
+        
+        // If we get `undefined`, we excausted the list and must move to the
+        // next round:
+        if (!this.active_player) {
+            this.parent_game.setCurState(1, true);
+        }
     }
 
     /**
@@ -157,12 +187,12 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
             const no_list = this.answer_map.get(key)?.[1];
             if (!yes_list || !no_list)
                 return;
-            
+
             const num_yes = yes_list.length;
             const num_no = no_list.length;
 
             // Check if question passed threshold:
-            if (num_yes > threshold) {
+            if (num_yes >= threshold) {
                 this.grantPoints(yes_list);
                 this.answer_map.delete(key);
                 this.answ_given.push(key);
@@ -172,7 +202,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
             // Check if some people should get penalty for prematurely marking
             // an answer as given, according to others:
             else if (num_yes && num_no >= num_yes * this.incorrect_threshold) {
-                
+
                 // Punish the wrongdoers
                 const score_map = new Map<string, number>();
                 for (const naughty of yes_list)
@@ -180,11 +210,11 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
                 this.parent_game.updateScores(score_map);
 
                 // Reset:
-                this.answer_map.set(key, [[],[]]);
+                this.answer_map.set(key, [[], []]);
             }
         }
     }
-    
+
     /**
      * After an answer has been triggered as given, this function grants points
      * to the nonplaying players who marked it. The first player that marked it
@@ -198,7 +228,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
         const y_0 = this.max_points;
         const decayFactor = this.min_points / y_0;
         const score_map = new Map<string, number>();
-        
+
         for (let idx = 0; idx != N; ++idx) {
             score_map.set(players[idx],
                 Math.floor(y_0 * Math.pow(decayFactor, idx / N))
@@ -245,16 +275,18 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      * say it was given, and the threshold is 2, then it will be 1, since the
      * theshold of 2 means that twice as many people have to say no than yes.
      */
-    private getAnswerMap(): {[key: string]: [number, number]} {
+    private getAnswerMap(): { [key: string]: [number, number] } {
         const notPlaying = this.parent_game.getPlayerNames(false).length;
-        const amap: {[key: string]: [number, number]} = {};
+        const amap: { [key: string]: [number, number] } = {};
         for (const [answ, [yes, no]] of this.answer_map) {
+            const yl = yes.length
+            const nl = no.length;
             amap[answ] = [
                 // "Yes" votes as fraction of threshold, so 1 when reached:
-                yes.length / notPlaying / this.correct_threshold,
+                yl / notPlaying / this.correct_threshold,
 
                 // "No" also as fraction of threshold:
-                no.length / (yes.length * this.incorrect_threshold)
+                yl ? nl / (yl * this.incorrect_threshold) : 0
             ];
         }
 
@@ -269,12 +301,36 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      * will go to the wait screen :-)
      */
     private getPlayerSpecificInfo() {
-        const ret: {[key: string]: {widget_name: any}} = {};
+
+        // Make the inverse of answer_map, so we can tell players what they
+        // already pressed:
+        const player_map: { [player: string]: [string[], string[]] } = {};
+        for (const [answ, [yes_list, no_list]] of this.answer_map) {
+            for (const name of yes_list) {
+                if (!(name in player_map))
+                    player_map[name] = [[], []]
+                player_map[name][0].push(answ);
+            }
+            for (const name of no_list) {
+                if (!(name in player_map))
+                    player_map[name] = [[], []]
+                player_map[name][1].push(answ);
+            }
+        }
+
+        // Make the player specific info object:
+        const ret: {
+            [player: string]: {
+                widget_name: string,
+                pmap?: [string[], string[]]
+            }
+        } = {};
         for (const name of this.parent_game.getPlayerNames(false))
-            ret[name] = { widget_name: "crowdjudge_np" };
+            ret[name] = { widget_name: "crowdjudge_np", pmap: player_map[name] };
         for (const name of this.parent_game.getPlayerNames(true))
             ret[name] = { widget_name: "wait_screen" };
-        ret[this.active_player || ""] = { widget_name: "crowdjudge_p" };
+        if (this.active_player)
+            ret[this.active_player] = { widget_name: "crowdjudge_p" };
 
         return ret;
     }
