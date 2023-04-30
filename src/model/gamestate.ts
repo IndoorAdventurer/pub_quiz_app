@@ -138,7 +138,11 @@ export default abstract class GameState {
         const of = descriptor.value;
         descriptor.value = function (this: GameState, ...args: any[]) {
             const out = of.apply(this, args);
-            this.parent_game.gameStateChange(this.stateMsg());
+            
+            // We cant be sure the current state is `this`, since we might
+            // have signalled to the game that we are done:
+            const msg = this.parent_game.currentState().stateMsg();
+            this.parent_game.gameStateChange(msg);
             return out;
         }
 

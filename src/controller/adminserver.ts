@@ -217,7 +217,7 @@ export default class AdminServer implements PlayerListener, GameListener, Server
     private sendGameUpdate(socket: WebSocket, msg: GameDataMsg) {
         const gi = msg.general_info;
         const ai = msg.admin_info;
-        const wn = ai && "widget_name" in ai ? gi.widget_name : msg.widget_name;
+        const wn = ai && "widget_name" in ai ? ai.widget_name : msg.widget_name;
         socket.send(JSON.stringify({
             widget_name: wn,
             admin_info: ai,
