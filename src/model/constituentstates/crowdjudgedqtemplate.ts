@@ -184,7 +184,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
                 pmap?: [string[], string[]]
             }
         } = {};
-        const player_map = this.jMap.getAnswersForPlayers();
+        const player_map = this.jMap.getVotesOfPlayers();
 
 
         for (const name of this.parent_game.getPlayerNames(false))

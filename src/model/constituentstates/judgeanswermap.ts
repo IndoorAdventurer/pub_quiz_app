@@ -1,5 +1,17 @@
 
-
+/**
+ * In some rounds, the player that is playing will have to speak out loud
+ * the answers. The players that already dropped out of the game will be
+ * the judges then. They get presented with all the right answers, and will
+ * have to press on them once they hear the playing player gave it. If enough
+ * players have said an answer was given, it passes its threshold and will be
+ * marked as given. If, however, some players mark it as given, others will get
+ * the option to correct this and explicitly say it is not given. If enough
+ * people say an answer is not given, the ones that said it was given get points
+ * subtracted.
+ * 
+ * All of the above logic is captured by this class..
+ */
 export default class JudgeAnswerMap {
 
     // See setters for explaination:
@@ -56,7 +68,7 @@ export default class JudgeAnswerMap {
      * @param The The treshold to set
      */
     public setCorrectThreshold(th: number) {
-        if (th <= 0)    // illegal
+        if (th <= 0 || th > 1)    // illegal
             return;
         this.correct_threshold = th;
     }
@@ -117,8 +129,12 @@ export default class JudgeAnswerMap {
     public handleChange(num_judges: number, answer: string | null = null)
         : [string[], Map<string, number>] {
             
-        const correct_th = num_judges * this.correct_threshold;
         const answers = answer ? [answer] : [...this.map.keys()];
+        const correct_th = num_judges * this.correct_threshold;
+        
+        // No judges -- admin is the only to vote:
+        if (correct_th === 0)
+            return [[], new Map()];
 
         const marked_answers: string[] = [];
         const score_update = new Map<string, number>();
@@ -234,7 +250,7 @@ export default class JudgeAnswerMap {
      * first element of the tuple is a list of answers the player voted yes on
      * and the second is a list of answers the player voted no on.
      */
-    public getAnswersForPlayers() {
+    public getVotesOfPlayers() {
         const pMap: { [player: string]: [string[], string[]] } = {};
 
         for (const [answer, [yes_list, no_list]] of this.map) {

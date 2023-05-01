@@ -135,18 +135,21 @@ describe("Updating scores/vals in multiple different ways", () => {
         g.addPlayer("jitse");
 
         expect(g.getPlayerNames().length).toBe(5);
+        expect(g.getPlayerNames(true).length).toBe(5);
         expect(g.getPlayerNames(false).length).toBe(0);
 
         console.log(g.playerDataDump());
         
         g.setIsPlaying(new Set(["theo", "dennis"]), false);
 
-        expect(g.getPlayerNames().length).toBe(3);
+        expect(g.getPlayerNames().length).toBe(5);
+        expect(g.getPlayerNames(true).length).toBe(3);
         expect(g.getPlayerNames(false).length).toBe(2);
 
         g.setIsPlaying(new Set(["jitse", "dennis"]), true);
 
-        expect(g.getPlayerNames().length).toBe(4);
+        expect(g.getPlayerNames().length).toBe(5);
+        expect(g.getPlayerNames(true).length).toBe(4);
         expect(g.getPlayerNames(false).length).toBe(1);
     });
 

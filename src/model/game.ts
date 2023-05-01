@@ -254,15 +254,20 @@ export default class Game {
 
     /**
      * Get an array of names of players.
-     * @param isplaying If `true` (default) it returns to names of all players
+     * @param isplaying If `true` it returns to names of all players
      * for which the `player.isplaying` attribute is `true`. If it is `false` it
-     * instead returns the ones that are not playing anymore.
+     * instead returns the ones that are not playing anymore. By default it is
+     * undefined, and hence returns all player names.
      * @returns Array of names
      */
-    public getPlayerNames(isplaying: boolean = true): string[] {
-        return Array.from(this.players)
-            .filter(([_, player]) => player.isplaying === isplaying)
-            .map(([name, _]) => name);
+    public getPlayerNames(isplaying: boolean | undefined = undefined): string[] {
+        let players = Array.from(this.players);
+        if (isplaying !== undefined) {
+            players = players
+                .filter(([_, player]) => player.isplaying === isplaying);
+        }
+        
+        return players.map(([name, _]) => name);
     }
 
     /**
