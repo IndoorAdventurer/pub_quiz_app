@@ -297,19 +297,28 @@ export default class Game {
      * will be *added* to the existing score of the corresponding players (i.e.
      * `new = old + update`). If it is `false`, the values found in `map` will
      * *overwrite* the old scores (i.e. `new = update`).
+     * @returns `false` if any of the players that got a score update now has a
+     * score lower or equal to 0. `true otherwise`.
      */
     public updateScores(map: Map<string, number>, additive: boolean = true) {
+        let all_positive = true;
+        
         // Iterate over map and update all values
         for (const [name, score] of map.entries()) {
             const player = this.players.get(name);
-            if (player)
+            if (player) {
                 player.score = additive ? player.score + score : score;
+                if (player.score <= 0)
+                    all_positive = false;
+            }
             else
                 console.warn("Tried updating non existing Player. Ignoring");
         }
 
         // Notify of update
         this.playerChange();
+
+        return all_positive;
     }
 
     /**

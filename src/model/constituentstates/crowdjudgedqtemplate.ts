@@ -22,6 +22,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     private picker: PlayerPicker
     protected active_player: string | null;
     private jMap: JudgeAnswerMap;
+    private timer: NodeJS.Timer | undefined;
 
     /**
      * Constructor of `CrowdJudgedQTemplate`
@@ -42,11 +43,12 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     @GameState.stateChanger
     public begin_active() {
         this.setActivePlayer(true);
-        // TODO start countdown timer
+        this.timer = setInterval(() => this.scoreTick(), 1000);
     }
 
     public end_active(): void {
-        // TODO end countdown timer
+        if (this.timer)
+            clearInterval(this.timer);
     }
 
     public playerScreenWidgets(): WidgetSnippets {
@@ -132,6 +134,12 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
             this.parent_game.setCurState(1, true);
     }
 
+    /**
+     * In this type of rounds are turn-based, so there is only one player at
+     * a time who is allowed to answer. This function selects and sets who
+     * this player is.
+     * @param isstart 
+     */
     private setActivePlayer(isstart: boolean) {
         this.active_player = this.picker.pickPlayer(isstart);
         
@@ -140,6 +148,29 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
         if (!this.active_player) {
             this.parent_game.setCurState(1, true);
         }
+    }
+
+    /**
+     * Should get called every second. Lowers the score of the active player
+     * with 1 (its points tick away while he/she has the round, so folding in
+     * time is part of the game too)
+     */
+    @GameState.stateChanger
+    private scoreTick() {        
+        if (this.active_player === null)
+            return;
+        const map = new Map([[this.active_player, -1]]);
+        const aboveZero = this.parent_game.updateScores(map, true);
+
+        // If the player's score reached zero, we grant all players 60 points
+        // extra and terminate that player his/her round:
+        if (aboveZero)
+            return;
+        for (const player of this.parent_game.getPlayerNames(true))
+            map.set(player, 60);
+        this.parent_game.updateScores(map, true);
+        
+        this.setActivePlayer(false);
     }
 
     /**
