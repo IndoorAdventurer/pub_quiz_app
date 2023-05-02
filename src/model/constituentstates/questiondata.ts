@@ -55,7 +55,8 @@ export default class QuestionData {
 
     /**
      * Returns a list of all players that gave a correct answer, and then clears
-     * all data
+     * all data. The list is in order, with the first to have answered at index
+     * 0.
      */
     public listDumpAndClear(): string[] {
         // All players that gave a correct answer:

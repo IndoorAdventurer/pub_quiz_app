@@ -14,6 +14,17 @@
             }
         },
         {
+            "name": "storyquestion",
+            "args": {
+                "story": "Dit wordt een heel lang verhaal!!!!",
+                "correct_answer": "Goeman Borgesius",
+                "case_sensitive": false,
+                "point_reward": 3,
+                "max_points": 10,
+                "min_points": 3
+            }
+        },
+        {
             "name": "mcquestion",
             "args": {
                 "question": "In what year did we start studying AI?",

@@ -15,9 +15,10 @@ import QuestionData from "./questiondata.js";
 export default class CheckAnswersStage extends GameState {
 
     public readonly name = "checkanswersstage";
-    private qdat: QuestionData;
-    private point_reward: number;
-    private player_specific_info: {[key: string]: any} = {};
+    protected qdat: QuestionData;
+    protected point_reward: number;
+    protected player_specific_info: {[key: string]: any} = {};
+    protected already_ran = false;
 
     /**
      * Constructor of `CheckAnswersStage`
@@ -34,6 +35,11 @@ export default class CheckAnswersStage extends GameState {
 
     @GameState.stateChanger
     public begin_active() {
+        // Only run the rest once. Nice so if you go back you still have same
+        if (this.already_ran)
+            return;
+        this.already_ran = true;
+        
         // Get list of players that answered correctly:
         const heroes = this.qdat.listDumpAndClear()
 
