@@ -15,7 +15,8 @@ import { all_game_states } from "./allgamestates.js";
  */
 export default class Game {
 
-    private start_score: number;
+    private start_score: number;        // score players start with
+    private reset_score: number;        // If player gets below 0 add this
 
     private state_sequence: GameState[] = [];       // see `gamestate.ts`
     private cur_state_idx: number = 0;              // index into state_sequence
@@ -39,6 +40,7 @@ export default class Game {
     constructor(config: {[key: string]: any}) {
 
         this.start_score = yesOrThrow(config, "start_score");
+        this.reset_score = yesOrThrow(config, "reset_score");
 
         // `Lobby` is always the first gamestate of any game. It allows users
         // to enter the game before it really starts.
@@ -287,7 +289,9 @@ export default class Game {
     }
 
     /**
-     * Updates the score of multiple players at once.
+     * Updates the score of multiple players at once. If the lowest score `s`
+     * drops to or below zero, `-s + this.reset_score` gets added to the score
+     * for each player.
      * @param map A map containing valid player names as keys, and score updates
      * as values. How scores are actually updated, depends on the `additive`
      * argument. It is possible to just give a single key-value pair per call,
@@ -297,28 +301,32 @@ export default class Game {
      * will be *added* to the existing score of the corresponding players (i.e.
      * `new = old + update`). If it is `false`, the values found in `map` will
      * *overwrite* the old scores (i.e. `new = update`).
-     * @returns `false` if any of the players that got a score update now has a
-     * score lower or equal to 0. `true otherwise`.
+     * @returns `true` under normal circumstances. `false` if any score became
+     * less or equal to zero, such that all players had to get extra points.
      */
     public updateScores(map: Map<string, number>, additive: boolean = true) {
-        let all_positive = true;
+        let min_score = Infinity;
         
         // Iterate over map and update all values
         for (const [name, score] of map.entries()) {
             const player = this.players.get(name);
             if (player) {
                 player.score = additive ? player.score + score : score;
-                if (player.score <= 0)
-                    all_positive = false;
+                min_score = player.score < min_score ? player.score : min_score;
             }
             else
                 console.warn("Tried updating non existing Player. Ignoring");
         }
 
+        if (min_score <= 0) {
+            for (const [_, player] of this.players)
+                player.score += -min_score +  this.reset_score;
+        }
+
         // Notify of update
         this.playerChange();
 
-        return all_positive;
+        return min_score > 0;
     }
 
     /**

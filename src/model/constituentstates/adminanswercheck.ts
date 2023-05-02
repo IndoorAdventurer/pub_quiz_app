@@ -33,8 +33,8 @@ export default class AdminAnswerCheck extends GameState {
 
     public bigScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
-            .add_html_file("./src/view/html/widgets/adminanswercheck_bigscreen.html")
-            .add_js_file("./dist/view/widget_scripts/adminanswercheck_bigscreen.js");
+            .add_html_file("./src/view/html/widgets/wait_bigscreen.html")
+            .add_js_file("./dist/view/widget_scripts/wait_bigscreen.js");
     }
 
     public playerScreenWidgets(): WidgetSnippets {
@@ -57,10 +57,10 @@ export default class AdminAnswerCheck extends GameState {
     }
 
     public stateMsg(): GameDataMsg {
-        // Players to wait_screen, others just to this screen :-)
+        // All to wait screen, except for admin:
         return {
             widget_name: "wait_screen",
-            general_info: { widget_name: this.name },
+            general_info: {},
             admin_info: {
                 widget_name: this.name,
                 exemplar_answer: this.qdat.exemplar_answer,

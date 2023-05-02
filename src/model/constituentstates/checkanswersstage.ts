@@ -6,7 +6,11 @@ import yesOrThrow from "../../utils/yesorthrow.js";
 import QuestionData from "./questiondata.js";
 
 /**
- * TODO: add description!
+ * After questions, points must be rewarded to the players that had the answer
+ * correct. This game state handles this. It gets a `QuestionData` object as
+ * input that contains a set of answer that can be considered correct. Then it
+ * checks for all players if their answer is in that set, and rewards points if
+ * so.
  */
 export default class CheckAnswersStage extends GameState {
 

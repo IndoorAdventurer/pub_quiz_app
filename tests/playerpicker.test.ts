@@ -3,6 +3,7 @@ import PlayerPicker from "../src/model/constituentstates/playerpicker";
 
 const config = {
     start_score: 0,
+    reset_score: 20,
     lobby: {
         big_screen_msg: "-",
     },

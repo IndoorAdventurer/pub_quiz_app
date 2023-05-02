@@ -21,6 +21,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     private picker: PlayerPicker
     protected active_player: string | null;
+    private stop_on_zero: boolean;
     private jMap: JudgeAnswerMap;
     private timer: NodeJS.Timer | undefined;
 
@@ -28,10 +29,20 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      * Constructor of `CrowdJudgedQTemplate`
      * @param parent_game The `Game` this lobby will be added to
      * @param config The config object.
+     * @param picker The `PlayerPicker` that selects next active players
+     * @param stop_on_zero If `true`, the round will stop when the main player
+     * reaches a score of 0. Default is `false`.
      */
-    constructor(parent_game: Game, config: { [key: string]: any }, picker: PlayerPicker) {
+    constructor(
+        parent_game: Game,
+        config: { [key: string]: any },
+        picker: PlayerPicker,
+        stop_on_zero: boolean = false
+
+    ) {
         super(parent_game, config);
         this.picker = picker;
+        this.stop_on_zero = stop_on_zero;
         this.active_player = null;
 
         const correct_answers = yesOrThrow(config, "correct_answers");
@@ -69,7 +80,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     @GameState.stateChanger
     public playerAnswer(name: string, response: string): boolean {
-        
+
         // A non-player (i.e. judge) giving a response: its a vote on an answer:
         if (name !== this.active_player) {
             const answer = response.slice(1);
@@ -78,7 +89,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
                 this.parent_game.getPlayerNames(false).length,
                 answer
             );
-            
+
             // Update scores of active player and judging players:
             for (const ca of correct_answers)
                 this.handleCorrectAnswer(ca);
@@ -90,7 +101,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
             return ret;
         }
-        
+
         // Active player passes, select next player (or exit round):
         if (response == "pass") {
             this.setActivePlayer(false);
@@ -102,7 +113,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     @GameState.stateChanger
     public adminAnswer(obj: { [key: string]: any }): void {
-        
+
         // If admin marks answer, so immediately trigger it as given:
         if ("answer" in obj) {
             const map = this.jMap.markAnswerGivenAndReturnPoints(obj.answer);
@@ -120,10 +131,10 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
             this.jMap.setCorrectThreshold(obj.correct_threshold);
         if ("incorrect_threshold" in obj)
             this.jMap.setIncorrectThreshold(obj.incorrect_threshold);
-        
+
         const [correct_answers, score_map] = this.jMap.handleChange(
             this.parent_game.getPlayerNames(false).length);
-        
+
         // Update scores of active player and judging players:
         for (const ca of correct_answers)
             this.handleCorrectAnswer(ca);
@@ -142,7 +153,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      */
     private setActivePlayer(isstart: boolean) {
         this.active_player = this.picker.pickPlayer(isstart);
-        
+
         // If we get `undefined`, we excausted the list and must move to the
         // next round:
         if (!this.active_player) {
@@ -156,21 +167,19 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      * time is part of the game too)
      */
     @GameState.stateChanger
-    private scoreTick() {        
+    private scoreTick() {
         if (this.active_player === null)
             return;
         const map = new Map([[this.active_player, -1]]);
         const aboveZero = this.parent_game.updateScores(map, true);
 
-        // If the player's score reached zero, we grant all players 60 points
-        // extra and terminate that player his/her round:
-        if (aboveZero)
-            return;
-        for (const player of this.parent_game.getPlayerNames(true))
-            map.set(player, 60);
-        this.parent_game.updateScores(map, true);
-        
-        this.setActivePlayer(false);
+        // If the player's score reached zero we terminate its turn.
+        if (!aboveZero) {
+            if (this.stop_on_zero)
+                this.parent_game.setCurState(1, true);
+            else
+                this.setActivePlayer(false);
+        }
     }
 
     /**

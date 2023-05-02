@@ -23,6 +23,7 @@ class CJQTest extends CrowdJudgedQTemplate {
 
 const configGame = {
     start_score: 0,
+    reset_score: 20,
     lobby: {
         big_screen_msg: "-",
     },
@@ -83,6 +84,8 @@ describe("Basic testing of the CrowdJudgedQTemplate template", () => {
         expect(data[3].name).toBe("c");
         expect(data[3].score).toBe(0);
 
+        g.setCurState(0, false);
+
     });
 
     test("A player gives the wrong answer", () => {
@@ -126,16 +129,18 @@ describe("Basic testing of the CrowdJudgedQTemplate template", () => {
         const data = g.playerDataDump();
 
         expect(data[0].name).toBe("d");
-        expect(data[0].score).toBe(20);
+        expect(data[0].score).toBe(45);
 
         expect(data[1].name).toBe("a");
-        expect(data[1].score).toBe(5);
+        expect(data[1].score).toBe(30);
 
         expect(data[2].name).toBe("c");
-        expect(data[2].score).toBe(0);
+        expect(data[2].score).toBe(25);
 
         expect(data[3].name).toBe("b");
-        expect(data[3].score).toBe(-3);
+        expect(data[3].score).toBe(22);
+
+        g.setCurState(0, false);
 
     })
 

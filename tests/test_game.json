@@ -2,6 +2,7 @@
     "admin_name": "admin",
     "admin_auth_code": "admin",
     "start_score": 3,
+    "reset_score": 20,
     "lobby": {
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },
@@ -13,35 +14,37 @@
             }
         },
         {
-            "name": "opencrowdjquestion",
-            "args": {
-                "correct_answers": [
-                    "Apen en olifanten",
-                    "Noten en pindakaas en kwallen",
-                    "Miezen en konijnen",
-                    "De aardappels zijn op",
-                    "Ik moet straks even plassen"
-                ],
-                "max_points": 5,
-                "min_points": 1
-            }
-        },
-        {
             "name": "mcquestion",
             "args": {
-                "question": "Wat eet ik tegenwoordig op brood?",
-                "correct_answer": "pindakaas",
-                "other_options": ["aap", "noot", "mies"],
+                "question": "In what year did we start studying AI?",
+                "correct_answer": "2018",
+                "other_options": ["2016", "2017", "2019", "2020"],
                 "point_reward": 3
             }
         },
         {
             "name": "openquestion",
             "args": {
-                "question": "Wat eet ik tegenwoordig op brood?",
-                "correct_answer": "Pindakaas",
+                "question": "In what building are we currently?",
+                "correct_answer": "Bernoulliborg",
                 "case_sensitive": false,
                 "point_reward": 3
+            }
+        },
+        {
+            "name": "cjudgedopenquestion",
+            "args": {
+                "question": "What do you know about bananas?",
+                "correct_answers": [
+                    "Fruit",
+                    "Yellow",
+                    "Bent",
+                    "Dancing banana",
+                    "Monkeys"
+                ],
+                "score_subtraction": 20,
+                "max_points": 5,
+                "min_points": 1
             }
         },
         {
