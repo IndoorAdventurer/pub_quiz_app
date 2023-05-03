@@ -4,6 +4,22 @@ import { socket_listener_setup } from "./utils.js";
 let name: string | undefined;        // name of this player
 let auth_code: string | undefined;   // corresponding authentication code
 
+// Setting up the socket:
+let socket = new WebSocket(`ws://${window.location.host}`, "player");
+socket_listener_setup(socket);
+
+// First message to send. When it is able to load name and auth code, and these
+// are valid according to the server, this will immediately cause a promotion.
+socket.onopen = (ev) => {
+    const tmp_name = sessionStorage.getItem("name");
+    const tmp_auth_code = sessionStorage.getItem("auth_code");
+    if (tmp_name && tmp_auth_code) {
+        name = tmp_name;
+        auth_code = tmp_auth_code;
+    }
+    socketMessage("-");
+}
+
 /**
  * Send a message over the socket in a format that suits the server.
  * @param answer The answer to send. Always has to be a string type.
@@ -40,22 +56,6 @@ export function setCreds(new_name: string, new_auth_code: string) {
     sessionStorage.setItem("auth_code", new_auth_code);
 }
 
-// Setting up the socket:
-const socket = new WebSocket(`ws://${window.location.host}`, "player");
-socket_listener_setup(socket);
-
-// First message to send. When it is able to load name and auth code, and these
-// are valid according to the server, this will immediately cause a promotion.
-socket.onopen = (ev) => {
-    const tmp_name = sessionStorage.getItem("name");
-    const tmp_auth_code = sessionStorage.getItem("auth_code");
-    if (tmp_name && tmp_auth_code) {
-        name = tmp_name;
-        auth_code = tmp_auth_code;
-    }
-    socketMessage("-");
-}
-
 // Update the info the player sees about him/herself
 document.addEventListener("player_update", (event) => {
     const data = (event as CustomEvent).detail.player_update;
@@ -72,6 +72,15 @@ document.addEventListener("player_update", (event) => {
 document.addEventListener("server_status", (ev) => {
     const data = (ev as CustomEvent).detail;
 
+    // Server tells us to forget any credentials because they were wrong:
+    if (data.status === "forget_creds") {
+        name = undefined;
+        auth_code = undefined;
+        sessionStorage.removeItem("name");
+        sessionStorage.removeItem("name");
+        socketMessage("-");
+    }
+    
     // Log user in if it received a success status
     if (data.name && data.auth_code)
         setCreds(data.name, data.auth_code);

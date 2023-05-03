@@ -22,7 +22,9 @@ export function socket_listener_setup(socket: WebSocket) {
     let old_msg: game_state_message = {widget_name: "-"};
     let new_msg: game_state_message = {widget_name: "-"};
 
-    socket.onmessage = (event) => {
+    socket.onmessage = onMessage;
+
+    function onMessage(event: MessageEvent) {
         try {
             const data = JSON.parse(event.data);
 

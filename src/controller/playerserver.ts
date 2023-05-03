@@ -209,8 +209,12 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                     socket.send(JSON.stringify({
                         status: "failure",
                         error_msg: "Je hebt (automatisch) een ongeldige naam " +
-                        "of code gestuurd. Open deze website op een nieuwe " +
-                        "pagina."
+                        "of code gestuurd."
+                    }));
+                    
+                    // Tell the client to forget any saved credentials:
+                    socket.send(JSON.stringify({
+                        status: "forget_creds"
                     }));
                 }
             }
