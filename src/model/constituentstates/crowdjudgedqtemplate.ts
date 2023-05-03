@@ -58,8 +58,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     }
 
     public end_active(): void {
-        if (this.timer)
-            clearInterval(this.timer);
+        clearInterval(this.timer);
     }
 
     public playerScreenWidgets(): WidgetSnippets {
@@ -168,6 +167,13 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      */
     @GameState.stateChanger
     private scoreTick() {
+        // Don't want mistakes here: keeping this log() in as long as possible
+        console.log("tick");
+        if (this.parent_game.currentState() !== this) {
+            clearInterval(this.timer);
+            return;
+        }
+
         if (this.active_player === null)
             return;
         const map = new Map([[this.active_player, -1]]);

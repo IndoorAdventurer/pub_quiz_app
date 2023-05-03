@@ -41,6 +41,7 @@ export default class Server {
 
             const route_val = this.routeMap.get(route);
             if (route_val) {
+                Server.makePingable(socket);
                 route_val.add_websocket(socket);
                 return;
             }
@@ -99,6 +100,35 @@ export default class Server {
         this.http_server.listen(port);
     }
 
+    /**
+     * All sockets should return 👌🏻 when they receive 🏓 from a client. These
+     * are ping pong messages to keep the socket active. This function turns
+     * an existing socket into one that has this as default behavior.
+     * @param socket The existing socket to modify
+     */
+    private static makePingable(socket: ws.WebSocket) {
+        // Setting a default listener that returns 🏓 for every msg:
+        socket.addEventListener("message", ev => ev.target.send("👌🏻"));
+        
+        // Overwriting the `onmessage` property with one that puts some pingpong
+        // middleware inbetween, which checks sends 👌🏻 when 🏓 was received.
+        // And otherwise standard behavior
+        Object.defineProperty(socket, "onmessage", {
+            enumerable: true,
+            get() {
+                return Object.getPrototypeOf(this).onmessage;
+            },
+            set(handler) {
+                this.removeAllListeners("message");
+                this.addEventListener("message", (event: ws.MessageEvent) => {
+                    if (event.data === "🏓")
+                        event.target.send("👌🏻");
+                    else
+                        handler(event);
+                });
+            }
+        });
+    }
 }
 
 // Route should always start with a forward slash:

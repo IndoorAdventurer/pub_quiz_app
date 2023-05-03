@@ -16,25 +16,52 @@
  * @param socket The socket to which the `onmessage` listener is added.
  */
 export function socket_listener_setup(socket: WebSocket) {
-    
+
     const main_div = document.getElementById("main");
 
-    let old_msg: game_state_message = {widget_name: "-"};
-    let new_msg: game_state_message = {widget_name: "-"};
+    let old_msg: game_state_message = { widget_name: "-" };
+    let new_msg: game_state_message = { widget_name: "-" };
 
     socket.onmessage = onMessage;
 
+    // Pingpong message every 10 second:
+    let timer = setInterval(() => {
+        if (socket.readyState === WebSocket.CLOSED) {
+            clearInterval(timer);
+            console.log("Closing pingpong!");
+            return;
+        }
+        socket.send("🏓");
+    }, 10_000); // change to 30 seconds later
+
+    // Send a ping when, for example, screen just got unlocked again
+    document.addEventListener("visibilitychange", (ev) => {
+        if (document.visibilityState === "visible" &&
+            socket.readyState !== WebSocket.CLOSED
+        ) {
+            socket.send("🏓");
+        }
+    });
+
+    /**
+     * Defines how to act when we receive a message
+     * @param event The message event we received
+     */
     function onMessage(event: MessageEvent) {
         try {
+            // Pingpong messages: I sent 🏓, server sent 👌🏻 back.
+            if (event.data === "👌🏻") {
+                return;
+            }
+
             const data = JSON.parse(event.data);
 
             // Check for a failure message first:
-            if ("status" in data)
-            {
+            if ("status" in data) {
                 handleStatusMsg(data);
                 return;
             }
-    
+
             // Its a game state message, so calling its method:
             if ("widget_name" in data) {
                 handleGameStateMessage(data);
@@ -43,17 +70,17 @@ export function socket_listener_setup(socket: WebSocket) {
 
             // Player updates should be handled by specific handler:
             if ("player_update" in data) {
-                const ev = new CustomEvent("player_update", {detail: data});
+                const ev = new CustomEvent("player_update", { detail: data });
                 document.dispatchEvent(ev);
                 return;
             }
 
             throw new Error("Server doet raar...");
-            
+
         } catch (e: any) {
             console.warn("Something went wrong with receiving a message.");
             console.warn(e);
-            
+
             // Errors are shown as pop-up messages:
             if (e instanceof Error) {
                 const error_div = document.createElement("div");
@@ -71,12 +98,12 @@ export function socket_listener_setup(socket: WebSocket) {
      * @param data The received message from the server, which contains the
      * `status` keyword
      */
-    function handleStatusMsg(data: {status: string, [key: string]: string}) {
+    function handleStatusMsg(data: { status: string, [key: string]: string }) {
         if (data.status === "failure") {
             const msg = "error_msg" in data ? data.error_msg : "Server error";
             throw new Error(msg);
         }
-        const ev = new CustomEvent("server_status", {detail: data});
+        const ev = new CustomEvent("server_status", { detail: data });
         document.dispatchEvent(ev);
     }
 
@@ -93,7 +120,7 @@ export function socket_listener_setup(socket: WebSocket) {
         // allows for comparisons, to see what needs to be changed.
         old_msg = new_msg;
         new_msg = data;
-        
+
         const w_name = new_msg.widget_name;
 
         // If the active page (check with id) is not the one the message
@@ -102,7 +129,7 @@ export function socket_listener_setup(socket: WebSocket) {
             const template = document.getElementsByClassName(w_name)[0];
             // old_msg can only cause harm if we have moved to a new widget, so
             // resetting to default:
-            old_msg = {widget_name: "-"};
+            old_msg = { widget_name: "-" };
             if (template) {
                 main_div.className = template.className;
                 main_div.innerHTML = template.innerHTML;
@@ -114,11 +141,13 @@ export function socket_listener_setup(socket: WebSocket) {
         }
 
         // Emit an event that the relevant widget script can receive:
-        const ev = new CustomEvent(w_name, {detail: {
-            main_div: main_div,
-            old_msg: old_msg,
-            new_msg: new_msg
-        }});
+        const ev = new CustomEvent(w_name, {
+            detail: {
+                main_div: main_div,
+                old_msg: old_msg,
+                new_msg: new_msg
+            }
+        });
         document.dispatchEvent(ev);
     }
 }

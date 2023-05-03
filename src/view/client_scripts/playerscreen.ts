@@ -10,7 +10,7 @@ socket_listener_setup(socket);
 
 // First message to send. When it is able to load name and auth code, and these
 // are valid according to the server, this will immediately cause a promotion.
-socket.onopen = (ev) => {
+socket.onopen = ev => {
     const tmp_name = sessionStorage.getItem("name");
     const tmp_auth_code = sessionStorage.getItem("auth_code");
     if (tmp_name && tmp_auth_code) {
@@ -19,6 +19,9 @@ socket.onopen = (ev) => {
     }
     socketMessage("-");
 }
+
+// When the socket closes we simply wait 3 seconds and reload the page...
+socket.onclose = ev => setTimeout(() => location.reload(), 1_000);
 
 /**
  * Send a message over the socket in a format that suits the server.
