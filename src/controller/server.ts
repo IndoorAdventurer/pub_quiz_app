@@ -103,7 +103,8 @@ export default class Server {
     /**
      * All sockets should return 👌🏻 when they receive 🏓 from a client. These
      * are ping pong messages to keep the socket active. This function turns
-     * an existing socket into one that has this as default behavior.
+     * an existing socket into one that has this behavior. Even after you set
+     * the onmessage property to another function.
      * @param socket The existing socket to modify
      */
     private static makePingable(socket: ws.WebSocket) {
@@ -111,7 +112,7 @@ export default class Server {
         socket.addEventListener("message", ev => ev.target.send("👌🏻"));
         
         // Overwriting the `onmessage` property with one that puts some pingpong
-        // middleware inbetween, which checks sends 👌🏻 when 🏓 was received.
+        // middleware inbetween, which sends 👌🏻 when 🏓 was received.
         // And otherwise standard behavior
         Object.defineProperty(socket, "onmessage", {
             enumerable: true,

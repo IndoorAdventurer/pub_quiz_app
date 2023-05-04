@@ -16,7 +16,7 @@ export default class StoryQuestion extends OQAnsweringStage {
     constructor(parent_game: Game, config: { [key: string]: any }) {
         const qdat = new QuestionData(
             yesOrThrow(config, "correct_answer"),
-            yesOrThrow(config, "case_sensitive")
+            true
         );
         
         // Construct parent: the game state that allows players to give open

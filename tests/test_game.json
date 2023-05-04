@@ -14,31 +14,41 @@
             }
         },
         {
-            "name": "storyquestion",
+            "name": "connectionround",
             "args": {
-                "story": "Dit wordt een heel lang verhaal!!!!",
-                "correct_answer": "Goeman Borgesius",
-                "case_sensitive": false,
-                "point_reward": 3,
-                "max_points": 10,
-                "min_points": 3
-            }
-        },
-        {
-            "name": "mcquestion",
-            "args": {
-                "question": "In what year did we start studying AI?",
-                "correct_answer": "2018",
-                "other_options": ["2016", "2017", "2019", "2020"],
-                "point_reward": 3
-            }
-        },
-        {
-            "name": "openquestion",
-            "args": {
-                "question": "In what building are we currently?",
-                "correct_answer": "Bernoulliborg",
-                "case_sensitive": false,
+                "gamestates": [
+                    {
+                        "name": "storyquestion",
+                        "args": {
+                            "story": "Dit wordt een heel lang verhaal!!!!",
+                            "correct_answer": "Goeman Borgesius",
+                            "point_reward": 3,
+                            "max_points": 10,
+                            "min_points": 3
+                        },
+                        "answer": "Goeman"
+                    },
+                    {
+                        "name": "mcquestion",
+                        "args": {
+                            "question": "In what year did we start studying AI?",
+                            "correct_answer": "2018",
+                            "other_options": ["2016", "2017", "2019", "2020"],
+                            "point_reward": 3
+                        },
+                        "answer": "2018"
+                    },
+                    {
+                        "name": "openquestion",
+                        "args": {
+                            "question": "In what building are we currently?",
+                            "correct_answer": "Bernoulliborg",
+                            "point_reward": 3
+                        },
+                        "answer": "BB, the Blue Building :-D"
+                    }
+                ],
+                "correct_answer": "Dingen",
                 "point_reward": 3
             }
         },

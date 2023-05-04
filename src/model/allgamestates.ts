@@ -1,5 +1,6 @@
 import AdminMsgState from "./fullstates/adminmsgstate.js";
 import CJudgedOpenQuestion from "./fullstates/cjudgedopenquestion.js";
+import ConnectionRound from "./fullstates/connectionround.js";
 import MCQuestion from "./fullstates/mcquestion.js";
 import OpenQuestion from "./fullstates/openquestion.js";
 import StaticPage from "./fullstates/staticpage.js";
@@ -11,6 +12,7 @@ import GameState from "./gamestate.js";
 export const all_game_states: all_game_states_type = {
     adminmsgstate : AdminMsgState,
     cjudgedopenquestion : CJudgedOpenQuestion,
+    connectionround : ConnectionRound,
     mcquestion : MCQuestion,
     openquestion : OpenQuestion,
     staticpage : StaticPage,

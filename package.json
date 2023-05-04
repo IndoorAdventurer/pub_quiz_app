@@ -1,7 +1,20 @@
 {
   "name": "goemanquizapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "An extensive web app for hosting fun and interactive pub quizzes.",
+  "keywords": [
+    "typescript",
+    "pub quiz",
+    "express",
+    "websockets",
+    "no frameworks",
+    "slimste mens",
+    "the connection",
+    "2 voor 12",
+    "game"
+  ],
+  "author": "Vincent Tonkes",
+  "license": "MIT",
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
@@ -13,9 +26,6 @@
     "test": "jest",
     "make_gamestate": "node ./dist/utils/makegamestate.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",

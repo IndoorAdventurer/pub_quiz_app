@@ -1,0 +1,13 @@
+#connection_answers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#connection_answers > div {
+    margin: 0.3rem;
+    padding: 0 0.3rem 0.1rem 0.3rem;
+    background-color: #95bac9;
+    border-radius: 0.5rem;
+    color: white;
+}
