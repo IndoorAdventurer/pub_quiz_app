@@ -1,0 +1,18 @@
+.multimediapage {
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.multimediapage > .visual_element {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    background-color: white;
+    padding: 0.5rem;
+    border: 3px black solid;
+    box-shadow: 1rem 1rem 1rem black;
+}

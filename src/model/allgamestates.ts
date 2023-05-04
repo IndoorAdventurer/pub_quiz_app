@@ -2,6 +2,7 @@ import AdminMsgState from "./fullstates/adminmsgstate.js";
 import CJudgedOpenQuestion from "./fullstates/cjudgedopenquestion.js";
 import ConnectionRound from "./fullstates/connectionround.js";
 import MCQuestion from "./fullstates/mcquestion.js";
+import MultimediaPage from "./fullstates/multimediapage.js";
 import OpenQuestion from "./fullstates/openquestion.js";
 import StaticPage from "./fullstates/staticpage.js";
 import StoryQuestion from "./fullstates/storyquestion.js";
@@ -14,6 +15,7 @@ export const all_game_states: all_game_states_type = {
     cjudgedopenquestion : CJudgedOpenQuestion,
     connectionround : ConnectionRound,
     mcquestion : MCQuestion,
+    multimediapage : MultimediaPage,
     openquestion : OpenQuestion,
     staticpage : StaticPage,
     storyquestion : StoryQuestion,

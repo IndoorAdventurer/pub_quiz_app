@@ -10,7 +10,28 @@
         {
             "name": "staticpage",
             "args": {
-                "html_content": "<h1>Testing 1</h1><p>Here I am testing the first static page 🤓</p>"
+                "html_content": "<h1>Media Tests</h1><p>Nu volgt een programma in de zendtijd van sexy mensen</p>"
+            }
+        },
+        {
+            "name": "multimediapage",
+            "args": {
+                "type": "image",
+                "path": "/media/img_test.webp"
+            }
+        },
+        {
+            "name": "multimediapage",
+            "args": {
+                "type": "audio",
+                "path": "/media/audio_test.wav"
+            }
+        },
+        {
+            "name": "multimediapage",
+            "args": {
+                "type": "video",
+                "path": "/media/video_test.mp4"
             }
         },
         {
