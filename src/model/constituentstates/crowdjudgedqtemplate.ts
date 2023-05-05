@@ -22,7 +22,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     private picker: PlayerPicker
     protected active_player: string | null;
     private stop_on_zero: boolean;
-    private jMap: JudgeAnswerMap;
+    protected jMap: JudgeAnswerMap;
     private timer: NodeJS.Timer | undefined;
 
     /**

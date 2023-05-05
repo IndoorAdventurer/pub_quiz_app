@@ -2,12 +2,12 @@ import { readFileSync } from "fs";
 import Game from "../src/model/game";
 import { PlayerListener } from "../src/model/gametypes";
 
-const config_file = "./tests/test_game.json"; // TODO: get from CLI arguments
-const config = JSON.parse(readFileSync(config_file, "utf-8"));
+const config_file = "./tests/test_game.json";
 
 describe('Adding players to the game', () => {
     test(`Adding one player should result in one player.
     Removing it should remove it again`, () => {
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         g.addPlayer("vincent");
         expect(g.getPlayerNames().length).toBe(1);
@@ -16,6 +16,7 @@ describe('Adding players to the game', () => {
     });
 
     test(`Adding players, and removing one that doesn't exist.`, () => {
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         g.addPlayer("vincent");
         expect(g.getPlayerNames().length).toBe(1);
@@ -44,6 +45,7 @@ describe('Adding players to the game', () => {
     });
 
     test("Adding same person twice should return false without any changes", () => {
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("vincent");
@@ -59,6 +61,7 @@ describe('Adding players to the game', () => {
 
 describe("Updating scores/vals in multiple different ways", () => {
     test("Updating the scores in a relative manner", () => {
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("dennis");
@@ -92,6 +95,7 @@ describe("Updating scores/vals in multiple different ways", () => {
     });
 
     test("Updating the scores in an absolute manner", () => {
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("dennis");
@@ -127,6 +131,7 @@ describe("Updating scores/vals in multiple different ways", () => {
     });
 
     test("Test the isplaying functionality", () => {
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         g.addPlayer("vincent");
         g.addPlayer("dennis");
@@ -167,7 +172,7 @@ class L implements PlayerListener {
 
 describe("Seeing if player listening works as it should", () => {
     test("single listener", () => {
-
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         const l = new L();
         g.addPlayerListener(l);
@@ -202,6 +207,7 @@ describe("Seeing if player listening works as it should", () => {
     test("multiple listeners", () => {
         // Also this test isn't completely what it should be anymore because I
         // changed the behavior of addPlayer() ...
+        const config = JSON.parse(readFileSync(config_file, "utf-8"));
         const g = new Game(config);
         const l1 = new L();
         const l2 = new L();

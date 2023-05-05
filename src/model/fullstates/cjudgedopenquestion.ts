@@ -16,7 +16,7 @@ import CrowdJudgedShowAnswers from "../constituentstates/crowdjudgedshowanswers.
  */
 export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
     
-    public readonly name: string = "cjudgedopenquestion"
+    public readonly name: string = "cjudgedopenquestion";
 
     private question: string;
     private score_subtraction: number;
@@ -35,7 +35,7 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
         // The answering stage itself:
         super(parent_game, config, picker, true);
 
-        // Show all the correct answers after the question at the end
+        // Show all the correct answers at the end:
         new CrowdJudgedShowAnswers(parent_game, config);
 
         this.question = question;

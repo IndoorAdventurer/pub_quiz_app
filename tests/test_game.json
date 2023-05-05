@@ -1,8 +1,8 @@
 {
     "admin_name": "admin",
     "admin_auth_code": "admin",
-    "start_score": 3,
-    "reset_score": 20,
+    "start_score": 60,
+    "reset_score": 60,
     "lobby": {
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },
@@ -11,6 +11,55 @@
             "name": "staticpage",
             "args": {
                 "html_content": "<h1>Media Tests</h1><p>Nu volgt een programma in de zendtijd van sexy mensen</p>"
+            }
+        },
+        {
+            "name": "cjudgedmovieround",
+            "args": {
+                "questions": [
+                    {
+                        "type": "image",
+                        "path": "/media/img_test.webp",
+                        "correct_answers": [
+                            "Aap",
+                            "Noot",
+                            "Mies",
+                            "Paard",
+                            "Koe"
+                        ],
+                        "score_sum": 150,
+                        "max_points": 5,
+                        "min_points": 1
+                    },
+                    {
+                        "type": "image",
+                        "path": "/media/img_test.webp",
+                        "correct_answers": [
+                            "Aap",
+                            "Noot",
+                            "Mies",
+                            "Paard",
+                            "Koe"
+                        ],
+                        "score_sum": 150,
+                        "max_points": 5,
+                        "min_points": 1
+                    },
+                    {
+                        "type": "image",
+                        "path": "/media/img_test.webp",
+                        "correct_answers": [
+                            "Aap",
+                            "Noot",
+                            "Mies",
+                            "Paard",
+                            "Koe"
+                        ],
+                        "score_sum": 150,
+                        "max_points": 5,
+                        "min_points": 1
+                    }
+                ]
             }
         },
         {
