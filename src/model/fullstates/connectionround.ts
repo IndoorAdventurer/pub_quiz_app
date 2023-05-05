@@ -22,7 +22,8 @@ export default class ConnectionRound extends ConnectionAnsweringStage {
 
         // Going over the rounds the question is made of. In addition to name
         // and args, we should now also specify the answer field. Not relying on
-        // the "correct_answer" field inside args, for flexibility.
+        // the "correct_answer" field inside of args for flexibility: what if
+        // we want to add a static or multimedia page inbetween, for exmaple.
         const connection_answers: string[] = [];
         for (const gs of yesOrThrow(config, "gamestates")) {
             const name = yesOrThrow(gs, "name");

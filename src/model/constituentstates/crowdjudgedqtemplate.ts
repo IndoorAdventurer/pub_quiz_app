@@ -209,7 +209,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
             general_info: {
                 active_player: this.active_player,
                 answer_map: amap,
-                given_answers: this.jMap.given_answers
+                answers: this.jMap.given_answers
             },
             admin_info: { widget_name: "crowdjudge" },
             player_specific_info: psi

@@ -5,10 +5,11 @@ import WidgetSnippets from "../../view/widgetsnippets.js";
 import { GameDataMsg } from "../gametypes.js";
 import yesOrThrow from "../../utils/yesorthrow.js";
 import AdminMsgState from "./adminmsgstate.js";
+import CrowdJudgedShowAnswers from "../constituentstates/crowdjudgedshowanswers.js";
 
 
 /**
- * This is an open question where the crown, i.e. the eliminated players, have
+ * This is an open question where the crowd, i.e. the eliminated players, have
  * to judge if an answer is given. So the quizmaster asks a question in the form
  * of: "What do you know about X", and the candidate has to give, say, 5 answers.
  * The crowd sees these 5 and have to press when it is given.
@@ -31,7 +32,11 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
         // First a state where only the admin already gets to see the quesion:
         new AdminMsgState(parent_game, { message: question });
 
+        // The answering stage itself:
         super(parent_game, config, picker, true);
+
+        // Show all the correct answers after the question at the end
+        new CrowdJudgedShowAnswers(parent_game, config);
 
         this.question = question;
         

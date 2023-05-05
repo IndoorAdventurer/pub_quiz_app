@@ -24,6 +24,9 @@ export function socket_listener_setup(socket: WebSocket) {
 
     socket.onmessage = onMessage;
 
+    // When the socket closes we simply wait 1 seconds and reload the page...
+    socket.onclose = ev => setTimeout(() => location.reload(), 1_000);
+
     // Pingpong message every 10 second:
     let timer = setInterval(() => {
         if (socket.readyState === WebSocket.CLOSED) {

@@ -20,9 +20,6 @@ socket.onopen = ev => {
     socketMessage("-");
 }
 
-// When the socket closes we simply wait 3 seconds and reload the page...
-socket.onclose = ev => setTimeout(() => location.reload(), 1_000);
-
 /**
  * Send a message over the socket in a format that suits the server.
  * @param answer The answer to send. Always has to be a string type.

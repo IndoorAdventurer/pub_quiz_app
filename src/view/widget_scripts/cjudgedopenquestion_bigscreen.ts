@@ -4,7 +4,7 @@ import { crowdJudgedRedraw } from "../client_scripts/crowdjudgedutils.js"
         const msg = (ev as CustomEvent).detail.new_msg;
 
         // Show the answers that were already given:
-        crowdJudgedRedraw(msg, "active_player_span", "answers_list");
+        crowdJudgedRedraw(msg, "answers_list", "active_player_span");
 
         // Show the question:
         const qfield = document.getElementById("question_field");
