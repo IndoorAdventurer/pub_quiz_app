@@ -4,7 +4,7 @@ import { socket_listener_setup } from "./utils.js";
 const socket = new WebSocket(`ws://${window.location.host}`, "admin");
 socket_listener_setup(socket);
 
-//---FUNCTION DEFINITIONS:------------------------------------------------------
+//---EXPORTS:-------------------------------------------------------------------
 /**
  * Send a message over the websocket
  * @param msg The message to be sent: a javascript object.
@@ -12,25 +12,6 @@ socket_listener_setup(socket);
 export function socketMessage(msg: { [key: string]: any }) {
     socket.send(JSON.stringify(msg));
 }
-
-/**
- * Send a message about switching to another game state
- * @param idx The index into the list of game states to move to. If
- * `relative` is `true`, then the index will be relative to the current
- * state.
- * @param relative Boolean value. If `true`, it will considered `idx` to be
- * relative to the current state. I.e. if we are at state 5 and `idx` is 1,
- * we move to state 6. If `false` (default), it will consider `idx` as
- * absolute.
- */
-function setGameState(idx: number, relative: boolean) {
-    socketMessage({
-        action: "set_game_state",
-        idx: idx,
-        relative: relative
-    });
-}
-
 
 //---ADMIN LOGIN:---------------------------------------------------------------
 
@@ -51,6 +32,24 @@ login_btn?.addEventListener("click", (ev) => {
 
 
 //---GAMESTATE NAVIGATION:------------------------------------------------------
+
+/**
+ * Send a message about switching to another game state
+ * @param idx The index into the list of game states to move to. If
+ * `relative` is `true`, then the index will be relative to the current
+ * state.
+ * @param relative Boolean value. If `true`, it will considered `idx` to be
+ * relative to the current state. I.e. if we are at state 5 and `idx` is 1,
+ * we move to state 6. If `false` (default), it will consider `idx` as
+ * absolute.
+ */
+function setGameState(idx: number, relative: boolean) {
+    socketMessage({
+        action: "set_game_state",
+        idx: idx,
+        relative: relative
+    });
+}
 
 // Adding a listener for the "previous" button:
 const game_nav_prev_btn = document.getElementById("game_nav_prev");
@@ -114,17 +113,19 @@ document.addEventListener("server_status", (ev) => {
     if (data.status === "state_info") {
         const info_span = document.getElementById("state_info");
         if (info_span) {
-            const at: number = data.widget_index + 1;
-            const of: number = data.num_widgets;
+            const at: number = data.widget_index;       // counting from zero
+            const of: number = data.num_widgets - 1;    // want last 2B: N of N
+            // If we exclude the lobby, it is like counting from one now.
+
             const wname: string = data.widget_name;
             info_span.textContent =
                 `At state ${at} of ${of} (${wname})`;
         }
     }
     
-    // If we receive a "logged in" status, we are logged in and we can delete
+    // If we receive a "logged_in" status, we are logged in and we can delete
     // the login div:
-    if (data.status === "logged in") {
+    if (data.status === "logged_in") {
         const login_div = document.getElementById("login_panel");
         login_div?.remove();
     }

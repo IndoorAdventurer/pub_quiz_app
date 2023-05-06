@@ -190,7 +190,7 @@ export default class AdminServer implements PlayerListener, GameListener, Server
                 socket.onmessage = (ev) => this.known_client_listener(socket, ev);
 
                 // Sending bunch of update messages directly:
-                socket.send(JSON.stringify({ status: "logged in" }));
+                socket.send(JSON.stringify({ status: "logged_in" }));
 
                 const msgGame = this.game.getGameDataMsg();
                 this.sendGameUpdate(socket, msgGame);

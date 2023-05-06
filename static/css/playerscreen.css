@@ -25,6 +25,7 @@ input {
     font-family: monospace;
     font-weight: bold;
     color: #1C2F33;
+    outline: none;
 }
 
 input:focus {

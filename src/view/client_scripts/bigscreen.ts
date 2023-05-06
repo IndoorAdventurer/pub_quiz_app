@@ -83,6 +83,12 @@ function update_leaderboard(data: player_data, map: [string, HTMLElement][]) {
         for (let idx = 0; idx != data.length; ++idx) {
             const card_div = document.createElement("div");
             card_div.className = "player_card";
+            
+            // grey out nonplayers:
+            if (!data[idx].isplaying) {
+                card_div.style.backgroundColor = "#ababab";
+                card_div.style.color = "#5c5c5c";
+            }
     
             const nth_div = document.createElement("div");
             nth_div.className = "player_card_nth";
@@ -118,4 +124,4 @@ function update_leaderboard(data: player_data, map: [string, HTMLElement][]) {
         setTimeout(() => arr.forEach(elem => elem.style.transform = "none"), 30);
 }
 
-type player_data = {name: string, score: number}[];
+type player_data = {name: string, score: number, isplaying: boolean}[];
