@@ -4,6 +4,7 @@ import CJudgedOpenQuestion from "./fullstates/cjudgedopenquestion.js";
 import ConnectionRound from "./fullstates/connectionround.js";
 import HorseJump from "./fullstates/horsejump.js";
 import MCQuestion from "./fullstates/mcquestion.js";
+import MemoryList from "./fullstates/memorylist.js";
 import MultimediaPage from "./fullstates/multimediapage.js";
 import OpenQuestion from "./fullstates/openquestion.js";
 import StaticPage from "./fullstates/staticpage.js";
@@ -20,6 +21,7 @@ export const all_game_states: all_game_states_type = {
     connectionround : ConnectionRound,
     horsejump : HorseJump,
     mcquestion : MCQuestion,
+    memorylist : MemoryList,
     multimediapage : MultimediaPage,
     openquestion : OpenQuestion,
     staticpage : StaticPage,

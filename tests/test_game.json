@@ -8,6 +8,13 @@
     },
     "gamestates": [
         {
+            "name": "memorylist",
+            "args": {
+                "list": ["Bejaarde", "Aap", "Noot", "Mies", "Paardenwagen en stal", "Dit is nummertje zes jongeman!", "Zeven", "Laatste alweer"],
+                "time_seconds": 35
+            }
+        },
+        {
             "name": "topnfliter",
             "args": { "top_n": 3 }
         },
