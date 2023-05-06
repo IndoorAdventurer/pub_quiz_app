@@ -1,6 +1,6 @@
-// Directly got this from stack overflow:
+// Got this from stack overflow:
 // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
-
+// Made some (imo) improvements, tho, and converted to Typescript
 
 /**
  * Function I copied from stackoverflow.com to shuffle arrays. How rediculous
@@ -8,7 +8,7 @@
  * @param array Array of strings to shuffle
  * @returns The array gotten as input, but shuffled the shit out of
  */
-export default function shuffle_strings(array: string[]) {
+export default function shuffle_array<T>(array: T[]) {
     let currentIndex = array.length;
     let randomIndex: number;
 
@@ -16,8 +16,7 @@ export default function shuffle_strings(array: string[]) {
     while (currentIndex != 0) {
 
         // Pick a remaining element.
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
+        randomIndex = Math.floor(Math.random() * currentIndex--);
 
         // And swap it with the current element.
         [array[currentIndex], array[randomIndex]] = [

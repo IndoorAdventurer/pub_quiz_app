@@ -8,6 +8,33 @@
     },
     "gamestates": [
         {
+            "name": "cjudgedpuzzleround",
+            "args": {
+                "puzzles": [
+                    {
+                        "puzzle": {
+                            "Aap": ["Aap1", "Aap2", "Aap3", "Aap4"],
+                            "Noot": ["Noot1", "Noot2", "Noot3", "Noot4"],
+                            "Mies": ["Mies1", "Mies2", "Mies3", "Mies4"]
+                        },
+                        "points_per_correct": 20,
+                        "max_points": 5,
+                        "min_points": 1
+                    },
+                    {
+                        "puzzle": {
+                            "Paard": ["Paard1", "Paard2", "Paard3", "Paard4"],
+                            "Koe": ["Koe1", "Koe2", "Koe3", "Koe4"],
+                            "Kat": ["Kat1", "Kat2", "Kat3", "Kat4"]
+                        },
+                        "points_per_correct": 20,
+                        "max_points": 5,
+                        "min_points": 1
+                    }
+                ]
+            }
+        },
+        {
             "name": "memorylist",
             "args": {
                 "list": ["Bejaarde", "Aap", "Noot", "Mies", "Paardenwagen en stal", "Dit is nummertje zes jongeman!", "Zeven", "Laatste alweer"],

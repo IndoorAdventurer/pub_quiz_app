@@ -14,6 +14,8 @@
  * contents of
  * @param ap_div_id The id of the div to put the name of the active player in.
  * This is an optional argument: if it is not given, we ignore drawing this.
+ * @returns If all goes well, it returns a map linking answers (strings) to li
+ * HTML elements, so the caller can still set some extra attributes, for example.
  */
 export function crowdJudgedRedraw(msg: any, list_id: string, ap_div_id?: string) {
     // Draw the list of given answers:
@@ -27,10 +29,14 @@ export function crowdJudgedRedraw(msg: any, list_id: string, ap_div_id?: string)
     const answers: string[] = msg.general_info.answers;
     const clone = list_elem.cloneNode(false);
 
+    // Creating this map so we can do things to it later
+    const liMap = new Map<string, HTMLLIElement>();
+    
     for (const answer of answers) {
         const li = document.createElement("li");
         li.textContent = answer;
         clone.appendChild(li);
+        liMap.set(answer, li);
     }
 
     list_elem.parentElement?.replaceChild(clone, list_elem);
@@ -38,11 +44,13 @@ export function crowdJudgedRedraw(msg: any, list_id: string, ap_div_id?: string)
 
     // Draw the name of the active player (optional):
     if (!ap_div_id || !msg?.general_info?.active_player)
-        return;
+        return liMap;
     
     const name_elem = document.getElementById(ap_div_id);
     if (!name_elem)
-        return;
+        return liMap;
     
     name_elem.textContent = msg.general_info.active_player;
+
+    return liMap;
 }
