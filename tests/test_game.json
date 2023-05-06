@@ -8,10 +8,14 @@
     },
     "gamestates": [
         {
+            "name": "topnfliter",
+            "args": { "top_n": 3 }
+        },
+        {
             "name": "horsejump",
             "args": {
                 "word": "Bejaarde",
-                "time_seconds": 40
+                "time_seconds": 35
             }
         },
         {
