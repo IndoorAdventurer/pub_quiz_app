@@ -2,6 +2,7 @@ import AdminMsgState from "./fullstates/adminmsgstate.js";
 import CJudgedMovieRound from "./fullstates/cjudgedmovieround.js";
 import CJudgedOpenQuestion from "./fullstates/cjudgedopenquestion.js";
 import ConnectionRound from "./fullstates/connectionround.js";
+import HorseJump from "./fullstates/horsejump.js";
 import MCQuestion from "./fullstates/mcquestion.js";
 import MultimediaPage from "./fullstates/multimediapage.js";
 import OpenQuestion from "./fullstates/openquestion.js";
@@ -16,6 +17,7 @@ export const all_game_states: all_game_states_type = {
     cjudgedmovieround : CJudgedMovieRound,
     cjudgedopenquestion : CJudgedOpenQuestion,
     connectionround : ConnectionRound,
+    horsejump : HorseJump,
     mcquestion : MCQuestion,
     multimediapage : MultimediaPage,
     openquestion : OpenQuestion,

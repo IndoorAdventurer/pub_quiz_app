@@ -87,3 +87,27 @@ header {
     height: 40vh;
     margin-bottom: 1rem;
 }
+
+/* Loading bar: */
+.timer_bar {
+    width: 18rem; /* default, but overwrite if needed overwrite ;-) */
+    height: 1rem;
+    background-color: aliceblue;
+    border: #90aeb3 solid 1px;
+    border-radius: 0.5rem;
+    margin: 0.5rem;
+    overflow: hidden;
+}
+
+.timer_bar > .timer_bar_fill {
+    background-color: #9bced6;
+    height: 0.9rem;
+    border-radius: 0.5rem;
+    border: white solid 2px;
+    animation: timer_bar_progression forwards linear var(--time_to_fill);
+}
+
+@keyframes timer_bar_progression {
+    from { width: 0%; }
+    to { width: 100%; }
+}

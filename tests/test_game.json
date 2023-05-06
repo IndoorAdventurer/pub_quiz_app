@@ -8,9 +8,10 @@
     },
     "gamestates": [
         {
-            "name": "staticpage",
+            "name": "horsejump",
             "args": {
-                "html_content": "<h1>Media Tests</h1><p>Nu volgt een programma in de zendtijd van sexy mensen</p>"
+                "word": "Bejaarde",
+                "time_seconds": 40
             }
         },
         {

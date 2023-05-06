@@ -1,0 +1,25 @@
+#hj_table, #hj_table th, #hj_table td {
+    border: 2px solid #1C2F33;
+    border-collapse: collapse;
+}
+
+#hj_table th {
+    font-size: 3.5rem;
+    width: 5.2rem;
+    height: 5.2rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#hj_table img {
+    height: 4.5rem;
+}
+
+#hj_table_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
