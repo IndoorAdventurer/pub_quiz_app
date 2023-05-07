@@ -6,6 +6,7 @@ import yesOrThrow from "../../utils/yesorthrow.js";
 import PlayerPicker from "./playerpicker.js";
 import CrowdJudgedShowAnswers from "./crowdjudgedshowanswers.js";
 import shuffle_array from "../../utils/shuffle.js";
+import JudgeInformAdminMsg from "./judgeinformadminmsg.js";
 
 /**
  * This is the puzzle question of De Slimste Mens. Each player has to find `N`
@@ -32,8 +33,13 @@ export default class CrowdJudgedPuzzleQuestion extends CrowdJudgedQTemplate {
         // The keys are the answers:
         const correct_answers = Object.keys(config.puzzle)
         config["correct_answers"] = correct_answers;
+                
+        // Show the judges the answers already:
+        config["message"] = "Puzzelvraag";
+        config["judgeinform_question"] = "Zoek de verbanden bij de trefwoorden.";
+        new JudgeInformAdminMsg(parent_game, config);
         
-        // Let the player play the puzzle immediately:
+        // Let the players play the puzzle:
         super(parent_game, config, picker);
 
         // Show all the correct answers at the end:

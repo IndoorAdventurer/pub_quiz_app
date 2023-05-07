@@ -4,8 +4,8 @@ import PlayerPicker from "../constituentstates/playerpicker.js";
 import WidgetSnippets from "../../view/widgetsnippets.js";
 import { GameDataMsg } from "../gametypes.js";
 import yesOrThrow from "../../utils/yesorthrow.js";
-import AdminMsgState from "./adminmsgstate.js";
 import CrowdJudgedShowAnswers from "../constituentstates/crowdjudgedshowanswers.js";
+import JudgeInformAdminMsg from "../constituentstates/judgeinformadminmsg.js";
 
 
 /**
@@ -29,8 +29,11 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
         const picker = new PlayerPicker(parent_game);
         const question = yesOrThrow(config, "question");
         
-        // First a state where only the admin already gets to see the quesion:
-        new AdminMsgState(parent_game, { message: question });
+        config["message"] = "QUESTION: " + question;
+        config["judgeinform_question"] = question;
+        
+        // Show admin the question, and judge question and answers:
+        new JudgeInformAdminMsg(parent_game, config);
 
         // The answering stage itself:
         super(parent_game, config, picker, true);
