@@ -3,6 +3,7 @@ import CJudgedMovieRound from "./fullstates/cjudgedmovieround.js";
 import CJudgedOpenQuestion from "./fullstates/cjudgedopenquestion.js";
 import CJudgedPuzzleRound from "./fullstates/cjudgedpuzzleround.js";
 import ConnectionRound from "./fullstates/connectionround.js";
+import FinalConnection from "./fullstates/finalconnection.js";
 import HorseJump from "./fullstates/horsejump.js";
 import MCQuestion from "./fullstates/mcquestion.js";
 import MemoryList from "./fullstates/memorylist.js";
@@ -21,6 +22,7 @@ export const all_game_states: all_game_states_type = {
     cjudgedopenquestion : CJudgedOpenQuestion,
     cjudgedpuzzleround : CJudgedPuzzleRound,
     connectionround : ConnectionRound,
+    finalconnection : FinalConnection,
     horsejump : HorseJump,
     mcquestion : MCQuestion,
     memorylist : MemoryList,

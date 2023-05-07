@@ -8,6 +8,13 @@
     },
     "gamestates": [
         {
+            "name": "finalconnection",
+            "args": {
+                "admin_text": "{Hoi}, ik ben {Vincent}!. Ik ben {heel erg lief}!!! {Groetjes ;-)}",
+                "start_bonus": 60
+            }
+        },
+        {
             "name": "cjudgedpuzzleround",
             "args": {
                 "puzzles": [
