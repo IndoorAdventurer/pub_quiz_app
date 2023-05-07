@@ -1,11 +1,10 @@
 import Game from "../game.js";
 import CrowdJudgedQTemplate from "./crowdjudgedqtemplate.js";
 import WidgetSnippets from "../../view/widgetsnippets.js";
-import { GameDataMsg } from "../gametypes.js";
 import yesOrThrow from "../../utils/yesorthrow.js";
 import PlayerPicker from "./playerpicker.js";
-import MultimediaPage from "../fullstates/multimediapage.js";
 import CrowdJudgedShowAnswers from "./crowdjudgedshowanswers.js";
+import JudgeInformMovie from "./judgeinformmovie.js";
 
 /**
  * In this type of question, the candidate(s) first get to see a video clip and
@@ -26,8 +25,11 @@ export default class CrowdJudgedMovieQuestion extends CrowdJudgedQTemplate {
      */
     constructor(parent_game: Game, config: { [key: string]: any }, picker: PlayerPicker) {
         
-        // First show the movie:
-        new MultimediaPage(parent_game, config);
+        // Setting the question the judges get to see to something generic here:
+        config["judgeinform_question"] = "Zoek trefwoorden bij het clipje.";
+
+        // First show the movie and inform judges already of correct answers:
+        new JudgeInformMovie(parent_game, config);
         
         // Let players answer:
         super(parent_game, config, picker);

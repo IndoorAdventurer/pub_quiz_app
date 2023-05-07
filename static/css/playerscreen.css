@@ -58,3 +58,7 @@ button:hover, button:active {
     background-color: #456a70;
     padding: .5rem 2.5rem .5rem 2.5rem;
 }
+
+ul {
+    padding-left: 2rem;
+}
