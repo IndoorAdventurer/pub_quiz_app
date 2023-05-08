@@ -7,6 +7,7 @@ import Lobby from "./lobby.js";
 import { readFileSync } from "fs";
 import yesOrThrow from "../utils/yesorthrow.js";
 import { all_game_states } from "./allgamestates.js";
+import gamelogger from "../utils/datarecording.js";
 
 /**
  * The main class managing all the data for a game. Most notably, it
@@ -37,7 +38,7 @@ export default class Game {
      * @param config A configuration object defining the whole game in terms of
      * key-value-pairs
      */
-    constructor(config: {[key: string]: any}) {
+    constructor(config: { [key: string]: any }) {
 
         this.start_score = yesOrThrow(config, "start_score");
         this.reset_score = yesOrThrow(config, "reset_score");
@@ -59,7 +60,7 @@ export default class Game {
             this.createView("./src/view/html/playerscreen.html", "playerScreenWidgets");
         this.adminView =
             this.createView("./src/view/html/adminscreen.html", "adminScreenWidgets");
-        
+
         // Let the first state know it is time for action:
         this.state_sequence[0].begin_active();
     }
@@ -126,9 +127,14 @@ export default class Game {
             return;
         }
 
-        this.state_sequence[this.cur_state_idx].end_active()
+        const old_idx = this.cur_state_idx;
+        this.state_sequence[old_idx].end_active()
         this.cur_state_idx = idx;
         this.state_sequence[idx].begin_active();
+
+        gamelogger.log(`State change: ${old_idx} → ${idx}. Now in state: ` +
+            this.state_sequence[idx].name);
+        gamelogger.logMap(this.players);
     }
 
     /**
@@ -166,7 +172,7 @@ export default class Game {
             ...cur_state.stateMsg()
         };
     }
-    
+
     /**
      * Notifies all listeners of a change in game state!
      * @param msg An object describing the state of the game.
@@ -268,7 +274,7 @@ export default class Game {
             players = players
                 .filter(([_, player]) => player.isplaying === isplaying);
         }
-        
+
         return players.map(([name, _]) => name);
     }
 
@@ -306,7 +312,7 @@ export default class Game {
      */
     public updateScores(map: Map<string, number>, additive: boolean = true) {
         let min_score = Infinity;
-        
+
         // Iterate over map and update all values
         for (const [name, score] of map.entries()) {
             const player = this.players.get(name);
@@ -320,7 +326,7 @@ export default class Game {
 
         if (min_score <= 0) {
             for (const [_, player] of this.players)
-                player.score += -min_score +  this.reset_score;
+                player.score += -min_score + this.reset_score;
         }
 
         // Notify of update

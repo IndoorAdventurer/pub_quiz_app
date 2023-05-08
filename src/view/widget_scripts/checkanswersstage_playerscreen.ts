@@ -41,7 +41,7 @@
         setTimeout(() => {
             gif.src = "";
             gif.src = img.src;
-        }, 30);
+        }, 15);
 
         // Temporarily changing background with big div:
         const bg = document.createElement("div");

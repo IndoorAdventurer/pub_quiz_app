@@ -4,6 +4,7 @@ import { GameDataMsg, PlayerListener, GameListener, PlayerDataMsg }
 import Server, { ServerListener } from "./server.js";
 import { Request, Response } from "express";
 import { WebSocket, MessageEvent } from "ws";
+import gamelogger from "../utils/datarecording.js";
 
 /**
  * This class is responsible for handling all traffic to and from the players.
@@ -179,6 +180,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      */
     private known_client_listener(socket: WebSocket, event: MessageEvent) {
         try {
+            gamelogger.log("playerserver client msg: " + event.data);
             // Checking if everything okay, and then forward answer to GameState.
             const data = JSON.parse(event.data.toString());
             if (!("name" in data &&
@@ -200,6 +202,11 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
             // Here I won't immediately close the connection since that might
             // cause more harm than good stuff. I forgot how it goes..
             console.warn("known_client_listener threw error!\n", e);
+                      
+            if ("message" in e && "name" in e)
+                gamelogger.log(e.name + " error from known client:\n" + e.message);
+            else
+                gamelogger.log("Unknown error from known client!")
         }
     }
 
@@ -214,6 +221,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
      */
     private anonymous_client_listener(socket: WebSocket, event: MessageEvent) {
         try {
+            gamelogger.log("playerserver, anon msg: " + event.data);
             const data = JSON.parse(event.data.toString());
             const state_name = this.game.currentState().name;
             if ("name" in data && "auth_code" in data) {
@@ -261,6 +269,11 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
         catch (e: any) {
             console.warn("anonymous player threw error!", e);
             socket.close();
+
+            if ("message" in e && "name" in e)
+                gamelogger.log(e.name + " error from anon client:\n" + e.message);
+            else
+                gamelogger.log("Unknown error from anon client!")
         }
     }
 

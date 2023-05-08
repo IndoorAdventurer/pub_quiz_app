@@ -1,6 +1,7 @@
 {
     "admin_name": "admin",
     "admin_auth_code": "admin",
+    "logfile": "./playground/logtest.txt",
     "start_score": 60,
     "reset_score": 60,
     "lobby": {
