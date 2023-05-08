@@ -1,8 +1,10 @@
 (function(){
     
-    const right_gif = "/img/correct_ans_gif.gif";
+    // GIF showing that the answer is right:
+    const right_gif = new Image();
+    right_gif.src = "/img/correct_ans_gif.gif";
     
-    // Gifs showing that the answer is wrong 😈:
+    // Gif showing that the answer is wrong 😈:
     const wrong_gifs = [
         "/img/wrong_ans_gif1.gif",
         "/img/wrong_ans_gif2.gif",
@@ -14,29 +16,32 @@
         "/img/wrong_ans_gif8.gif",
         "/img/wrong_ans_gif9.gif",
         "/img/wrong_ans_gif10.gif"
-    ];
-
-    // Pre-loading the gifs:
-    [...wrong_gifs, right_gif].forEach((file) => {
+    ].map(src => {
         const img = new Image();
-        img.src = file;
+        img.src = src;
+        return img;
     });
-    
     
     /**
      * Spectacular reveal with GIFs and colors to show an answer :-)
      * @param path 
      * @param bg_color 
      */
-    function reveal_answer(path: string, bg_color: string, bg_delay: number) {
+    function reveal_answer(img: HTMLImageElement, bg_color: string, bg_delay: number) {
         const main = document.getElementById("main");
 
         // Adding a GIF:
         const gif = document.createElement("img");
         gif.id = "eval_gif";
-        gif.src = path;
+        gif.src = img.src;
         gif.alt = "Je hebt het goed of slecht, maar de GIF laadt niet..";
         main?.appendChild(gif);
+        
+        // Uglyness needed to force reset animation without reloading:
+        setTimeout(() => {
+            gif.src = "";
+            gif.src = img.src;
+        }, 30);
 
         // Temporarily changing background with big div:
         const bg = document.createElement("div");

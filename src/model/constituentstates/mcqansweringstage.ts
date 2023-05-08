@@ -35,9 +35,15 @@ export default class MCQAnsweringStage extends OQAnsweringStage {
         
         // Get all options and shuffle:
         const correct_answer: string = yesOrThrow(config, "correct_answer");
-        const other_options: string[] = yesOrThrow(config, "other_options");
-        this.options = other_options.concat(correct_answer);
-        this.options = shuffle_array(this.options);
+        this.options = yesOrThrow(config, "options");
+        
+        // If the correct answer is not among the options, add it:
+        if (this.options.indexOf(correct_answer) === -1)
+            this.options.push(correct_answer);
+        
+        // Don't shuffle if preserve_order is defined and set to true
+        if (!config.preserve_order)
+            this.options = shuffle_array(this.options);
     }
 
     public bigScreenWidgets(): WidgetSnippets {

@@ -10,9 +10,20 @@
         {
             "name": "mcquestion",
             "args": {
-                "question": "In what year did we start studying AI?",
+                "question": "Ordered question",
                 "correct_answer": "2018",
-                "other_options": ["2016", "2017", "2019", "2020"],
+                "options": ["2016", "2017", "2018", "2019", "2020"],
+                "point_reward": 3,
+                "preserve_order": true
+            },
+            "answer": "2018"
+        },
+        {
+            "name": "mcquestion",
+            "args": {
+                "question": "Unrdered question",
+                "correct_answer": "2018",
+                "options": ["2016", "2017", "2019", "2020"],
                 "point_reward": 3
             },
             "answer": "2018"
@@ -188,7 +199,7 @@
                         "args": {
                             "question": "In what year did we start studying AI?",
                             "correct_answer": "2018",
-                            "other_options": ["2016", "2017", "2019", "2020"],
+                            "options": ["2016", "2017", "2019", "2020"],
                             "point_reward": 3
                         },
                         "answer": "2018"
