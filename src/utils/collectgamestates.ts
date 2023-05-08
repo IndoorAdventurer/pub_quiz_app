@@ -36,11 +36,13 @@ for (const [file, name] of class_list) {
 
 // Now add middle part:
 outfile +=
-`import type Game from "./game.js";
+`import Lobby from "./lobby.js";
+import type Game from "./game.js";
 import GameState from "./gamestate.js";
 
 
-export const all_game_states: all_game_states_type = {\n`;
+export const all_game_states: all_game_states_type = {
+    lobby : Lobby,\n`;
 
 // All entries:
 for (const [_, name] of class_list) {

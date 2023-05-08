@@ -156,6 +156,21 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
     }
 
     /**
+     * Closes all websocket connections
+     */
+    public closeAllConnections() {
+        for (const socketdata of this.known_clients.values()) {
+
+            // Tell the client to forget any saved credentials:
+            socketdata.socket?.send(JSON.stringify({ status: "forget_creds" }));
+
+            // Close the socket (but give some time to process forget_creds):
+            socketdata.socket?.close();
+        }
+        this.known_clients.clear();
+    }
+
+    /**
      * This method gets called when a known client socket sends a message. It
      * first checks if everything is in order (authentication). If so, it
      * forwards the received message to the active GameState object.
@@ -209,9 +224,9 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                     socket.send(JSON.stringify({
                         status: "failure",
                         error_msg: "Je hebt (automatisch) een ongeldige naam " +
-                        "of code gestuurd."
+                            "of code gestuurd."
                     }));
-                    
+
                     // Tell the client to forget any saved credentials:
                     socket.send(JSON.stringify({
                         status: "forget_creds"

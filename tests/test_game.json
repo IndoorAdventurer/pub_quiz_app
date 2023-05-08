@@ -8,6 +8,29 @@
     },
     "gamestates": [
         {
+            "name": "mcquestion",
+            "args": {
+                "question": "In what year did we start studying AI?",
+                "correct_answer": "2018",
+                "other_options": ["2016", "2017", "2019", "2020"],
+                "point_reward": 3
+            },
+            "answer": "2018"
+        },
+        {
+            "name": "lobby",
+            "args": { "big_screen_msg": "Nu naar groepjes!!!" }
+        },
+        {
+            "name": "openquestion",
+            "args": {
+                "question": "In what building are we currently?",
+                "correct_answer": "Bernoulliborg",
+                "point_reward": 3
+            },
+            "answer": "BB, the Blue Building :-D"
+        },
+        {
             "name": "finalconnection",
             "args": {
                 "admin_text": "{Hoi}, ik ben {Vincent}!. Ik ben {heel erg lief}!!! {Groetjes ;-)}",

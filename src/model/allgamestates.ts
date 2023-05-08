@@ -12,11 +12,13 @@ import OpenQuestion from "./fullstates/openquestion.js";
 import StaticPage from "./fullstates/staticpage.js";
 import StoryQuestion from "./fullstates/storyquestion.js";
 import TopNFliter from "./fullstates/topnfliter.js";
+import Lobby from "./lobby.js";
 import type Game from "./game.js";
 import GameState from "./gamestate.js";
 
 
 export const all_game_states: all_game_states_type = {
+    lobby : Lobby,
     adminmsgstate : AdminMsgState,
     cjudgedmovieround : CJudgedMovieRound,
     cjudgedopenquestion : CJudgedOpenQuestion,

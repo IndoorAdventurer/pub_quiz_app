@@ -8,6 +8,14 @@ import yesOrThrow from "../utils/yesorthrow.js";
  * The first `GameState` of any game! Will show on the big screen a list of
  * all candidates. To people going to the website (on their phone), it will
  * provide an interface to join the game and create a (nick)name.
+ * 
+ * The lobby can also be added again later in the game as a game state. In that
+ * case, it is used to go from groups to individual players. I.e. people were
+ * first playing in groupes, where only one was logged in, but now everyone will
+ * log in. The admin screen has functionality for this. It has a button to log
+ * everyone out at once, but save all group names and associated scores. Then it
+ * shows an interface to quickly place newly logged in players to their former
+ * group, such that they get the amount of points of their group.
  */
 export default class Lobby extends GameState implements PlayerListener {
 
@@ -55,19 +63,28 @@ export default class Lobby extends GameState implements PlayerListener {
             .add_js_file("./dist/view/widget_scripts/lobby_playerscreen.js");
     }
 
+    public adminScreenWidgets(): WidgetSnippets {
+        return new WidgetSnippets()
+            .add_html_file("./src/view/html/widgets/lobby_adminscreen.html")
+            .add_js_file("./dist/view/widget_scripts/lobby_adminscreen.js");
+    }
+
     public playerAnswer(name: string, response: string): boolean {
         return this.parent_game.addPlayer(name);
     }
 
     public stateMsg(): GameDataMsg {
-        const players = this.parent_game.getPlayerNames();
+        const pdata = this.parent_game.playerDataDump();
+        const names = pdata.map(p => p.name);
+        const scores = pdata.map(p => p.score);
         const psi: { [key: string]: any } = {};
-        for (const p of players)
+        for (const p of names)
             psi[p] = { widget_name: "wait_screen" };
 
         return {
             general_info: {
-                all_players: players,
+                all_players: names,
+                all_scores: scores,
                 big_screen_msg: this.big_screen_msg
             },
             player_specific_info: psi

@@ -118,27 +118,27 @@ export default class AdminServer implements PlayerListener, GameListener, Server
                     if ("idx" in data && "relative" in data)
                         this.game.setCurState(data.idx, data.relative);
                     return;
-                
+
                 // Changing the score of an individual player:
                 case "set_score":
                     if ("player" in data && "score" in data)
                         this.game.updateScores(
                             new Map([[data.player, data.score]]), false);
                     return;
-                
+
                 // Changing the isplaying boolean of an individual player:
                 case "set_isplaying":
                     if ("player" in data && "isplaying" in data)
                         this.game.setIsPlaying(
                             new Set([data.player]), data.isplaying);
                     return;
-                
+
                 // Remove a player from the game:
                 case "remove_player":
                     if ("player" in data)
                         this.game.removePlayer(data.player);
                     return;
-                
+
                 // Add a player to the game:
                 case "add_player":
                     if (!("name" in data && this.game.addPlayer(data.name))) {
@@ -148,12 +148,19 @@ export default class AdminServer implements PlayerListener, GameListener, Server
                         }));
                     }
                     return;
-                
+
+                // Removes all players from the game and the server:
+                case "remove_all_players":
+                    this.player_server.closeAllConnections();
+                    for (const player of this.game.getPlayerNames())
+                        this.game.removePlayer(player);
+                    return;
+
                 // If action undefined or anything else, we let the game deal
                 // with it :-)
                 default:
                     this.game.currentState().adminAnswer(data);
-                
+
                 // Set wildcard authcode of PlayerServer:
                 case "set_wildcard_auth":
                     if ("auth_code" in data)

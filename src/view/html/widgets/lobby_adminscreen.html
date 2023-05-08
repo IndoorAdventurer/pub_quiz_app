@@ -1,0 +1,13 @@
+<template class="lobby">
+    <h3>Lobby</h1>
+    <p>Were you working in groups (where a single player was logged in for the whole group), but do you now want to continue with individual players?
+       Then press the button shown below. It will remove and disconnect all players, but save their names and scores in the table below. Then, for
+       players that just log in, you can quickly put them into their former group to give them the amount of points their group had.
+    </p>
+    <button id="remove_all_players_btn">REMOVE ALL PLAYERS!</button>
+    <table>
+        <thead><tr><th>Group name</th><th>Players →</th></tr></thead>
+        <tbody id="player_group_table" style="cursor: pointer;"></tbody>
+    </table>
+    <p>Selected player: <span id="selected_player">-</span></p>
+</template>
