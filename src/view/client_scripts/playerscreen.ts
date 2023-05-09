@@ -4,8 +4,9 @@ import { socket_listener_setup } from "./utils.js";
 let name: string | undefined;        // name of this player
 let auth_code: string | undefined;   // corresponding authentication code
 
-// Setting up the socket:
-let socket = new WebSocket(`ws://${window.location.host}`, "player");
+// Setting up the socket (either over tls or not):
+const protocol = document.location.protocol === "https:" ? "wss:" : "ws:";
+const socket = new WebSocket(`${protocol}//${window.location.host}`, "player");
 socket_listener_setup(socket);
 
 // First message to send. When it is able to load name and auth code, and these

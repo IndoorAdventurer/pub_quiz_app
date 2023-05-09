@@ -71,9 +71,8 @@ export default class QuestionData {
             return this.correct_answers.has(answer);
         });
 
-        // Clear all data so we don't fuck up if we have to go back somewhere:
+        // Make correct answers the empty set so we cant assign points again:
         this.correct_answers = new Set();
-        this.player_answers = [];
 
         // Return the names of our heroes:
         return list.map(([player]) => player);

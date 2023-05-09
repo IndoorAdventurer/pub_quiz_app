@@ -4,6 +4,7 @@
     "logfile": "./playground/logtest.txt",
     "start_score": 60,
     "reset_score": 60,
+    "socket": 8080,
     "lobby": {
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },

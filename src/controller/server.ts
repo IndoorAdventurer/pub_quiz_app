@@ -1,7 +1,10 @@
 import * as http from 'http';
+import * as https from 'https';
 import express, { Express } from 'express';
 import * as ws from 'ws';
-
+import yesOrThrow from '../utils/yesorthrow.js';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
 
 /**
  * This class encapsulates both the `express` server as well as the `ws`
@@ -13,8 +16,10 @@ import * as ws from 'ws';
  */
 export default class Server {
 
+    private port: number;
+    
     // server constituents:
-    private http_server: http.Server
+    private http_server: http.Server | https.Server;
     private express: Express;
     private wss: ws.WebSocketServer;
 
@@ -24,15 +29,34 @@ export default class Server {
 
     /**
      * Constructor. Sets up the infrastructure for servering clients.
+     * @param config The configuration object containing all settings.
      */
-    constructor() {
+    constructor(config: { [key: string]: any }) {
+
+        this.port = yesOrThrow(config, "port");
 
         this.express = express();
-        this.http_server = http.createServer(this.express);
+
+        // Create https or http server:
+        if ("key_file" in config && "cert_file" in config) {
+            this.http_server = https.createServer({
+                key: readFileSync(config.key_file),
+                cert: readFileSync(config.cert_file)
+            }, this.express);
+        }
+        else
+            this.http_server = http.createServer(this.express);
+        
         this.wss = new ws.WebSocketServer({ server: this.http_server });
 
         // static files should go here!
         this.express.use(express.static("static"));
+
+        // folder containing the config json file should also contain a file
+        // called "resources" in which all images, videos, etc are found.
+        // these can then be accessed via the "/resources/*" route.
+        const resources_dir = join(dirname(config.config_path), "resources");
+        this.express.use("/resources", express.static(resources_dir));
         
         this.routeMap = new Map<string, ServerListener>();
 
@@ -94,10 +118,9 @@ export default class Server {
     /**
      * Makes the server listen. Function does not ever return, so should be
      * called last, of course :-p
-     * @param port The port number to listen on.
      */
-    public listen(port: number): void {
-        this.http_server.listen(port);
+    public listen(): void {
+        this.http_server.listen(this.port);
     }
 
     /**

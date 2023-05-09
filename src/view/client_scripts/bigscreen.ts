@@ -1,7 +1,8 @@
 import { socket_listener_setup } from "./utils.js";
 
-// Setting up the socket:
-const socket = new WebSocket(`ws://${window.location.host}`, "bigscreen");
+// Setting up the socket (either over tls or not):
+const protocol = document.location.protocol === "https:" ? "wss:" : "ws:";
+const socket = new WebSocket(`${protocol}//${window.location.host}`, "bigscreen");
 socket_listener_setup(socket);
 
 // Showing the top n players and their scores:
