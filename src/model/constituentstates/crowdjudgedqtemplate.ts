@@ -54,6 +54,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     @GameState.stateChanger
     public begin_active() {
         this.setActivePlayer(true);
+        clearInterval(this.timer); // 2b safe. Else lost reference to it :-p
         this.timer = setInterval(() => this.scoreTick(), 1000);
     }
 

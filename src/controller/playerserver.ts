@@ -138,7 +138,7 @@ export default class PlayerServer implements PlayerListener, GameListener, Serve
                 if (entry)
                     entry[1].socket = null;
             }
-            console.log("A player websocket connection was closed.");
+            gamelogger.log("A player websocket connection was closed.");
         }
 
         socket.onmessage = (event) => this.anonymous_client_listener(socket, event);

@@ -5,6 +5,7 @@ import Server, { ServerListener } from "./server.js";
 import { Request, Response } from "express";
 import { WebSocket, MessageEvent } from "ws";
 import PlayerServer from "./playerserver.js";
+import gamelogger from "../utils/datarecording.js";
 
 
 /**
@@ -191,7 +192,7 @@ export default class AdminServer implements PlayerListener, GameListener, Server
                     if (idx !== -1)
                         this.clients.splice(idx, 1);
 
-                    console.log("An admin websocket connection was closed.");
+                    gamelogger.log("An admin websocket connection was closed.");
                 }
 
                 socket.onmessage = (ev) => this.known_client_listener(socket, ev);

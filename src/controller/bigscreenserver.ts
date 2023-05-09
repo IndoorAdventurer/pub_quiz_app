@@ -4,6 +4,7 @@ import { GameDataMsg, PlayerListener, GameListener, PlayerDataMsg }
 import Server, { ServerListener } from "./server.js";
 import { Request, Response } from "express";
 import { WebSocket } from "ws";
+import gamelogger from "../utils/datarecording.js";
 
 
 /**
@@ -92,7 +93,7 @@ export default class BigScreenServer implements PlayerListener, GameListener, Se
             if (idx !== -1)
                 this.clients.splice(idx, 1);
             
-            console.log("A bigscreen websocket connection was closed.");
+            gamelogger.log("A bigscreen websocket connection was closed.");
         }
 
         const msgGame = this.game.getGameDataMsg();
