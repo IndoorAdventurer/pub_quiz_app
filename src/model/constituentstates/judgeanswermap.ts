@@ -15,8 +15,8 @@
 export default class JudgeAnswerMap {
 
     // See setters for explaination:
-    private correct_threshold = 0.5;
-    private incorrect_threshold = 2;
+    private static CORRECT_THRESHOLD = 0.5;
+    private static INCORRECT_THRESHOLD = 2;
 
     /**
      * Stores for each answer a list of players that say it was given, and a
@@ -70,7 +70,7 @@ export default class JudgeAnswerMap {
     public setCorrectThreshold(th: number) {
         if (th <= 0 || th > 1)    // illegal
             return;
-        this.correct_threshold = th;
+        JudgeAnswerMap.CORRECT_THRESHOLD = th;
     }
 
     /**
@@ -81,7 +81,7 @@ export default class JudgeAnswerMap {
     public setIncorrectThreshold(th: number) {
         if (th <= 1)    // illegal
             return;
-        this.incorrect_threshold = th;
+        JudgeAnswerMap.INCORRECT_THRESHOLD = th;
     }
 
     /**
@@ -130,7 +130,7 @@ export default class JudgeAnswerMap {
         : [string[], Map<string, number>] {
             
         const answers = answer ? [answer] : [...this.map.keys()];
-        const correct_th = num_judges * this.correct_threshold;
+        const correct_th = num_judges * JudgeAnswerMap.CORRECT_THRESHOLD;
         
         // No judges -- admin is the only to vote:
         if (correct_th === 0)
@@ -176,7 +176,7 @@ export default class JudgeAnswerMap {
 
             // Enough people said an answer is wrong that the ones that said it
             // is right must be punished ;-P
-            if (no_length >= yes_length * this.incorrect_threshold) {
+            if (no_length >= yes_length * JudgeAnswerMap.INCORRECT_THRESHOLD) {
                 const punish_map = new Map<string, number>();
                 for (const naughty of yes_list)
                     punish_map.set(naughty, -this.max_points);
@@ -228,13 +228,13 @@ export default class JudgeAnswerMap {
      */
     public getVotesForAnswers(num_judges: number) {
         const ret: { [key: string]: [number, number] } = {};
-        const iThres = this.incorrect_threshold;
+        const iThres = JudgeAnswerMap.INCORRECT_THRESHOLD;
         for (const [answer, [yes_list, no_list]] of this.map) {
             const yLength = yes_list.length
             const nLength = no_list.length;
             
             // "Yes" votes as fraction of threshold, so 1 when reached:
-            const yVal = yLength / num_judges / this.correct_threshold;
+            const yVal = yLength / num_judges / JudgeAnswerMap.CORRECT_THRESHOLD;
 
             // "No" also as fraction of threshold:
             const nVal = nLength ? nLength / (yLength * iThres) : 0;

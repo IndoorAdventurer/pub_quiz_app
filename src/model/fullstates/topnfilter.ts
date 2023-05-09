@@ -12,20 +12,22 @@ import yesOrThrow from "../../utils/yesorthrow.js";
  * a player its `isplaying` boolean is set to `false`. From then on this player
  * will be a judge instead of an active player.
  */
-export default class TopNFliter extends GameState implements PlayerListener {
+export default class TopNFilter extends GameState implements PlayerListener {
 
-    public readonly name = "topnfliter";
+    public readonly name = "topnfilter";
 
     private top_n: number;
+    private bonus: number;
 
     /**
-     * Constructor of `TopNFliter`
+     * Constructor of `TopNFilter`
      * @param parent_game The `Game` this lobby will be added to
      * @param config The config object.
      */
     constructor(parent_game: Game, config: { [key: string]: any }) {
         super(parent_game, config);
         this.top_n = yesOrThrow(config, "top_n");
+        this.bonus = "bonus" in config ? config.bonus : 0;
     }
 
     // Listens for player changes while active. For example, if we the admin
@@ -52,12 +54,19 @@ export default class TopNFliter extends GameState implements PlayerListener {
         const topN = ordered_names.splice(0, this.top_n);
         this.parent_game.setIsPlaying(topN, true);
         this.parent_game.setIsPlaying(ordered_names, false);
+
+        // Give the isplaying players an additional bonus:
+        this.parent_game.updateScores(
+            new Map(
+                this.parent_game.getPlayerNames(true)
+                    .map(name => [name, this.bonus])
+            ), true);
     }
 
     public bigScreenWidgets(): WidgetSnippets {
         return new WidgetSnippets()
-            .add_html_file("./src/view/html/widgets/topnfliter_bigscreen.html")
-            .add_js_file("./dist/view/widget_scripts/topnfliter_bigscreen.js");
+            .add_html_file("./src/view/html/widgets/topnfilter_bigscreen.html")
+            .add_js_file("./dist/view/widget_scripts/topnfilter_bigscreen.js");
     }
 
     public playerScreenWidgets(): WidgetSnippets {

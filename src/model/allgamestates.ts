@@ -11,7 +11,7 @@ import MultimediaPage from "./fullstates/multimediapage.js";
 import OpenQuestion from "./fullstates/openquestion.js";
 import StaticPage from "./fullstates/staticpage.js";
 import StoryQuestion from "./fullstates/storyquestion.js";
-import TopNFliter from "./fullstates/topnfliter.js";
+import TopNFilter from "./fullstates/topnfilter.js";
 import Lobby from "./lobby.js";
 import type Game from "./game.js";
 import GameState from "./gamestate.js";
@@ -32,7 +32,7 @@ export const all_game_states: all_game_states_type = {
     openquestion : OpenQuestion,
     staticpage : StaticPage,
     storyquestion : StoryQuestion,
-    topnfliter : TopNFliter,
+    topnfilter : TopNFilter,
 
 };
 

@@ -3,7 +3,7 @@
     // Type for received array:
     type player_data_arr = {name: string, score: number}[];
     
-    document.addEventListener("topnfliter", (ev: Event) => {
+    document.addEventListener("topnfilter", (ev: Event) => {
         const msg = (ev as CustomEvent).detail.new_msg;
         const top_n_data: player_data_arr = msg?.general_info?.top_n;
         const top_n_span = document.getElementById("top_n_span");

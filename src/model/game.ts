@@ -308,7 +308,7 @@ export default class Game {
      * `new = old + update`). If it is `false`, the values found in `map` will
      * *overwrite* the old scores (i.e. `new = update`).
      * @returns `true` under normal circumstances. `false` if any score became
-     * less or equal to zero, such that all players had to get extra points.
+     * less than zero, such that all players had to get extra points.
      */
     public updateScores(map: Map<string, number>, additive: boolean = true) {
         let min_score = Infinity;
@@ -324,7 +324,7 @@ export default class Game {
                 console.warn("Tried updating non existing Player. Ignoring");
         }
 
-        if (min_score <= 0) {
+        if (min_score < 0) {
             for (const [_, player] of this.players)
                 player.score += -min_score + this.reset_score;
         }

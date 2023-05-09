@@ -8,48 +8,7 @@
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },
     "gamestates": [
-        {
-            "name": "mcquestion",
-            "args": {
-                "question": "Ordered question",
-                "correct_answer": "2018",
-                "options": ["2016", "2017", "2018", "2019", "2020"],
-                "point_reward": 3,
-                "preserve_order": true
-            },
-            "answer": "2018"
-        },
-        {
-            "name": "mcquestion",
-            "args": {
-                "question": "Unrdered question",
-                "correct_answer": "2018",
-                "options": ["2016", "2017", "2019", "2020"],
-                "point_reward": 3
-            },
-            "answer": "2018"
-        },
-        {
-            "name": "lobby",
-            "args": { "big_screen_msg": "Nu naar groepjes!!!" }
-        },
-        {
-            "name": "openquestion",
-            "args": {
-                "question": "In what building are we currently?",
-                "correct_answer": "Bernoulliborg",
-                "point_reward": 3
-            },
-            "answer": "BB, the Blue Building :-D"
-        },
-        {
-            "name": "finalconnection",
-            "args": {
-                "admin_text": "{Hoi}, ik ben {Vincent}!. Ik ben {heel erg lief}!!! {Groetjes ;-)}",
-                "start_bonus": 60
-            }
-        },
-        {
+                {
             "name": "cjudgedpuzzleround",
             "args": {
                 "puzzles": [
@@ -142,6 +101,51 @@
             }
         },
         {
+            "name": "mcquestion",
+            "args": {
+                "question": "Ordered question",
+                "correct_answer": "2018",
+                "options": ["2016", "2017", "2018", "2019", "2020"],
+                "point_reward": 3,
+                "preserve_order": true
+            },
+            "answer": "2018"
+        },
+        {
+            "name": "mcquestion",
+            "args": {
+                "question": "Unrdered question",
+                "correct_answer": "2018",
+                "options": ["2016", "2017", "2019", "2020"],
+                "point_reward": 3
+            },
+            "answer": "2018"
+        },
+        {
+            "name": "topnfilter",
+            "args": { "top_n": 3, "bonus": 1000 }
+        },
+        {
+            "name": "lobby",
+            "args": { "big_screen_msg": "Nu naar groepjes!!!" }
+        },
+        {
+            "name": "openquestion",
+            "args": {
+                "question": "In what building are we currently?",
+                "correct_answer": "Bernoulliborg",
+                "point_reward": 3
+            },
+            "answer": "BB, the Blue Building :-D"
+        },
+        {
+            "name": "finalconnection",
+            "args": {
+                "admin_text": "{Hoi}, ik ben {Vincent}!. Ik ben {heel erg lief}!!! {Groetjes ;-)}",
+                "start_bonus": 60
+            }
+        },
+        {
             "name": "memorylist",
             "args": {
                 "list": ["Bejaarde", "Aap", "Noot", "Mies", "Paardenwagen en stal", "Dit is nummertje zes jongeman!", "Zeven", "Laatste alweer"],
@@ -149,7 +153,7 @@
             }
         },
         {
-            "name": "topnfliter",
+            "name": "topnfilter",
             "args": { "top_n": 3 }
         },
         {
