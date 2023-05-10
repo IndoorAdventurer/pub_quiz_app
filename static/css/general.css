@@ -57,6 +57,24 @@ header > img {
     align-items: center;
 }
 
+#fs_btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 1.5rem;
+    background-color: white;
+    box-shadow: 0 0.1rem 0.3rem rgba(0, 0, 0, 0.452);
+    display: flex;
+    cursor: pointer;
+}
+
+#fs_btn > img {
+    width: 1rem;
+    margin: auto;
+}
+
 p {
     text-align: center;
 }

@@ -159,3 +159,39 @@ type game_state_message = {
     widget_name: string,
     [key: string]: any
 }
+
+/**
+ * Adds a fullscreen toggle button at the top right corner of the screen and,
+ * of course, makes sure that it works properly ;-)
+ */
+export function add_fullscreen_functionality() {
+
+    // Add the button:
+    const fs_btn = document.createElement("div");
+    fs_btn.id = "fs_btn";
+    document.body.appendChild(fs_btn);
+
+    // Get the images:
+    const enter_fs_img = new Image();
+    enter_fs_img.src = "/img/enter_fs.svg";
+    const exit_fs_img = new Image();
+    exit_fs_img.src = "/img/exit_fs.svg";
+    fs_btn.appendChild(enter_fs_img);
+    
+    // Toggle fullscreen:
+    fs_btn.onclick = ev => {
+        if (document.fullscreenElement)
+            document.exitFullscreen();
+        else
+            document.documentElement.requestFullscreen();
+    }
+
+    // Change icon:
+    document.addEventListener("fullscreenchange", ev => {
+        fs_btn.innerHTML = "";
+        if (document.fullscreenElement)
+            fs_btn.appendChild(exit_fs_img);
+        else
+            fs_btn.appendChild(enter_fs_img);
+    });
+}
