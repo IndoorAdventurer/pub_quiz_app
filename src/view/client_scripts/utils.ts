@@ -38,7 +38,7 @@ export function socket_listener_setup(socket: WebSocket) {
     }, 10_000); // change to 30 seconds later
 
     // Send a ping when, for example, screen just got unlocked again
-    document.addEventListener("visibilitychange", (ev) => {
+    document.addEventListener("visibilitychange", ev => {
         if (document.visibilityState === "visible" &&
             socket.readyState !== WebSocket.CLOSED
         ) {
@@ -161,7 +161,7 @@ type game_state_message = {
 }
 
 /**
- * Adds a fullscreen toggle button at the top right corner of the screen and,
+ * Adds a fullscreen toggle button in the top right corner of the screen and,
  * of course, makes sure that it works properly ;-)
  */
 export function add_fullscreen_functionality() {
@@ -194,4 +194,38 @@ export function add_fullscreen_functionality() {
         else
             fs_btn.appendChild(enter_fs_img);
     });
+}
+
+/**
+ * If possible, this will add a wake lock, which prohobits the screen from going
+ * black while this page is active. In addition, it will also set things up to
+ * reacquire the lock after the user comes back to this screen again.
+ */
+export function add_wakelock_functionality() {
+    if (!("wakeLock" in window.navigator)) {
+        console.log("Wakelock not supported");
+        return;
+    }
+
+    const nav = navigator as Navigator & { wakeLock: any };
+    let lock: any = null;
+
+    // Async funciton for getting lock:
+    async function get_lock() {
+        try {
+            lock = await nav.wakeLock.request('screen');
+        } catch (e) {
+            console.log("Could not obtain WakeLock");
+            console.log(e);
+        }
+    }
+
+    // Reacquiring lock after user gets back to this screen:
+    document.addEventListener("visibilitychange", ev => {
+        if (document.visibilityState === "visible" && lock !== null)
+            get_lock();
+    });
+
+    // Asking for lock :-)
+    get_lock();
 }

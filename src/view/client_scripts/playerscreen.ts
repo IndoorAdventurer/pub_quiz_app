@@ -1,4 +1,8 @@
-import { socket_listener_setup, add_fullscreen_functionality } from "./utils.js";
+import {
+    socket_listener_setup,
+    add_fullscreen_functionality,
+    add_wakelock_functionality
+} from "./utils.js";
 
 
 let name: string | undefined;        // name of this player
@@ -9,6 +13,7 @@ const protocol = document.location.protocol === "https:" ? "wss:" : "ws:";
 const socket = new WebSocket(`${protocol}//${window.location.host}`, "player");
 socket_listener_setup(socket);
 add_fullscreen_functionality();
+add_wakelock_functionality();
 
 // First message to send. When it is able to load name and auth code, and these
 // are valid according to the server, this will immediately cause a promotion.

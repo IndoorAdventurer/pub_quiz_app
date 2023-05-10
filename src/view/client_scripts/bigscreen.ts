@@ -1,10 +1,15 @@
-import { add_fullscreen_functionality, socket_listener_setup } from "./utils.js";
+import {
+    add_fullscreen_functionality,
+    socket_listener_setup,
+    add_wakelock_functionality
+} from "./utils.js";
 
 // Setting up the socket (either over tls or not):
 const protocol = document.location.protocol === "https:" ? "wss:" : "ws:";
 const socket = new WebSocket(`${protocol}//${window.location.host}`, "bigscreen");
 socket_listener_setup(socket);
 add_fullscreen_functionality();
+add_wakelock_functionality();
 
 // Showing the top n players and their scores:
 document.addEventListener("player_update", (event) => {

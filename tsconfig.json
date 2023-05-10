@@ -7,7 +7,8 @@
       "sourceMap": true,
       "outDir": "dist",
       "experimentalDecorators": true,
-      "removeComments": true
+      "removeComments": true,
+      "lib": ["DOM", "DOM.Iterable"]
     },
     "include": ["src/**/*"],
     // Will be compiled to static/scripts instead. See tsconfig.client.json
