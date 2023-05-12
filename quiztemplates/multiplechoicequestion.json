@@ -1,0 +1,14 @@
+{
+    "name": "mcquestion",
+    "args": {
+        "question": "Question to display",
+        "correct_answer": "The correct answer to the question",
+        "options": [
+            "An array of options players can choose from.",
+            "You can include 'correct_answer' also. If not, it will be added",
+            "automatically."
+        ],
+        "point_reward": 1,
+        "preserve_order": "By default the options are put in random order. If you set this optional boolean to true, it will keep the order as you gave it."
+    }
+}

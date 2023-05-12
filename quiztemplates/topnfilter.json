@@ -1,0 +1,7 @@
+{
+    "name": "topnfilter",
+    "args": {
+        "top_n": "number: this many players (based on highest score) remain",
+        "bonus": "optional number: give the top_n player a bonus score."
+    }
+}

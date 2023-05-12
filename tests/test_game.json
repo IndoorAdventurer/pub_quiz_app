@@ -9,15 +9,30 @@
         "big_screen_msg": "Hoi! Log in op mijn website 😎"
     },
     "gamestates": [
-                {
+        {
             "name": "cjudgedpuzzleround",
             "args": {
                 "puzzles": [
                     {
                         "puzzle": {
-                            "Aap": ["Aap1", "Aap2", "Aap3", "Aap4"],
-                            "Noot": ["Noot1", "Noot2", "Noot3", "Noot4"],
-                            "Mies": ["Mies1", "Mies2", "Mies3", "Mies4"]
+                            "Aap": [
+                                "Aap1",
+                                "Aap2",
+                                "Aap3",
+                                "Aap4"
+                            ],
+                            "Noot": [
+                                "Noot1",
+                                "Noot2",
+                                "Noot3",
+                                "Noot4"
+                            ],
+                            "Mies": [
+                                "Mies1",
+                                "Mies2",
+                                "Mies3",
+                                "Mies4"
+                            ]
                         },
                         "points_per_correct": 20,
                         "max_points": 5,
@@ -25,9 +40,24 @@
                     },
                     {
                         "puzzle": {
-                            "Paard": ["Paard1", "Paard2", "Paard3", "Paard4"],
-                            "Koe": ["Koe1", "Koe2", "Koe3", "Koe4"],
-                            "Kat": ["Kat1", "Kat2", "Kat3", "Kat4"]
+                            "Paard": [
+                                "Paard1",
+                                "Paard2",
+                                "Paard3",
+                                "Paard4"
+                            ],
+                            "Koe": [
+                                "Koe1",
+                                "Koe2",
+                                "Koe3",
+                                "Koe4"
+                            ],
+                            "Kat": [
+                                "Kat1",
+                                "Kat2",
+                                "Kat3",
+                                "Kat4"
+                            ]
                         },
                         "points_per_correct": 20,
                         "max_points": 5,
@@ -106,7 +136,13 @@
             "args": {
                 "question": "Ordered question",
                 "correct_answer": "2018",
-                "options": ["2016", "2017", "2018", "2019", "2020"],
+                "options": [
+                    "2016",
+                    "2017",
+                    "2018",
+                    "2019",
+                    "2020"
+                ],
                 "point_reward": 3,
                 "preserve_order": true
             },
@@ -117,18 +153,28 @@
             "args": {
                 "question": "Unrdered question",
                 "correct_answer": "2018",
-                "options": ["2016", "2017", "2019", "2020"],
+                "options": [
+                    "2016",
+                    "2017",
+                    "2019",
+                    "2020"
+                ],
                 "point_reward": 3
             },
             "answer": "2018"
         },
         {
             "name": "topnfilter",
-            "args": { "top_n": 3, "bonus": 1000 }
+            "args": {
+                "top_n": 3,
+                "bonus": 1000
+            }
         },
         {
             "name": "lobby",
-            "args": { "big_screen_msg": "Nu naar groepjes!!!" }
+            "args": {
+                "big_screen_msg": "Nu naar groepjes!!!"
+            }
         },
         {
             "name": "openquestion",
@@ -149,13 +195,24 @@
         {
             "name": "memorylist",
             "args": {
-                "list": ["Bejaarde", "Aap", "Noot", "Mies", "Paardenwagen en stal", "Dit is nummertje zes jongeman!", "Zeven", "Laatste alweer"],
+                "list": [
+                    "Bejaarde",
+                    "Aap",
+                    "Noot",
+                    "Mies",
+                    "Paardenwagen en stal",
+                    "Dit is nummertje zes jongeman!",
+                    "Zeven",
+                    "Laatste alweer"
+                ],
                 "time_seconds": 35
             }
         },
         {
             "name": "topnfilter",
-            "args": { "top_n": 3 }
+            "args": {
+                "top_n": 3
+            }
         },
         {
             "name": "horsejump",
@@ -205,7 +262,12 @@
                         "args": {
                             "question": "In what year did we start studying AI?",
                             "correct_answer": "2018",
-                            "options": ["2016", "2017", "2019", "2020"],
+                            "options": [
+                                "2016",
+                                "2017",
+                                "2019",
+                                "2020"
+                            ],
                             "point_reward": 3
                         },
                         "answer": "2018"

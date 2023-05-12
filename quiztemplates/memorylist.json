@@ -1,0 +1,11 @@
+{
+    "name": "memorylist",
+    "args": {
+        "list": [
+            "A list of items",
+            "That the player should remember",
+            "Such that you can ask them to recall it at a later moment."
+        ],
+        "time_seconds": "The time they get to memorize. An hourglass will display this to them."
+    }
+}

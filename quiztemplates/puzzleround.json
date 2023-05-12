@@ -1,0 +1,57 @@
+{
+    "name": "cjudgedpuzzleround",
+    "args": {
+        "puzzles": [
+            {
+                "puzzle": {
+                    "A": [
+                        "number",
+                        "of",
+                        "key-value",
+                        "pairs"
+                    ],
+                    "where": [
+                        "the keys are strings, and the values are arrays of strings.",
+                        "Do make sure that each array has the same length!",
+                        "The player must guess the key from the values",
+                        "For example:"
+                    ],
+                    "Apple": [
+                        "Snow White",
+                        "Red or green",
+                        "Fruit",
+                        "Core"
+                    ]
+                },
+                "points_per_correct": "Number of points you receive for each correct answer",
+                "max_points": "number: points to give to the first judge to mark an answer as given. This is also the penalty for wrongly marking an answer as given!",
+                "min_points": "number: points to give to the last judge to mark an answer as given"
+            },
+            {
+                "puzzle": {
+                    "a": [
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "b": [
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "c": [
+                        "",
+                        "",
+                        "",
+                        ""
+                    ]
+                },
+                "points_per_correct": 30,
+                "max_points": 5,
+                "min_points": 3
+            }
+        ]
+    }
+}

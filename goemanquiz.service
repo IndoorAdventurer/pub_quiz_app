@@ -1,0 +1,13 @@
+[Unit]
+Description=An extensive web app for hosting fun and interactive pub quizzes.
+After=network.target
+
+[Service]
+WorkingDirectory=/home/vincent/Documents/PubQuizApp
+User=vincent
+ExecStart=/usr/bin/npm start -- quizzes/quizconfig.json
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

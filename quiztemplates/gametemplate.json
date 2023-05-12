@@ -1,0 +1,16 @@
+{
+    "admin_name": "The quiz master/admin will use this username to log in on the /admin page",
+    "admin_auth_code": "The quiz master/admin will use this password to log in on the /admin page",
+    "port": "The port the server will listen on for new connections",
+    "key_file": "If you want to use https instead of http, you can specify this optional argument, giving the path (preferably absolute) to your ssl private key ...",
+    "cert_file": "... in that case you must also specify the path to your ssl certificate here :-)",
+    "logfile": "The file to log to. I would recommend specifying: ./quizzes/<MYQUIZ>/resources/log.txt, where you replace <MYQUIZ> by the name of your quiz. This allows you to access it online",
+    "start_score": "The score players start with. Mostly will be set to 0, but maybe you want to start at a higher score for some reasons",
+    "reset_score": "If one player manages to drop to a score of zero, every single player will get this amount of points added to their score.",
+    "lobby": {
+        "big_screen_msg": "Message to show on the big screen of the loby page. Usually you write here how users can connect to your server (e.g.: go to abc.xyz to join the game)"
+    },
+    "gamestates": [
+        "This is an array of object, such that each object corresponds to a round/question/other type of game state. See all the other template files for examples!"
+    ]
+}

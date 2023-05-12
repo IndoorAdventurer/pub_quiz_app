@@ -1,0 +1,6 @@
+{
+    "name": "staticpage",
+    "args": {
+        "html_content": "Any raw html content to show on the big screen"
+    }
+}

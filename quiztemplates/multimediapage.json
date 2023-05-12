@@ -1,0 +1,7 @@
+{
+    "name": "multimediapage",
+    "args": {
+        "type": "`image`, `audio` or `video`",
+        "path": "/path/to/the/file.mp4  IMPORTANT! Put your files in the resources folder that exists on the same level as your config.json. Then specify path simply as /resources/mymedia.extension"
+    }
+}

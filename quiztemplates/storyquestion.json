@@ -1,0 +1,10 @@
+{
+    "name": "storyquestion",
+    "args": {
+        "story": "A long story the quizmaster will tell about the answer. In the beginning it should be vague what he/she is talking about, but it should become more clear over time.",
+        "correct_answer": "The answer to the question",
+        "max_points": "First person to answer gets this many points",
+        "min_points": "Last to answer gets this many",
+        "point_reward": "set to 0. Needed for parsing, but gets ignored.."
+    }
+}

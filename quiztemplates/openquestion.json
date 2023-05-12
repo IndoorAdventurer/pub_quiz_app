@@ -1,0 +1,8 @@
+{
+    "name": "openquestion",
+    "args": {
+        "question": "Question to display",
+        "correct_answer": "The correct answer to the question",
+        "point_reward": 1
+    }
+}

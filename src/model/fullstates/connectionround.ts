@@ -31,7 +31,7 @@ export default class ConnectionRound extends ConnectionAnsweringStage {
             if ("answer" in gs)
                 connection_answers.push(gs.answer);
             else
-                console.warn(`No "answer" specified for "${name}", ${args}` +
+                console.warn(`No "answer" specified for "${name}"` +
                     " in connection round");
             new all_game_states[name](parent_game, args);
         }
