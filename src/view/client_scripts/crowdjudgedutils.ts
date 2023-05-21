@@ -18,25 +18,36 @@
  * HTML elements, so the caller can still set some extra attributes, for example.
  */
 export function crowdJudgedRedraw(msg: any, list_id: string, ap_div_id?: string) {
-    // Draw the list of given answers:
-    if (!msg.general_info?.answers)
-        return;
-    
     const list_elem = document.getElementById(list_id);
     if (!list_elem)
         return;
 
-    const answers: string[] = msg.general_info.answers;
+    // Usually it should get an amap array of 3-tuples, but it should also work
+    // when just giving it an array of answer strings:
+    let amap: [string, number, number][] | undefined =
+        msg?.general_info?.answer_map;
+    if (!amap) {
+        const answers: string[] | undefined = msg?.general_info?.answers;
+        if (!answers)
+            return;
+        amap = answers.map(answ => [answ, 1, 0]);
+    }
+
+
     const clone = list_elem.cloneNode(false);
 
-    // Creating this map so we can do things to it later
+    // Creating a map of li-elements so we can do things to it later:
     const liMap = new Map<string, HTMLLIElement>();
     
-    for (const answer of answers) {
+    for (const [answer, yVal, _] of amap) {
         const li = document.createElement("li");
-        li.textContent = answer;
+        if (yVal === 1) {
+            li.textContent = answer;
+            liMap.set(answer, li);
+        }
+        else
+            li.textContent = "-";
         clone.appendChild(li);
-        liMap.set(answer, li);
     }
 
     list_elem.parentElement?.replaceChild(clone, list_elem);

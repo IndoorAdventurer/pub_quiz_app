@@ -56,19 +56,28 @@ describe("Basic testing of the CrowdJudgedQTemplate template", () => {
 
         // They all now think noot was said, so they write Ynoot
         cjq.playerAnswer("a", "Ynoot");
-        expect(cjq.stateMsg().general_info.answer_map?.aap?.[0]).toBe(0);
-        expect(cjq.stateMsg().general_info.answer_map?.noot?.[0]).toBe(2/3);
-        expect(cjq.stateMsg().general_info.answer_map?.mies?.[0]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[0][0]).toBe("aap");
+        expect(cjq.stateMsg().general_info.answer_map?.[0][1]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[1][0]).toBe("noot");
+        expect(cjq.stateMsg().general_info.answer_map?.[1][1]).toBe(2/3);
+        expect(cjq.stateMsg().general_info.answer_map?.[2][0]).toBe("mies");
+        expect(cjq.stateMsg().general_info.answer_map?.[2][1]).toBe(0);
 
         cjq.playerAnswer("b", "Ynoot");
-        expect(cjq.stateMsg().general_info.answer_map?.aap?.[0]).toBe(0);
-        expect(cjq.stateMsg().general_info.answer_map?.noot?.[0]).toBe(undefined);
-        expect(cjq.stateMsg().general_info.answer_map?.mies?.[0]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[0][0]).toBe("aap");
+        expect(cjq.stateMsg().general_info.answer_map?.[0][1]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[1][0]).toBe("noot");
+        expect(cjq.stateMsg().general_info.answer_map?.[1][1]).toBe(1);
+        expect(cjq.stateMsg().general_info.answer_map?.[2][0]).toBe("mies");
+        expect(cjq.stateMsg().general_info.answer_map?.[2][1]).toBe(0);
 
         cjq.playerAnswer("c", "Ynoot");
-        expect(cjq.stateMsg().general_info.answer_map?.aap?.[0]).toBe(0);
-        expect(cjq.stateMsg().general_info.answer_map?.noot?.[0]).toBe(undefined);
-        expect(cjq.stateMsg().general_info.answer_map?.mies?.[0]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[0][0]).toBe("aap");
+        expect(cjq.stateMsg().general_info.answer_map?.[0][1]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[1][0]).toBe("noot");
+        expect(cjq.stateMsg().general_info.answer_map?.[1][1]).toBe(1);
+        expect(cjq.stateMsg().general_info.answer_map?.[2][0]).toBe("mies");
+        expect(cjq.stateMsg().general_info.answer_map?.[2][1]).toBe(0);
 
         const data = g.playerDataDump();
 
@@ -112,19 +121,28 @@ describe("Basic testing of the CrowdJudgedQTemplate template", () => {
         
         // They all now think noot was said, so they write Ynoot
         cjq.playerAnswer("a", "Ynoot");
-        expect(cjq.stateMsg().general_info.answer_map?.aap?.[0]).toBe(0);
-        expect(cjq.stateMsg().general_info.answer_map?.noot?.[0]).toBe(2/3);
-        expect(cjq.stateMsg().general_info.answer_map?.mies?.[0]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[0][0]).toBe("aap");
+        expect(cjq.stateMsg().general_info.answer_map?.[0][1]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[1][0]).toBe("noot");
+        expect(cjq.stateMsg().general_info.answer_map?.[1][1]).toBe(2/3);
+        expect(cjq.stateMsg().general_info.answer_map?.[2][0]).toBe("mies");
+        expect(cjq.stateMsg().general_info.answer_map?.[2][1]).toBe(0);
 
         cjq.playerAnswer("b", "Ynoot");
-        expect(cjq.stateMsg().general_info.answer_map?.aap?.[0]).toBe(0);
-        expect(cjq.stateMsg().general_info.answer_map?.noot?.[0]).toBe(undefined);
-        expect(cjq.stateMsg().general_info.answer_map?.mies?.[0]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[0][0]).toBe("aap");
+        expect(cjq.stateMsg().general_info.answer_map?.[0][1]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[1][0]).toBe("noot");
+        expect(cjq.stateMsg().general_info.answer_map?.[1][1]).toBe(1);
+        expect(cjq.stateMsg().general_info.answer_map?.[2][0]).toBe("mies");
+        expect(cjq.stateMsg().general_info.answer_map?.[2][1]).toBe(0);
 
         cjq.playerAnswer("c", "Ynoot");
-        expect(cjq.stateMsg().general_info.answer_map?.aap?.[0]).toBe(0);
-        expect(cjq.stateMsg().general_info.answer_map?.noot?.[0]).toBe(undefined);
-        expect(cjq.stateMsg().general_info.answer_map?.mies?.[0]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[0][0]).toBe("aap");
+        expect(cjq.stateMsg().general_info.answer_map?.[0][1]).toBe(0);
+        expect(cjq.stateMsg().general_info.answer_map?.[1][0]).toBe("noot");
+        expect(cjq.stateMsg().general_info.answer_map?.[1][1]).toBe(1);
+        expect(cjq.stateMsg().general_info.answer_map?.[2][0]).toBe("mies");
+        expect(cjq.stateMsg().general_info.answer_map?.[2][1]).toBe(0);
 
         const data = g.playerDataDump();
 

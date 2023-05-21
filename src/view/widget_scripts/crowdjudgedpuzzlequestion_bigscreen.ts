@@ -17,14 +17,16 @@ import { crowdJudgedRedraw } from "../client_scripts/crowdjudgedutils.js"
 
         // Show the answers that were already given:
         const liMap = crowdJudgedRedraw(msg, "answers_list", "active_player_span");
-        if (!liMap)
+        if (!liMap || !msg?.general_info?.answer_map)
             return;
 
         // Create map from answers to colors:
-        const answers: string[] = msg?.general_info?.answers;
+        const amap: [string, number, number][] = msg.general_info.answer_map;
         const colorMap = new Map<string, string>();
-        for (let idx = 0; idx !== answers.length; ++idx)
-            colorMap.set(answers[idx], color_list[idx % color_list.length]);
+        for (let idx = 0; idx !== amap.length; ++idx) {
+            if (amap[idx][1] === 1)
+                colorMap.set(amap[idx][0], color_list[idx % color_list.length]);
+        }
 
         // Giving all given answers their associated color:
         for (const [answer, li] of liMap) {

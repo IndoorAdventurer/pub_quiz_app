@@ -7,7 +7,7 @@ import { socketMessage } from "../client_scripts/adminscreen.js";
             return;
         ap_div.textContent = msg.general_info.active_player;
 
-        const amap: { [key: string]: [number, number] } | undefined =
+        const amap: [string, number, number][] | undefined =
             msg.general_info.answer_map;
         const container = document.getElementById("btn_container_div");
         if (!amap || !container)
@@ -16,15 +16,19 @@ import { socketMessage } from "../client_scripts/adminscreen.js";
         // For each answer a button. If admin clicks, will immediately be marked
         // as given:
         const clone = container.cloneNode(false);
-        for (const answer in amap) {
+        for (const [answer, yVal, nVal] of amap) {
             const btn = document.createElement("button");
-            btn.style.height = "10rem";  // Fitts law :-p I need to be fast
+            // btn.style.height = "10rem";  // Fitts law :-p I need to be fast
             btn.style.padding = "1rem 3rem 1rem 3rem";
-            const y = Math.round(amap[answer][0] * 100);
-            const n = Math.round(amap[answer][1] * 100);
+            const y = Math.round(yVal * 100);
+            const n = Math.round(nVal * 100);
             btn.textContent = `${answer} (y=${y}, n=${n})`;
-            btn.ondblclick = (ev) => socketMessage({ answer: answer });
+            if (yVal === 1)
+                btn.disabled = true;
+            else
+                btn.ondblclick = ev => socketMessage({ answer: answer });
             clone.appendChild(btn);
+            clone.appendChild(document.createElement("br"));
         }
         container.parentElement?.replaceChild(clone, container);
 

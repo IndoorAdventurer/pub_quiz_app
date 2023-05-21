@@ -19,6 +19,11 @@ export default class JudgeAnswerMap {
     private static INCORRECT_THRESHOLD = 2;
 
     /**
+     * All answers players can vote on, in the order they should appear
+     */
+    private all_answers: string[];
+    
+    /**
      * Stores for each answer a list of players that say it was given, and a
      * list of players that explicitly say it was not given
      */
@@ -44,6 +49,8 @@ export default class JudgeAnswerMap {
      */
     constructor(answers: string[], max_points: number, min_points: number) {
 
+        this.all_answers = answers;
+        
         // Adding some constraints:
         this.min_points = min_points <= 0 ? 0.001 : min_points;
         this.max_points = max_points < min_points ? min_points : max_points;
@@ -225,23 +232,34 @@ export default class JudgeAnswerMap {
      * threshold values.
      * @param num_judges The number of non-players. Needed to calculate the
      * threshold values
+     * @returns An object with answers as keys, and as values a tuple, where the
+     * first value is the number of judges that voted yes on it, and the second
+     * the number of judges that voted no on it.
      */
     public getVotesForAnswers(num_judges: number) {
-        const ret: { [key: string]: [number, number] } = {};
+        const ret: [string, number, number][] = [];
+        const cThres = JudgeAnswerMap.CORRECT_THRESHOLD;
         const iThres = JudgeAnswerMap.INCORRECT_THRESHOLD;
-        for (const [answer, [yes_list, no_list]] of this.map) {
-            const yLength = yes_list.length
-            const nLength = no_list.length;
-            
-            // "Yes" votes as fraction of threshold, so 1 when reached:
-            const yVal = yLength / num_judges / JudgeAnswerMap.CORRECT_THRESHOLD;
 
-            // "No" also as fraction of threshold:
-            const nVal = nLength ? nLength / (yLength * iThres) : 0;
-            
-            ret[answer] = [yVal, nVal];
+        for (const answer of this.all_answers) {
+            let yVal = 1;
+            let nVal = 0;
+
+            const vote_lists = this.map.get(answer);
+            if (vote_lists !== undefined) {
+                const yLength = vote_lists[0].length
+                const nLength = vote_lists[1].length;
+
+                // "Yes" votes as fraction of threshold, so 1 when reached:
+                yVal = yLength / num_judges / cThres;
+
+                // "No" also as fraction of threshold:
+                nVal = nLength ? nLength / (yLength * iThres) : 0;
+            }
+
+            ret.push([answer, yVal, nVal])
         }
-        
+
         return ret;
     }
 

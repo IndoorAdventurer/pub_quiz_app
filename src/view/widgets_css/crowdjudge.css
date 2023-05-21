@@ -45,3 +45,9 @@
             #1c2f335b var(--fill),
             transparent var(--fill));
 }
+
+.voting_trey .yes_btn_filled {
+    width: 100%;
+    background-color: #1c2f33;
+    color: white;
+}

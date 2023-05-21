@@ -7,25 +7,25 @@ import { socketMessage } from "../client_scripts/playerscreen.js"
             return;
         
         // Get all data and clone container:
-        const amap: { [key: string]: [number, number] } =
-            msg.general_info.answer_map;
+        const amap: [string, number, number][] = msg.general_info.answer_map;
         const [yes, no] = getOwnAnswers(msg);
         const clone = container.cloneNode(false);
 
         // For each answer add a trey with a yes button and an optional no btn
-        for (const answer in amap) {
+        for (const [answer, yVal, nVal] of amap) {
             const trey = document.createElement("div");
             trey.className = "voting_trey";
 
             // Only show nope button if at least one person clicked yes
-            if (amap[answer][0] > 0) {
-                const no_btn = createButtonDiv(
-                    "no_btn", amap[answer][1], answer, no.has(answer));
+            // and the answer wasn't marked given yet:
+            if (yVal > 0 && yVal !== 1) {
+                const no_btn = 
+                    createButtonDiv("no_btn", nVal, answer, no.has(answer));
                 trey.appendChild(no_btn);
             }
 
-            const yes_btn = createButtonDiv(
-                "yes_btn", amap[answer][0], answer, yes.has(answer));
+            const yes_btn =
+                createButtonDiv("yes_btn", yVal, answer, yes.has(answer));
             trey.appendChild(yes_btn);
 
             clone.appendChild(trey);
@@ -67,20 +67,21 @@ import { socketMessage } from "../client_scripts/playerscreen.js"
         answer: string,
         given: boolean
     ) {
-        const text = given ? "✓ " + answer : answer;
         const isyes = cls === "yes_btn";
+        const isfilled = fill === 1;
+        let text = isyes ? answer : "";
+        text = given ? "✓ " + text : text;
 
         // Creating div and adding basic properties:
         const btn = document.createElement("div");
-        btn.className = cls;
+        btn.textContent = text;
+        btn.className = isyes && isfilled ? "yes_btn_filled" : cls;
         btn.style.setProperty("--fill", `${Math.round(100 * fill)}%`);
-        
-        // Only yes buttons get the answer as inner content:
-        if (isyes)
-            btn.textContent = text;
 
-        // Adding the onclick listener, that sends Y/N prepended to the answer:
-        btn.onclick = (ev) => socketMessage((isyes ? "Y" : "N") + answer);
+        // Only not filled up buttons are still clickable:
+        if (!isfilled)
+            btn.onclick = ev => socketMessage((isyes ? "Y" : "N") + answer);
+
         return btn;
     }
 
