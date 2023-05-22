@@ -168,8 +168,8 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      */
     @GameState.stateChanger
     private scoreTick() {
-        // Don't want mistakes here: keeping this log() in as long as possible
-        console.log("tick");
+        // Don't want mistakes here: keeping this write() in as long as possible
+        process.stdout.write("tick, ")
         if (this.parent_game.currentState() !== this) {
             clearInterval(this.timer);
             return;

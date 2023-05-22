@@ -5,7 +5,7 @@
 /**
  * Function I copied from stackoverflow.com to shuffle arrays. How rediculous
  * is it that this isn't built into JS/TS?!
- * @param array Array of strings to shuffle
+ * @param array Array of elements to shuffle
  * @returns The array gotten as input, but shuffled the shit out of
  */
 export default function shuffle_array<T>(array: T[]) {

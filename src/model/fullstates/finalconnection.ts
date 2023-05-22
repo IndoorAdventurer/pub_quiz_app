@@ -5,6 +5,7 @@ import { GameDataMsg } from "../gametypes.js";
 import yesOrThrow from "../../utils/yesorthrow.js";
 import ConnectionAnsweringStage from "../constituentstates/connectionansweringstage.js";
 import QuestionData from "../constituentstates/questiondata.js";
+import shuffle_array from "../../utils/shuffle.js";
 
 /**
  * If the person making the quiz feels like it, he/she can design the game like
@@ -34,9 +35,11 @@ export default class FinalConnection extends GameState {
      */
     constructor(parent_game: Game, config: { [key: string]: any }) {
         const admin_text: string = yesOrThrow(config, "admin_text");
-        const connection_answers: string[] = [];
+        let connection_answers: string[] = [];
         for (const match of admin_text.matchAll(FinalConnection.curlyRegEx))
             connection_answers.push(match[1]);
+        
+        connection_answers = shuffle_array(connection_answers);
         
         const qdat = new QuestionData("-");
         const cas = new ConnectionAnsweringStage(
@@ -109,7 +112,7 @@ export default class FinalConnection extends GameState {
  * for this :-p) Modifies the `ConnectionAnsweringStage` object such that it
  * directs all players to the wait screen instead to the screen where they can
  * give answers.
- * @param cas The `ConnectionAnsweringStage` object fck up
+ * @param cas The `ConnectionAnsweringStage` object to fck up
  */
 function modifyAnsweringStage(cas: ConnectionAnsweringStage,
     game: Game,
@@ -140,7 +143,7 @@ function modifyAnsweringStage(cas: ConnectionAnsweringStage,
             [num1, -1]
         ]), true);
 
-        // Move to next state if score ran out
+        // Move to next state if score ran out:
         if (!nominal)
             game.setCurState(1, true);
     }
