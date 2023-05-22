@@ -43,7 +43,7 @@ export default class CrowdJudgedPuzzleQuestion extends CrowdJudgedQTemplate {
         super(parent_game, config, picker);
 
         // Show all the correct answers at the end:
-        new CrowdJudgedShowAnswers(parent_game, config);
+        this.addCustomShowAnswerStage(parent_game, config);
 
         this.points_per_correct = yesOrThrow(config, "points_per_correct");
 
@@ -100,5 +100,32 @@ export default class CrowdJudgedPuzzleQuestion extends CrowdJudgedQTemplate {
         ret.general_info["x2"] = this.x2;
 
         return ret;
+    }
+
+    /**
+     * For a puzzle question we want to show the completed puzzle at the end.
+     * This method adds a `CrowdJudgedShowAnswers` object to the game, and then
+     * adjusts its `stateMsg` method to this end.
+     * @param game The game to add the `CrowdJudgedShowAnswers` stage to
+     * @param config The config to give to the `CrowdJudgedShowAnswers` object
+     */
+    private addCustomShowAnswerStage(game: Game, config: { [key: string]: any }) {
+        const ca = new CrowdJudgedShowAnswers(game, config);
+
+        const outer_this = this;
+
+        // Cheapeast, most hacky way of doing things lol. Just combining state
+        // messages of CrowdJudgedPuzzleQuestion and CrowdJudgedShowAnswers
+        ca.stateMsg = function(): GameDataMsg {
+            const ret = CrowdJudgedShowAnswers.prototype.stateMsg.call(this);
+            const gi = outer_this.stateMsg().general_info;
+
+            gi.widget_name = outer_this.name;
+            const answers: string[] = ret.general_info["answers"];
+            gi["answer_map"] = answers.map(answ => [answ, 1, 0]);
+
+            ret.general_info = gi;
+            return ret;
+        }
     }
 }

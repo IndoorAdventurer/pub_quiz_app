@@ -3,12 +3,11 @@
     let idx = 0;
 
     const kut_teksten = [
-        "Niet zomaar een man.. Een Goeman!",
+        "Niet zomaar een man.. Een Goeman! 🦸🏻",
         "Goemanspiratie: De Goemanische Woonkamerwedstrijd!",
-        "Goeman, wat doet u nu?!",
+        "Goeman, wat doet u nu?! 👣🫢",
         "Er zit een Goeman in ons allemaal!",
-        "The Goeman Gotham deserves, but not the one it needs right now.",
-        "Verrekte Goeman, jonguh!"
+        "The Goeman Gotham deserves, but not the one it needs right now. 🦇"
     ];
 
     document.addEventListener("wait_screen", (ev: Event) => {
