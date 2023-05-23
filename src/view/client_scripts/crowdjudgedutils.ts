@@ -1,11 +1,20 @@
 // Some common functions needed on the client side for game states derived from
 // the crowdjudgedqtemplate
 
+// Sound to play on answer given:
+const bell_sound = new Audio("/audio/goeman_bell.wav");
+let answer_count = 0;   // Keeping track of num answers given to detect change
+
 /**
  * Crowd Judged rounds will (probably all) have to show on the bigscreen:
  * 1) The name of the current active player, so he/she also knows its his/her
  * turn;
  * 2) The list of answers that were already given.
+ * 
+ * ❗**IMPORTANT:** This function has some stateful behavior :-( For playing a
+ * bell sound when a new answer is added, it keeps track of the number of
+ * answers given, such that it can detect when this increases. I should, of
+ * course, have used `msg_old` for this, but this solution is much easier. 🤷🏻‍♂️
  * 
  * To prevent duplicate code, this handy method helps draw these for us
  * widget script.
@@ -52,6 +61,11 @@ export function crowdJudgedRedraw(msg: any, list_id: string, ap_div_id?: string)
 
     list_elem.parentElement?.replaceChild(clone, list_elem);
 
+    // Play bell sound if an answer was just marked correct.
+    const new_count = amap.filter(a => a[1] === 1).length;
+    if (new_count !== 0 && new_count !== answer_count)
+        bell_sound.play().catch(r => {});   // Don't care if it doesn't work 🤷🏻‍♂️
+    answer_count = new_count;
 
     // Draw the name of the active player (optional):
     if (!ap_div_id || !msg?.general_info?.active_player)

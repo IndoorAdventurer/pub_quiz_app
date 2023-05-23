@@ -71,6 +71,9 @@ function fade_out_players(data: player_data, map: [string, HTMLElement][]) {
     return made_changes;
 }
 
+// Sound that plays whenever the leaderboard gets updated:
+const click_sound = new Audio("/audio/goeman_click.wav");
+
 /**
  * Completely redraws the leaderboard. Also animates them by making them swap
  * places if a swap occurs, or making them come in from the bottom if a new
@@ -127,6 +130,8 @@ function update_leaderboard(data: player_data, map: [string, HTMLElement][]) {
         }
     
         leaderboard.parentElement?.replaceChild(clone, leaderboard);
+        
+        click_sound.play().catch(r => {});  // Don't care if it doesn't work 🤷🏻‍♂️
 
         setTimeout(() => arr.forEach(elem => elem.style.transform = "none"), 30);
 }
