@@ -63,8 +63,10 @@ export function crowdJudgedRedraw(msg: any, list_id: string, ap_div_id?: string)
 
     // Play bell sound if an answer was just marked correct.
     const new_count = amap.filter(a => a[1] === 1).length;
-    if (new_count !== 0 && new_count !== answer_count)
+    if (new_count !== 0 && new_count !== answer_count) {
+        bell_sound.currentTime = 0; // Needed for if rapidly triggered twice
         bell_sound.play().catch(r => {});   // Don't care if it doesn't work 🤷🏻‍♂️
+    }
     answer_count = new_count;
 
     // Draw the name of the active player (optional):
