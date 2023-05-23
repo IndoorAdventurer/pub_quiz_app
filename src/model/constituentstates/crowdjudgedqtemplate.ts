@@ -21,7 +21,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
     private picker: PlayerPicker
     protected active_player: string | null;
-    private stop_on_zero: boolean;
+    private on_zero_callback: (() => void) | undefined;
     protected jMap: JudgeAnswerMap;
     private timer: NodeJS.Timer | undefined;
 
@@ -30,19 +30,19 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      * @param parent_game The `Game` this lobby will be added to
      * @param config The config object.
      * @param picker The `PlayerPicker` that selects next active players
-     * @param stop_on_zero If `true`, the round will stop when the main player
-     * reaches a score of 0. Default is `false`.
+     * @param on_zero_callback Optional callback function for that gets called
+     * when one of the players drops all the way down to zero.
      */
     constructor(
         parent_game: Game,
         config: { [key: string]: any },
         picker: PlayerPicker,
-        stop_on_zero: boolean = false
+        on_zero_callback: (() => void) | undefined = undefined
 
     ) {
         super(parent_game, config);
         this.picker = picker;
-        this.stop_on_zero = stop_on_zero;
+        this.on_zero_callback = on_zero_callback;
         this.active_player = null;
 
         const correct_answers = yesOrThrow(config, "correct_answers");
@@ -182,8 +182,8 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
 
         // If the player's score reached zero we terminate its turn.
         if (!aboveZero) {
-            if (this.stop_on_zero)
-                this.parent_game.setCurState(1, true);
+            if (this.on_zero_callback)
+                this.on_zero_callback();
             else
                 this.setActivePlayer(false);
         }

@@ -332,7 +332,7 @@ export default class Game {
         // Notify of update
         this.playerChange();
 
-        return min_score > 0;
+        return min_score >= 0;
     }
 
     /**

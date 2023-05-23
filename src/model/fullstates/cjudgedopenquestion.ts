@@ -21,6 +21,14 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
     private question: string;
     private score_subtraction: number;
 
+    /**
+     * When one player beat the other, we should go the the game state beyond
+     * the last open question. This variable keeps an index to that state.
+     * Maybe I could have come up with a cleaner solution, but well 🤷🏻‍♂️😛
+     */
+    private static target_gs_idx = -1;
+    private showanswerstage: CrowdJudgedShowAnswers;
+
 
     constructor(parent_game: Game, config: {[key: string]: any}) {
 
@@ -36,10 +44,13 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
         new JudgeInformAdminMsg(parent_game, config);
 
         // The answering stage itself:
-        super(parent_game, config, picker, true);
+        super(parent_game, config, picker, () => {
+            this.alterShowAnswerStage();
+            this.parent_game.setCurState(1, true);
+        });
 
         // Show all the correct answers at the end:
-        new CrowdJudgedShowAnswers(parent_game, config);
+        this.showanswerstage = new CrowdJudgedShowAnswers(parent_game, config);
 
         this.question = question;
         
@@ -48,6 +59,10 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
         this.score_subtraction = yesOrThrow(config, "score_subtraction");
         if (this.score_subtraction < 0)
             throw Error("Make sure the score subtraction value is positive");
+        
+        // Settings target game state index to the number of game states, such
+        // that it points to the one beyond the last CJudgedOpenQuestion we add:
+        CJudgedOpenQuestion.target_gs_idx = parent_game.numberOfStates();
     }
 
     public bigScreenWidgets(): WidgetSnippets {
@@ -71,8 +86,10 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
         const aboveZero = this.parent_game.updateScores(map);
 
         // WE HAVE A WINNER! EXITING QUESTION.
-        if (!aboveZero)
+        if (!aboveZero) {
+            this.alterShowAnswerStage();
             this.parent_game.setCurState(1, true);
+        }
     }
 
     public stateMsg(): GameDataMsg {
@@ -81,5 +98,31 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
 
         return ret;
     }
-    
+
+    /**
+     * Probably the most sketchy method in this code base... It alters the
+     * `CrowdJudgedShowAnswers` object associated with this question, such that
+     * after leaving that state, it will redirect you to the game state beyond
+     * the last question.
+     * 
+     * It gets called after one player beat the other (which means the game is
+     * over). In that way, it ensures you can still show the correct answers,
+     * but after that, will leave this round by skipping al unanswered questions
+     */
+    private alterShowAnswerStage() {
+        const end_active = this.showanswerstage.end_active;
+        const pg = this.parent_game;
+
+        this.showanswerstage.end_active = function() {
+            // Immediately restore old situation after the first call, otherwise
+            // we likely end in an infinite loop..
+            this.end_active = end_active;
+
+            // I have to put this in a setTimeout, because this function itself
+            // gets called from inside setCurState().. Otherwise the outer call
+            // undos the effect of this inner call...
+            setTimeout(
+                () => pg.setCurState(CJudgedOpenQuestion.target_gs_idx), 10)
+        }
+    }
 }
