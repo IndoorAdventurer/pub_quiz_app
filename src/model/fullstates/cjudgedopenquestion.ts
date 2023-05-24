@@ -122,7 +122,7 @@ export default class CJudgedOpenQuestion extends CrowdJudgedQTemplate {
             // gets called from inside setCurState().. Otherwise the outer call
             // undos the effect of this inner call...
             setTimeout(
-                () => pg.setCurState(CJudgedOpenQuestion.target_gs_idx), 10)
+                () => pg.setCurState(CJudgedOpenQuestion.target_gs_idx), 0)
         }
     }
 }
