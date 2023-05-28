@@ -67,6 +67,9 @@ header {
 
 
 /* Main screen stuff: */
+#main {
+    font-size: 1.3em;
+}
 
 .quote {
     font-size: 3rem;
