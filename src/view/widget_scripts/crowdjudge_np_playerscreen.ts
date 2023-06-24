@@ -70,7 +70,7 @@ import { socketMessage } from "../client_scripts/playerscreen.js"
         const isyes = cls === "yes_btn";
         const isfilled = fill === 1;
         let text = isyes ? answer : "";
-        text = given ? "✓ " + text : text;
+        text = given && isyes ? "✓ " + text : text;
 
         // Creating div and adding basic properties:
         const btn = document.createElement("div");

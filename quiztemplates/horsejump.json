@@ -1,0 +1,19 @@
+[
+
+{
+    "name": "horsejump",
+    "args": {
+        "word": "a word of 8 letters",
+        "time_seconds": "time people get to solve it"
+    }
+},
+{
+    "name": "openquestion",
+    "args": {
+        "question": "What was the horse jump?",
+        "correct_answer": "the same 8 letter word as above",
+        "point_reward": "score to give for it"
+    }
+}
+
+]

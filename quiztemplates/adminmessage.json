@@ -1,0 +1,6 @@
+{
+    "name": "adminmsgstate",
+    "args": {
+        "message": "Type here a message that only the admin will see."
+    }
+}
