@@ -9,7 +9,7 @@ body {
     flex-direction: column;
 }
 
-h1 {
+h1, h2, h3 {
     text-align: center;
 }
 
@@ -69,6 +69,11 @@ header {
 /* Main screen stuff: */
 #main {
     font-size: 1.3em;
+    text-align: center;
+}
+
+li {
+    text-align: start;
 }
 
 .quote {

@@ -8,8 +8,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-width: 95%;
-    max-height: 95%;
+    width: 95%;
+    height: 95%;
     object-fit: contain;
     background-color: white;
     padding: 0.5rem;
