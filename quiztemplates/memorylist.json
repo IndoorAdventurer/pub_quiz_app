@@ -1,3 +1,4 @@
+[
 {
     "name": "memorylist",
     "args": {
@@ -6,6 +7,15 @@
             "That the player should remember",
             "Such that you can ask them to recall it at a later moment."
         ],
-        "time_seconds": "The time they get to memorize. An hourglass will display this to them."
+        "time_seconds": "number: The time they get for memorizing. An hourglass will display this to them."
+    }
+},
+{
+    "name": "openquestion",
+    "args": {
+        "question": "Put this open question somewhere else in the game. Ask for the list back",
+        "correct_answer": "same list as before, but now just comma separated or something (just for you to correct their answers with).",
+        "point_reward": "number: points given for answering correctly"
     }
 }
+]

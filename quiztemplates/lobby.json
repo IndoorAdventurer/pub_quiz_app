@@ -1,0 +1,6 @@
+{
+    "name": "lobby",
+    "args": {
+        "big_screen_msg": "You can add a second lobby page anywhere in the game. This will allow you to switch from playing in teams to playing individually, giving all players the score of their teams."
+    }
+}

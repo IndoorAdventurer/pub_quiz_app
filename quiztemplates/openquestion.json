@@ -3,6 +3,6 @@
     "args": {
         "question": "Question to display",
         "correct_answer": "The correct answer to the question",
-        "point_reward": 1
+        "point_reward": "number: points given for answering correctly"
     }
 }

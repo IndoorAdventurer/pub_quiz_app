@@ -1,0 +1,7 @@
+{
+    "name": "finalconnection",
+    "args": {
+        "admin_text": "Really long text, revealing the final connection of the quiz. All/most answers of the entire quiz should appear as {keywords} between brackets in this text. The final candidate first gets to see all these keywords/answers and has to guess what the final connection is before this text reveals it.",
+        "start_bonus": "number: seconds that get added on top of the score at the start. This is how long the player has to guess the connection."
+    }
+}

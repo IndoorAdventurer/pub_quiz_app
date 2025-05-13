@@ -3,7 +3,7 @@
     "args": {
         "questions": [
             {
-                "type": "`image`, `audio` or `video`",
+                "type": "'image', 'audio' or 'video'. In practice, 'video', of course. Add as many questions in the 'questions' list as there are candidates left (typically 3)",
                 "path": "/path/to/the/file.mp4  IMPORTANT! Put your files in the resources folder that exists on the same level as your config.json. Then specify path simply as /resources/mymedia.extension",
                 "correct_answers": [
                     "Here you again specify a list of answers the player should give",
@@ -14,7 +14,7 @@
                     "Samuel L. Jackson",
                     "etc"
                 ],
-                "score_sum": "If the player gets all answers right, he will receive approximately this amount of points",
+                "score_sum": "number: If the player gets all answers right, he will receive approximately this amount of points",
                 "max_points": "number: points to give to the first judge to mark an answer as given. This is also the penalty for wrongly marking an answer as given!",
                 "min_points": "number: points to give to the last judge to mark an answer as given"
             },

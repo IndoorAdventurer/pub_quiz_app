@@ -3,12 +3,12 @@
     "args": {
         "gamestates": [
             {
-                "name": "Name of a game state. This works just like the root `gamestates` array, and you can specify any game state here too.",
+                "name": "Name of a game state. This works just like in the root `gamestates` list, and you can specify any game states here too.",
                 "args": { "The": "corresponding args object. Also just like in the root." },
-                "answer": "The answer to include for this game state in the connection question. You can also leave it blank. For example, for multimedia pages you show before a question."
+                "answer": "The answer to include for this game state in the connection question. You can also leave it blank -- for multimedia pages you show before a question, for example."
             }
         ],
         "correct_answer": "The connection between the answers given during this round.",
-        "point_reward": "number of points to give for the connection question. Usually bit more than the individual questions."
+        "point_reward": "number: points to give for the connection question. Usually bit more than the individual questions."
     }
 }

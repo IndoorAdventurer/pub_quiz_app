@@ -23,14 +23,14 @@
                         "Core"
                     ]
                 },
-                "points_per_correct": "Number of points you receive for each correct answer",
+                "points_per_correct": "number: points you receive for each correct answer",
                 "max_points": "number: points to give to the first judge to mark an answer as given. This is also the penalty for wrongly marking an answer as given!",
                 "min_points": "number: points to give to the last judge to mark an answer as given"
             },
             {
                 "puzzle": {
                     "a": [
-                        "",
+                        "Btw, make sure there are as many questions as there are players.",
                         "",
                         "",
                         ""

@@ -3,9 +3,9 @@ Description=An extensive web app for hosting fun and interactive pub quizzes.
 After=network.target
 
 [Service]
-WorkingDirectory=/home/vincent/Documents/PubQuizApp
-User=vincent
-ExecStart=/usr/bin/npm start -- quizzes/quizconfig.json
+WorkingDirectory=/absolute/path/to/this/repository
+User=my_username
+ExecStart=/usr/bin/npm start -- quizzes/my_quiz/quizconfig.json
 Restart=always
 RestartSec=10
 

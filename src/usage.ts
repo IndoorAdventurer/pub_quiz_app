@@ -33,7 +33,23 @@ Setup:
     present to the audience.
 
 Configuration file:
-    TODO!
+    To define your own quiz, create a JSON configuration file that specifies all
+    rounds and questions. You can use 'quiztemplates/gametemplate.json' as a
+    starting point. This template contains instructions to help you on your way.
+    The most important field is the "gamestates" array, which defines all rounds
+    and questions you want. Templates for these are available in the 
+    'quiztemplates/' directory.
+
+File structure:
+    Your quiz folder should be structured as follows:
+    my_quiz/
+    ├─ config.json
+    └─ resources/
+       ├─ some_picture.png
+       ├─ some_video.webm
+       └─ etc.
+    To reference any media within the resources 'directory', refer to them as,
+    for example, "/resources/some_picture.png" in your JSON configuration file.
 `
     );
 }

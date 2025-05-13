@@ -1,6 +1,8 @@
-// Small AND UGLY script to create a new game state
+/**
+ * Small AND UGLY script to create a new game state. Just run it with node and
+ * answer the questions.
+ */
 
-// Just run with node.
 
 import * as readline from "readline";
 import fs from "fs";
@@ -123,7 +125,7 @@ const css_template = `/* TODO */`;
         // ./src/model/constituentstates
         const isFull = await askYesNoQuestion(
             "Is this a full game state? In other words: can it directly be " +
-            "added to the game? If not, it will be put treated as a " +
+            "added to the game? If not, it will be treated as a " +
             "constituent game state, which is meant to be used by other game " +
             "states to make a full one."
         );
@@ -158,10 +160,10 @@ const css_template = `/* TODO */`;
         }
         files.push({ path: model_path, content: gs });
 
-        // STEP 6: showing user all changes and ask if proceed:
-        console.log("-----The-final-lobby-file-will-look-like-this:-----");
+        // STEP 6: showing user all changes and ask to proceed:
+        console.log("-----The-template-will-look-like-this:-------------");
         console.log(gs);
-        console.log("-----Will-make-the-following-files:----------------");
+        console.log("-----And-the-following-files-will-be-created:------");
         for (const f of files)
             console.log(f.path);
         if (await askYesNoQuestion("Do you want to proceed?")) {
