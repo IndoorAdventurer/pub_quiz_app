@@ -107,13 +107,15 @@ As mentioned, I myself host this quiz on a Raspberry Pi. Here, I will very brief
 	sudo systemctl enable goemanquiz.service
 	```
 2. Giving my Raspberry Pi a static local IP address, and forwarding `TCP` port 443. This heavily depends on your specific router.
-3. Getting a dynamic domain name via [No-IP](https://www.noip.com/), and changing my router's configuration accordingly.
-4. Using [Let's Encrypt](https://letsencrypt.org/), and I think its `certbot` to get an SSL certificate. Put the file they specify in the `static` directory:
+	I forward 443 to 4343 and 80 to 80, by the way. This lets me host the actual server on port 4343, which does not require root access. At the same time, it does let me use `certbot` in `standalone` mode easily (see below).
+3. Getting a dynamic domain name via [No-IP](https://www.noip.com/), and changing my router's configuration so it automatically updates the attached IP. I would just stick to `IPv4` (Type A), because with `IPv6` (`AAAA`) I had some problems.
+4. Getting a free SSL certificate with [Let's Encrypt](https://letsencrypt.org/) its `certbot` tool. The easiest way is to use the `standalone` mode:
 	```bash
 	sudo apt-get install certbot
-	sudo certbot certonly --manual
+	sudo certbot certonly --standalone -d your.domain.net
 	```
-	and put the file they want you to be reachable in `static/.well-known/acme-challenge/`. I am not completely sure anymore how I did this, but I will look it up 🤓
+	This will make `certbot` temporarily host an `HTTP` server for domain control validation. You do have to make sure port 80 is forwarded for this, of course.
+	Alternatively, you can use manual mode and put the file they want you to be reachable in `static/.well-known/acme-challenge/` before spinning up an `HTTP` version of the server, but this is much more clumsy in my opinion.
 ## Contributing
 Contributions are always welcome. If there are bugs you want to fix, you can submit a pull request. In addition, if you're going to extend the code, I added some helpful tools to create new game states quickly. See the next section for instructions.
 ### Adding a new game state
