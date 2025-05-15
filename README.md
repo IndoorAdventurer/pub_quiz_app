@@ -98,24 +98,25 @@ In this last panel, you will also see a section called `Wildcard authorization c
 3. Make them enter this name and code.
 When an existing player wants to connect on a new device, or reconnect on the same device, you only need to set the wildcard (and make sure they write their name exactly as they did before).
 ### Hosting on a Raspberry Pi
-As mentioned, I myself host this quiz on a Raspberry Pi. Here, I will very briefly mention the steps I took to set this up. This might not work exactly the same for you, but it can still be a helpful guide.
+As mentioned, I myself host this quiz on a Raspberry Pi. Here, I will very briefly mention the steps I take to set this up. This might not work exactly the same for you, but it can still be a helpful guide.
 1. Setting up the `systemd` daemon:
-	Move the specified service file to `/lib/systemd/system/goemanquiz.service`, and change the specified paths and username accordingly. After that, call:
+	Move the service file to `/lib/systemd/system/goemanquiz.service`, and change the specified paths and username accordingly. After that, call:
 	```bash
 	sudo systemctl daemon-reload
 	sudo systemctl start goemanquiz.service
 	sudo systemctl enable goemanquiz.service
 	```
-2. Giving my Raspberry Pi a static local IP address, and forwarding `TCP` port 443. This heavily depends on your specific router.
-	I forward 443 to 4343 and 80 to 80, by the way. This lets me host the actual server on port 4343, which does not require root access. At the same time, it does let me use `certbot` in `standalone` mode easily (see below).
+2. Giving my Raspberry Pi a static local IP address, and forwarding ports. This heavily depends on your specific router and preferences. I forward `TCP` port 443 to 4343 and port 80 to 80. This lets me host the actual server on port 4343, which does not require root access. At the same time, it does let me use `certbot` in `standalone` mode easily (see below).
 3. Getting a dynamic domain name via [No-IP](https://www.noip.com/), and changing my router's configuration so it automatically updates the attached IP. I would just stick to `IPv4` (Type A), because with `IPv6` (`AAAA`) I had some problems.
-4. Getting a free SSL certificate with [Let's Encrypt](https://letsencrypt.org/) its `certbot` tool. The easiest way is to use the `standalone` mode:
+4. Getting a free SSL certificate with [Let's Encrypt](https://letsencrypt.org/) and its `certbot` tool. The easiest way is to use it in `standalone` mode[^2]:
 	```bash
 	sudo apt-get install certbot
 	sudo certbot certonly --standalone -d your.domain.net
 	```
 	This will make `certbot` temporarily host an `HTTP` server for domain control validation. You do have to make sure port 80 is forwarded for this, of course.
 	Alternatively, you can use manual mode and put the file they want you to be reachable in `static/.well-known/acme-challenge/` before spinning up an `HTTP` version of the server, but this is much more clumsy in my opinion.
+	After either of these methods, the output will tell you where it stored the private key and certificate files. If you don't want to run the server with root access, you will need to copy them somewhere else and properly point to them in the `JSON` config file.
+[^2]: See this guide: https://eff-certbot.readthedocs.io/en/stable/using.html#standalone
 ## Contributing
 Contributions are always welcome. If there are bugs you want to fix, you can submit a pull request. In addition, if you're going to extend the code, I added some helpful tools to create new game states quickly. See the next section for instructions.
 ### Adding a new game state
