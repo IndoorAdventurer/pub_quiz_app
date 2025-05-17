@@ -107,13 +107,18 @@ document.addEventListener("authorize", (ev: Event) => {
         const auth_code = document.getElementById("authorize_auth_code") as
             HTMLInputElement | null;
     
-        if (name && auth_code &&
-            name.value.length > 0 && auth_code.value.length > 0) {
-        
-            socketMessageUnsafe({
-                name: name.value,
-                auth_code: auth_code.value
-            });
+        if (name && auth_code) {
+            // Manually trimming because we are using the unsafe version of
+            // the socketMessage function:
+            const trimmed_name = name.value.trim();
+            const trimmed_auth_code = auth_code.value.trim();
+
+            if (trimmed_name.length > 0 && auth_code.value.length > 0) {
+                socketMessageUnsafe({
+                    name: trimmed_name,
+                    auth_code: trimmed_auth_code
+                });
+            }
         }
     };
 });

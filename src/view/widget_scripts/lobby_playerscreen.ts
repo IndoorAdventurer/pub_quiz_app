@@ -16,7 +16,13 @@ import { socketMessageUnsafe } from "../client_scripts/playerscreen.js"
             
             btn.onclick = (ev) => {
                 if (inp?.value) {
-                    socketMessageUnsafe({name: inp.value});
+                    // Manually trimming away whitespace: we don't want "Michiel"
+                    // and "Michiel " to be different names...
+                    const trimmed_name = inp.value.trim();
+
+                    if (trimmed_name.length > 0)
+                        socketMessageUnsafe({name: inp.value.trim()});
+
                 }
             };
         }

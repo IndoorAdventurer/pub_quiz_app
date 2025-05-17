@@ -84,9 +84,13 @@ const new_player_add_btn = document.getElementById("new_player_add_btn");
 new_player_add_btn?.addEventListener("click", (ev) => {
     const name_field =
         document.getElementById("new_player_name") as HTMLInputElement | null;
-    if (name_field?.value && name_field.value.length > 0) {
-        socketMessage({ action: "add_player", name: name_field.value });
-        name_field.value = "";
+    if (name_field?.value) {
+        const trimmed_name = name_field.value.trim();
+
+        if (trimmed_name.length > 0) {
+            socketMessage({ action: "add_player", name: trimmed_name });
+            name_field.value = "";
+        }
     }
 });
 
