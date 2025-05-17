@@ -23,7 +23,7 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
     protected active_player: string | null;
     private on_zero_callback: (() => void) | undefined;
     protected jMap: JudgeAnswerMap;
-    private timer: NodeJS.Timer | undefined;
+    private timer: NodeJS.Timeout | undefined;
 
     /**
      * Constructor of `CrowdJudgedQTemplate`
@@ -168,8 +168,6 @@ export default abstract class CrowdJudgedQTemplate extends GameState {
      */
     @GameState.stateChanger
     private scoreTick() {
-        // Don't want mistakes here: keeping this write() in as long as possible
-        process.stdout.write("tick, ")
         if (this.parent_game.currentState() !== this) {
             clearInterval(this.timer);
             return;

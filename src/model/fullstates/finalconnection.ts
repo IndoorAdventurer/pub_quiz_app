@@ -138,7 +138,6 @@ function modifyAnsweringStage(cas: ConnectionAnsweringStage,
             clearInterval(timer);
             return;
         }
-        process.stdout.write("tick, ")
         const nominal = game.updateScores(new Map<string, number>([
             [num1, -1]
         ]), true);
