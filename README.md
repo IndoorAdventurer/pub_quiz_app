@@ -99,16 +99,24 @@ In this last panel, you will also see a section called `Wildcard authorization c
 When an existing player wants to connect on a new device, or reconnect on the same device, you only need to set the wildcard (and make sure they write their name exactly as they did before).
 ### Hosting on a Raspberry Pi
 As mentioned, I myself host this quiz on a Raspberry Pi. Here, I will very briefly mention the steps I take to set this up. This might not work exactly the same for you, but it can still be a helpful guide.
-1. Setting up the `systemd` daemon:
+1. Installing `node` and `npm`, and building the project:
+	```bash
+	curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+	sudo apt-get install nodejs
+	```
+	This will install node version `22.x`. In the future, make sure you change
+	this to a more recent version. Check to confirm with `node --version`. After
+	that, build the project as described above.
+2. Setting up the `systemd` daemon:
 	Move the service file to `/lib/systemd/system/goemanquiz.service`, and change the specified paths and username accordingly. After that, call:
 	```bash
 	sudo systemctl daemon-reload
 	sudo systemctl start goemanquiz.service
 	sudo systemctl enable goemanquiz.service
 	```
-2. Giving my Raspberry Pi a static local IP address, and forwarding ports. This heavily depends on your specific router and preferences. I forward `TCP` port 443 to 4343 and port 80 to 80. This lets me host the actual server on port 4343, which does not require root access. At the same time, it does let me use `certbot` in `standalone` mode easily (see below).
-3. Getting a dynamic domain name via [No-IP](https://www.noip.com/), and changing my router's configuration so it automatically updates the attached IP. I would just stick to `IPv4` (Type A), because with `IPv6` (`AAAA`) I had some problems.
-4. Getting a free SSL certificate with [Let's Encrypt](https://letsencrypt.org/) and its `certbot` tool. The easiest way is to use it in `standalone` mode[^2]:
+3. Giving my Raspberry Pi a static local IP address, and forwarding ports. This heavily depends on your specific router and preferences. I forward `TCP` port 443 to 4343 and port 80 to 80. This lets me host the actual server on port 4343, which does not require root access. At the same time, it does let me use `certbot` in `standalone` mode easily (see below).
+4. Getting a dynamic domain name via [No-IP](https://www.noip.com/), and changing my router's configuration so it automatically updates the attached IP. I would just stick to `IPv4` (Type A), because with `IPv6` (`AAAA`) I had some problems.
+5. Getting a free SSL certificate with [Let's Encrypt](https://letsencrypt.org/) and its `certbot` tool. The easiest way is to use it in `standalone` mode[^2]:
 	```bash
 	sudo apt-get install certbot
 	sudo certbot certonly --standalone -d your.domain.net
