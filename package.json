@@ -1,6 +1,6 @@
 {
   "name": "goemanquizapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An extensive web app for hosting fun and interactive pub quizzes.",
   "keywords": [
     "typescript",
